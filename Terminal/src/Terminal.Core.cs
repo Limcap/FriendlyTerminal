@@ -163,7 +163,7 @@ namespace Limcap.TextboxTerminal {
 					e.Handled = true;
 				}
 				else if (e.Key == Key.Return) {
-					var input = LastLine.Replace( PromptLine, "" );
+					var input = LastLine.Replace( NewLine, "" ).Replace( "> ", "" );
 					UpdateDebugArea( e.Key );
 					Text += NewLine;
 					if (input.Trim().Length == 0) {

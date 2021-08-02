@@ -14,11 +14,11 @@
 	</Window.Background>
 			-->
 	<DockPanel x:Name="MainPanel" LastChildFill="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-		<!--
 		<TextBlock 
 			Background="Black" Foreground="Cyan" Padding="5" TextWrapping="Wrap" Text="TextBlock" 
-			HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+			HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontFamily="Consolas"
 		/>
+		<!-- 
 		-->
 	</DockPanel>
 </Window>
