@@ -49,7 +49,8 @@ namespace Limcap.TextboxTerminal {
 
 
 		public void StartNewInputLine() {
-			Text += Text.EndsWith( NewLine ) ? "> " : PromptLine;
+			bool newLineNeeded = !(Text.Length == 0 || Text.EndsWith( NewLine ) );
+			Text += (newLineNeeded ? NewLine : string.Empty) + "> ";
 			_minCaretIndex = Text.Length;
 			_mainArea.CaretIndex = Text.Length;
 			_scrollArea.ScrollToBottom();
