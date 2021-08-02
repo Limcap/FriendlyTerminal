@@ -34,8 +34,13 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Terminal.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Dux, Version=1.0.2.5, Culture=neutral, PublicKeyToken=null" />
+    <Reference Include="Dux">
+      <HintPath>..\..\..\AgenteSolution\packages\Dux\Dux.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -104,6 +109,9 @@
       <Project>{b094e712-a262-431a-9b4c-79861284df63}</Project>
       <Name>TextboxTerminal</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Terminal.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

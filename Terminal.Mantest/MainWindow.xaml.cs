@@ -20,7 +20,7 @@ namespace Limcap.TextboxTerminal.Mantest {
 	public partial class MainWindow : Window {
 		public MainWindow() {
 			InitializeComponent();
-			var t = new Terminal( null, null );
+			var t = new Terminal( null );
 			MainPanel.Children.Add( t.Panel );
 
 			t.RegisterCommand<AscenderPrivilegios>();

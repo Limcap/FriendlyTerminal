@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Limcap.TextboxTerminal.Mantest"
         mc:Ignorable="d"
 		  Background="Black"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Limcap Textbox Terminal" Height="450" Width="800">
 			<!--
 			AllowsTransparency="True" WindowStyle="None"
 	<Window.Background>
