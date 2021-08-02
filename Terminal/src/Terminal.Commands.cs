@@ -41,7 +41,7 @@ namespace Limcap.TextboxTerminal {
 
 			if (cmd == "exit") {
 				Clear();
-				_onExit();
+				onExit?.Invoke();
 				return string.Empty;
 			}
 			if (cmd == "clear") {

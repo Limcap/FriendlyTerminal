@@ -21,7 +21,7 @@ namespace Limcap.TextboxTerminal {
 
 
 		public void Exit() {
-			_onExit();
+			onExit();
 		}
 
 

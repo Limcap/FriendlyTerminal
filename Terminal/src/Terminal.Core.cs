@@ -16,11 +16,12 @@ namespace Limcap.TextboxTerminal {
 		private static readonly string NewLine = Environment.NewLine;
 		private static readonly string PromptLine = NewLine + "> ";
 
+		private readonly string _introText = "Limcap Textbox Terminal";
 		private readonly TextBox _mainArea;
 		private readonly TextBox _statusArea;
-		private readonly string _introText = "Limcap Terminal";
-		private readonly Action _onExit;
+		private int _minCaretIndex;
 
+		public Action onExit;
 		public event PropertyChangedEventHandler PropertyChanged;
 		public DuxNamedList vars;
 		private Func<string, string> _inputHandler; 
@@ -31,10 +32,11 @@ namespace Limcap.TextboxTerminal {
 		//private string _lastLine = string.Empty;
 		//private readonly Func<string, string> _cmdProcessor = ( cmd ) => cmd;
 
-		public Terminal( string introText, Action onExit ) {
+		public Terminal( string introText, Action onExit = null) {
 			_introText = introText ?? _introText;
-			_onExit = onExit;
+			this.onExit = onExit;
 			//_cmdProcessor = cmdProcessor ?? _cmdProcessor;
+			vars = new DuxNamedList();
 			_mainArea = BuildMainArea();
 			_statusArea = BuildStatuArea();
 			_cmdList = new Dictionary<string, Type>();
@@ -53,7 +55,9 @@ namespace Limcap.TextboxTerminal {
 			};
 			_ = BindingOperations.SetBinding( _mainArea, TextBox.TextProperty, myBinding );
 
-			TypeText( introText + PromptLine );
+			//TypeText( _introText );
+			Text += _introText;
+			StartNewInputLine();
 		}
 
 
@@ -123,8 +127,6 @@ namespace Limcap.TextboxTerminal {
 			};
 
 			mainArea.PreviewKeyDown += ( object sender, KeyEventArgs e ) => {
-				if (CaretIndex < 0) mainArea.CaretIndex = mainArea.Text.Length;
-
 				if (e.IsRepeat)
 					UpdateStatus( e.Key );
 
@@ -133,29 +135,31 @@ namespace Limcap.TextboxTerminal {
 					return;
 				}
 				else if (e.Key == Key.Back || e.Key == Key.Left) {
-					if (CaretIndex < NewLine.Length + 3) e.Handled = true;
-					//else {
-					//	Send( e.Key );
-					//	e.Handled = true;
-					//	UpdateStatus( e.Key );
-					//}
+					if (mainArea.CaretIndex <= _minCaretIndex) e.Handled = true;
 				}
 				else if (e.Key == Key.Home) {
-					var lastLineStartIndex = mainArea.Text.LastIndexOf( NewLine );
-					lastLineStartIndex = lastLineStartIndex < 0 ? 0 : lastLineStartIndex;
-					mainArea.CaretIndex = lastLineStartIndex + NewLine.Length + 2;
+					//var lastLineStartIndex = mainArea.Text.LastIndexOf( NewLine );
+					//lastLineStartIndex = lastLineStartIndex < 0 ? 0 : lastLineStartIndex;
+					mainArea.CaretIndex = _minCaretIndex;
 					e.Handled = true;
 				}
 				else if (e.Key == Key.Return) {
 					var input = LastLine.Replace( PromptLine, "" );
 					UpdateStatus( e.Key );
+					if (input == PromptLine) {
+						e.Handled = true;
+						return;
+					}
 					Text += NewLine;
 					var output = _inputHandler is null ? ProcessInput( input ) : _inputHandler( input );
-					if (output != null)
-						mainArea.Text += NewLine + output + PromptLine;
+					if (output != null) {
+						mainArea.Text += output;
+						StartNewInputLine();
+					}
 					mainArea.CaretIndex = mainArea.Text.Length;
 				}
 				else {
+					if (mainArea.CaretIndex < _minCaretIndex) mainArea.CaretIndex = mainArea.Text.Length;
 					UpdateStatus( e.Key );
 				}
 			};
@@ -165,12 +169,6 @@ namespace Limcap.TextboxTerminal {
 			};
 
 			mainArea.Loaded += ( object sender, RoutedEventArgs e ) => mainArea.Focus();
-
-			//mainArea.PreviewMouseUp += ( object sender, MouseButtonEventArgs e ) => {
-			//	if (LastLineCaretIndex < 0) mainArea.CaretIndex = mainArea.Text.Length;
-			//};
-
-			mainArea.CaretIndex = mainArea.Text.Length;
 
 			return mainArea;
 		}
@@ -201,6 +199,15 @@ namespace Limcap.TextboxTerminal {
 					InputManager.Current.ProcessInput( e1 );
 				}
 			}
+		}
+
+
+
+
+		public void StartNewInputLine() {
+			Text += Text.EndsWith( NewLine ) ? "> " : PromptLine;
+			_minCaretIndex = Text.Length;
+			_mainArea.CaretIndex = Text.Length;
 		}
 
 

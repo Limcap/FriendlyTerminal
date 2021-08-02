@@ -32,7 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Dux">
-      <HintPath>..\DuxDS\Dux\bin\Debug\Dux.dll</HintPath>
+      <HintPath>..\..\..\AgenteSolution\packages\Dux\Dux.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
