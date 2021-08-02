@@ -165,17 +165,19 @@ namespace Limcap.TextboxTerminal {
 				else if (e.Key == Key.Return) {
 					var input = LastLine.Replace( PromptLine, "" );
 					UpdateDebugArea( e.Key );
-					if (input == PromptLine) {
-						e.Handled = true;
-						return;
-					}
 					Text += NewLine;
-					var output = _inputHandler is null ? ProcessInput( input ) : _inputHandler( input );
-					if (output != null) {
-						mainArea.Text += output;
-						StartNewInputLine();
+					if (input.Trim().Length == 0) {
+						e.Handled = true;
+						//return;
 					}
-					mainArea.CaretIndex = mainArea.Text.Length;
+					else {
+						var output = _inputHandler is null ? ProcessInput( input ) : _inputHandler( input );
+						if (output != null) {
+							mainArea.Text += output;
+						}
+					}
+					StartNewInputLine();
+					//mainArea.CaretIndex = mainArea.Text.Length;
 				}
 				else {
 					if (mainArea.CaretIndex < _minCaretIndex) mainArea.CaretIndex = mainArea.Text.Length;
@@ -206,41 +208,6 @@ namespace Limcap.TextboxTerminal {
 				Height = 25,
 				IsReadOnly = true,
 			};
-		}
-
-
-
-
-		public static void Send( Key key ) {
-			if (Keyboard.PrimaryDevice != null) {
-				if (Keyboard.PrimaryDevice.ActiveSource != null) {
-					var e1 = new KeyEventArgs( Keyboard.PrimaryDevice, Keyboard.PrimaryDevice.ActiveSource, 0, Key.Down ) { RoutedEvent = Keyboard.KeyDownEvent };
-					InputManager.Current.ProcessInput( e1 );
-				}
-			}
-		}
-
-
-
-
-		public void StartNewInputLine() {
-			Text += Text.EndsWith( NewLine ) ? "> " : PromptLine;
-			_minCaretIndex = Text.Length;
-			_mainArea.CaretIndex = Text.Length;
-			_scrollArea.ScrollToBottom();
-		}
-
-
-
-
-		private void UpdateDebugArea( Key pressedKey ) {
-			//var lastLineStartIndex = mainArea.Text.LastIndexOf( NewLine );
-			//lastLineStartIndex = lastLineStartIndex < 0 ? 0 : lastLineStartIndex;
-			//_lastLine = mainArea.Text.Substring( lastLineStartIndex );
-			//_lastLineCaretIndex = mainArea.CaretIndex - (mainArea.Text.Length - _lastLine.Length);
-			//var curChar = _lastLineCaretIndex == _lastLine.Length ? ' ' : _lastLine[_lastLineCaretIndex];
-			//statusArea.Text = $"{pressedKey} - {curChar} - ({_lastLineCaretIndex})";
-			_debugArea.Text = $"{pressedKey} - {CurrentChar} - ({CaretIndex})";
 		}
 	}
 }

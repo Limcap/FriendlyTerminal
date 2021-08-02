@@ -54,7 +54,7 @@
     <Compile Include="src\ICommand.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="src\Terminal.Commands.cs" />
+    <Compile Include="src\Terminal.Interpreter.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
