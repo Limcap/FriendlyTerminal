@@ -17,8 +17,10 @@ namespace Limcap.TextboxTerminal {
 		private static readonly string PromptLine = NewLine + "> ";
 
 		private readonly string _introText = "Limcap Textbox Terminal";
+		private readonly ScrollViewer _scrollArea;
 		private readonly TextBox _mainArea;
 		private readonly TextBox _statusArea;
+		private readonly TextBox _debugArea;
 		private int _minCaretIndex;
 
 		public Action onExit;
@@ -28,6 +30,15 @@ namespace Limcap.TextboxTerminal {
 
 		public Panel Panel { get; private set; }
 
+		private bool _showStatusArea = true;
+		public bool ShowStatusArea {
+			get => _showStatusArea;
+			set {
+				_showStatusArea = value;
+				_statusArea.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
+			}
+		}
+
 		//private int _lastLineCaretIndex;
 		//private string _lastLine = string.Empty;
 		//private readonly Func<string, string> _cmdProcessor = ( cmd ) => cmd;
@@ -35,16 +46,24 @@ namespace Limcap.TextboxTerminal {
 		public Terminal( string introText, Action onExit = null) {
 			_introText = introText ?? _introText;
 			this.onExit = onExit;
-			//_cmdProcessor = cmdProcessor ?? _cmdProcessor;
 			vars = new DuxNamedList();
-			_mainArea = BuildMainArea();
-			_statusArea = BuildStatuArea();
 			_cmdList = new Dictionary<string, Type>();
-
 			Panel = new DockPanel() { LastChildFill = true };
-			//panel.Children.Add( statusArea );
-			Panel.Children.Add( _mainArea );
+			
+			_debugArea = BuildStatuArea();
+			//Panel.Children.Add( _debugArea );
+			DockPanel.SetDock( _debugArea, Dock.Bottom );
+
+			_statusArea = BuildStatuArea();
+			Panel.Children.Add( _statusArea );
 			DockPanel.SetDock( _statusArea, Dock.Bottom );
+			ShowStatusArea = ShowStatusArea;
+			//_statusArea.Visibility = _showStatusArea ? Visibility.Visible : Visibility.Collapsed;
+
+			_scrollArea = new ScrollViewer() { VerticalScrollBarVisibility = ScrollBarVisibility.Auto };
+			_mainArea = BuildMainArea();
+			_scrollArea.Content = _mainArea;
+			Panel.Children.Add( _scrollArea );
 			DockPanel.SetDock( _mainArea, Dock.Top );
 
 			Binding myBinding = new Binding {
@@ -128,7 +147,7 @@ namespace Limcap.TextboxTerminal {
 
 			mainArea.PreviewKeyDown += ( object sender, KeyEventArgs e ) => {
 				if (e.IsRepeat)
-					UpdateStatus( e.Key );
+					UpdateDebugArea( e.Key );
 
 				if (e.Key == Key.Up || e.Key == Key.Down || e.Key == Key.PageUp || e.Key == Key.PageDown) {
 					e.Handled = true;
@@ -145,7 +164,7 @@ namespace Limcap.TextboxTerminal {
 				}
 				else if (e.Key == Key.Return) {
 					var input = LastLine.Replace( PromptLine, "" );
-					UpdateStatus( e.Key );
+					UpdateDebugArea( e.Key );
 					if (input == PromptLine) {
 						e.Handled = true;
 						return;
@@ -160,12 +179,12 @@ namespace Limcap.TextboxTerminal {
 				}
 				else {
 					if (mainArea.CaretIndex < _minCaretIndex) mainArea.CaretIndex = mainArea.Text.Length;
-					UpdateStatus( e.Key );
+					UpdateDebugArea( e.Key );
 				}
 			};
 
 			mainArea.PreviewKeyUp += ( object sender, KeyEventArgs e ) => {
-				UpdateStatus( e.Key );
+				UpdateDebugArea( e.Key );
 			};
 
 			mainArea.Loaded += ( object sender, RoutedEventArgs e ) => mainArea.Focus();
@@ -208,19 +227,20 @@ namespace Limcap.TextboxTerminal {
 			Text += Text.EndsWith( NewLine ) ? "> " : PromptLine;
 			_minCaretIndex = Text.Length;
 			_mainArea.CaretIndex = Text.Length;
+			_scrollArea.ScrollToBottom();
 		}
 
 
 
 
-		private void UpdateStatus( Key pressedKey ) {
+		private void UpdateDebugArea( Key pressedKey ) {
 			//var lastLineStartIndex = mainArea.Text.LastIndexOf( NewLine );
 			//lastLineStartIndex = lastLineStartIndex < 0 ? 0 : lastLineStartIndex;
 			//_lastLine = mainArea.Text.Substring( lastLineStartIndex );
 			//_lastLineCaretIndex = mainArea.CaretIndex - (mainArea.Text.Length - _lastLine.Length);
 			//var curChar = _lastLineCaretIndex == _lastLine.Length ? ' ' : _lastLine[_lastLineCaretIndex];
 			//statusArea.Text = $"{pressedKey} - {curChar} - ({_lastLineCaretIndex})";
-			_statusArea.Text = $"{pressedKey} - {CurrentChar} - ({CaretIndex})";
+			_debugArea.Text = $"{pressedKey} - {CurrentChar} - ({CaretIndex})";
 		}
 	}
 }
