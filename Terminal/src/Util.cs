@@ -90,7 +90,7 @@ namespace Limcap.TextboxTerminal {
 		public static char? ToPasswordAllowedChar( this Key key ) {
 			char c = Util.GetCharFromKey( key );
 			int i = c;
-			if (i == 32) return ' ';
+			//if (i == 32) return ' ';
 			if (i.IsInBetween( 33, 126 ) && i != 92) return c; else return null;
 			//int keyCode = (int)key;
 			//return keyCode.IsInBetween( 34, 79 ) || keyCode.IsIn(143);
