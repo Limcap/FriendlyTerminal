@@ -106,19 +106,23 @@ namespace Limcap.TextboxTerminal {
 
 
 
-		private int CaretIndex {
-			get => _mainArea.CaretIndex - (_mainArea.Text.Length - LastLine.Length);
-		}
+		//private int CaretIndex {
+		//	get => _mainArea.CaretIndex - (_mainArea.Text.Length - LastLine.Length);
+		//}
+		private int CaretIndex => _mainArea.CaretIndex;
 
 
 
 
+		//private char CurrentChar {
+		//	get {
+		//		var i = CaretIndex;
+		//		var ll = LastLine;
+		//		return i == ll.Length ? ' ' : ll[i];
+		//	}
+		//}
 		private char CurrentChar {
-			get {
-				var i = CaretIndex;
-				var ll = LastLine;
-				return i == ll.Length ? ' ' : ll[i];
-			}
+			get => CaretIndex == Text.Length ? ' ' : Text[CaretIndex];
 		}
 
 
@@ -139,6 +143,7 @@ namespace Limcap.TextboxTerminal {
 				Background = new SolidColorBrush( Color.FromArgb( 200, 25, 27, 27 ) ),
 				Foreground = Brushes.GreenYellow,
 				FontFamily = new FontFamily( "Consolas" ),
+				FontSize = 14,
 				Padding = new Thickness( 5 ),
 				BorderThickness = new Thickness( 0 ),
 				AcceptsReturn = false,
@@ -163,7 +168,8 @@ namespace Limcap.TextboxTerminal {
 					e.Handled = true;
 				}
 				else if (e.Key == Key.Return) {
-					var input = LastLine.Replace( NewLine, "" ).Replace( "> ", "" );
+					//var input = LastLine.Replace( NewLine, "" ).Replace( "> ", "" );
+					var input = Text.Substring( _minCaretIndex );
 					UpdateDebugArea( e.Key );
 					Text += NewLine;
 					if (input.Trim().Length == 0) {
@@ -171,7 +177,10 @@ namespace Limcap.TextboxTerminal {
 						//return;
 					}
 					else {
-						var output = _inputHandler is null ? ProcessInput( input ) : _inputHandler( input );
+						var processor = _inputHandler is null ? ProcessInput : _inputHandler;
+						_inputHandler = null;
+						var output = processor( input );
+						//var output = _inputHandler is null ? ProcessInput( input ) : (() => { return _inputHandler( input ); })();
 						if (output != null) {
 							mainArea.Text += output;
 						}
