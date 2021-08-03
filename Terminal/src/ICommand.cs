@@ -7,6 +7,6 @@ namespace Limcap.TextboxTerminal {
 	public interface ICommand {
 		//private Terminal terminal { get; set; }
 		string HelpInfo { get; }
-		string MainFunction( Terminal t, string arg );
+		string MainFunction( Terminal t, Args args );
 	}
 }

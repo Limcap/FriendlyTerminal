@@ -4,12 +4,13 @@ using System.Linq;
 using System.Reflection;
 
 namespace Limcap.TextboxTerminal {
-	public class SalvarArquivo : ICommand {
+	public class SaveOutput : ICommand {
 
-		public const string INVOKE_STRING = "salvar arquivo";
+		public const string INVOKE_STRING = "save output";
 
 		public string HelpInfo { get => "Chame o comando com o parametro igual ao valor que desejar"; }
-		public string MainFunction( Terminal t, string filename ) {
+		public string MainFunction( Terminal t, Args args ) {
+			string filename = args;
 			if (!filename.All( c => char.IsLetterOrDigit( c ) || c == '_' )) {
 				return "O nome do arquivo escolhido é inválido.\nDeve conter somente letras, números ou o caractere 'underline' ";
 			}

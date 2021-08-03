@@ -32,7 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Dux">
-      <HintPath>..\DuxDS\Dux\bin\Debug\Dux.dll</HintPath>
+      <HintPath>..\..\..\AgenteSolution\packages\Dux\Dux.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -48,11 +48,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="src\Args.cs" />
+    <Compile Include="src\CmdHistory.cs" />
+    <Compile Include="src\cmds\Raise.cs" />
+    <Compile Include="src\cmds\SaveOutput.cs" />
+    <Compile Include="src\cmds\ToggleStatusBar.cs" />
+    <Compile Include="src\cmds\ToggleTraceBar.cs" />
     <Compile Include="src\KeyedSet.cs" />
     <Compile Include="src\Terminal.Actions.cs" />
     <Compile Include="src\Terminal.Core.cs" />
     <Compile Include="src\ICommand.cs" />
     <Compile Include="src\Terminal.Interpreter.cs" />
+    <Compile Include="src\Util.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

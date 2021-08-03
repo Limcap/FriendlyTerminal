@@ -23,10 +23,10 @@ namespace Limcap.TextboxTerminal.Mantest {
 			var t = new Terminal( null );
 			MainPanel.Children.Add( t.Panel );
 
-			t.RegisterCommand<AscenderPrivilegios>();
-			t.RegisterCommand<ExibirInconsistenciasDeNsr>();
-			t.RegisterCommand<ListarMarcacoesEnviadas>();
-			t.RegisterCommand<SalvarArquivo>();
+			//t.RegisterCommand<Raise>();
+			//t.RegisterCommand<ToggleTraceBar>();
+			//t.RegisterCommand<ToggleStatusBar>();
+			//t.RegisterCommand<SaveOutput>();
 		}
 	}
 }
