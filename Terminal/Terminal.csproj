@@ -32,7 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Dux">
-      <HintPath>..\..\..\AgenteSolution\packages\Dux\Dux.dll</HintPath>
+      <HintPath>..\DuxDS\Dux\bin\Debug\Dux.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -52,8 +52,6 @@
     <Compile Include="src\Terminal.Actions.cs" />
     <Compile Include="src\Terminal.Core.cs" />
     <Compile Include="src\ICommand.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="src\Terminal.Interpreter.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
