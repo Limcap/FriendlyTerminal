@@ -244,6 +244,8 @@ namespace Limcap.TextboxTerminal {
 
 
 		private void HandleRegularInput( object sender, KeyEventArgs e ) {
+			var shift = Keyboard.IsKeyDown( Key.LeftCtrl ) || Keyboard.IsKeyDown(Key.RightCtrl);
+
 			if (e.IsRepeat)
 				UpdateDebugArea( e.Key );
 
@@ -253,28 +255,29 @@ namespace Limcap.TextboxTerminal {
 			}
 
 			if (e.Key == Key.Up) {
-				if (_inputHandler == null) {
-					if( _cmdHistory.TempText is null ) _cmdHistory.TempText = Text;
+				if (_inputHandler == null && shift) {
+					if (_cmdHistory.TempText is null) _cmdHistory.TempText = Text;
 					Text = _cmdHistory.TempText + _cmdHistory.Prev();
 					CaretIndex = Text.Length;
+					e.Handled = true;
 				}
-				e.Handled = true;
-				return;
 			}
 
-			if (e.Key == Key.Down) {
-				if( _inputHandler == null ) {
+			else if (e.Key == Key.Down) {
+				if (_inputHandler == null && shift) {
 					if (_cmdHistory.TempText is null) _cmdHistory.TempText = Text;
 					Text = _cmdHistory.TempText + _cmdHistory.Down();
 					CaretIndex = Text.Length;
+					e.Handled = true;
 				}
-				e.Handled = true;
-				return;
 			}
 
-			if (e.Key == Key.PageUp || e.Key == Key.PageDown) {
+			else if(e.Key.IsIn(Key.Left,Key.Right)) {
+
+			}
+
+			else if (e.Key == Key.PageUp || e.Key == Key.PageDown) {
 				e.Handled = true;
-				return;
 			}
 
 			else if (e.Key == Key.Back || e.Key == Key.Left) {
@@ -323,7 +326,6 @@ namespace Limcap.TextboxTerminal {
 			}
 			else {
 				if (CaretIndex < _minCaretIndex) CaretIndex = Text.Length;
-				//var shift = Keyboard.IsKeyDown( Key.LeftShift ) || Keyboard.IsKeyDown(Key.RightShift);
 				//if (_usePasswordMaskForInput && e.Key != Key.Back && e.Key != Key.Delete ) {
 				//	char? c = e.Key.ToPasswordAllowedChar();
 				//	if (c.HasValue) Text += c.Value;
