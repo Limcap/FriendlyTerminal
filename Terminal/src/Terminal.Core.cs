@@ -10,6 +10,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Linq;
 
 namespace Limcap.TextboxTerminal {
 
@@ -75,6 +76,14 @@ namespace Limcap.TextboxTerminal {
 			AppendText( _introText );
 			StartNewInputBuffer();
 		}
+
+
+
+
+		public string[] AvailableCommands {
+			get => _cmdList.Select( entry => entry.Key ).ToArray();
+		}
+
 
 
 
