@@ -35,7 +35,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Terminal.ico</ApplicationIcon>
+    <ApplicationIcon>UTerminal.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Dux">
@@ -101,16 +101,16 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Terminal.ico" />
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="cmds\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Terminal\UTerminal.csproj">
+    <ProjectReference Include="..\UTerminal\UTerminal.csproj">
       <Project>{b094e712-a262-431a-9b4c-79861284df63}</Project>
       <Name>UTerminal</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="UTerminal.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
