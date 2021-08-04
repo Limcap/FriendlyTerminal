@@ -204,16 +204,12 @@ namespace Limcap.TextboxTerminal {
 				AcceptsReturn = false,
 				AcceptsTab = true,
 				VerticalAlignment = VerticalAlignment.Stretch,
-				SelectionBrush = Brushes.White
+				SelectionBrush = Brushes.White,
 			};
 
+			mainArea.Loaded += ( o, a ) => mainArea.Focus();
 			mainArea.PreviewKeyDown += HandleRegularInput;
-			mainArea.PreviewKeyUp += ( object sender, KeyEventArgs e ) => UpdateTraceArea( e.Key );
-			//if (_usePasswordMask) {
-			//	if (Text[Text.Length - 1] == 'p') Text = Text.Remove(Text.Length-1) + '*';
-			//	CaretToEnd();
-			//}
-			mainArea.Loaded += ( object sender, RoutedEventArgs e ) => mainArea.Focus();
+			mainArea.PreviewKeyUp += ( o, a ) => UpdateTraceArea( a.Key );
 			mainArea.PreviewKeyUp += ( o, a ) => {
 				if (a.Key.IsIn( Key.Down, Key.PageDown )) {
 					var curlineIndex = mainArea.GetLineIndexFromCharacterIndex( CaretIndex );
@@ -221,6 +217,10 @@ namespace Limcap.TextboxTerminal {
 					if (curlineIndex == lastLineIndex)
 						_scrollArea.ScrollToBottom();
 				}
+			};
+			mainArea.SelectionChanged += ( o, a ) => {
+				var isHelperSelection = !(mainArea.SelectionStart != _bufferStartIndex || mainArea.SelectionLength != mainArea.Text.Length - _bufferStartIndex);
+				_mainArea.SelectionOpacity = isHelperSelection ? 0 : 0.5;
 			};
 			return mainArea;
 		}

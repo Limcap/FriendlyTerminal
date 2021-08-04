@@ -86,14 +86,15 @@ namespace Limcap.TextboxTerminal {
 
 
 			else if (e.Key == Key.Return) {
+				var input = InputBuffer;
 				UpdateTraceArea( e.Key );
-				if (InputBuffer.Trim().Length == 0) {
+				if (input.Trim().Length == 0) {
 					e.Handled = true;
 					// pede um novo prompt somente se não existir um input handler.
 					StartNewInputBuffer( usePrompt: _inputHandler is null );
 				}
 				else {
-					_cmdHistory.Add( InputBuffer );
+					_cmdHistory.Add( input );
 					// Se houver um inputHandler esperando por input, copia ele para a variavel processos e já reseta
 					// oo _inputHandler para que caso o handler atual defina outro inputHandler, não haja problema de 
 					// substituição e para que 
@@ -101,7 +102,7 @@ namespace Limcap.TextboxTerminal {
 					_inputHandler = null;
 					var caretIndexBefore = CaretIndex;
 					TypeText( NewLine );
-					var output = processor( InputBuffer );
+					var output = processor( input );
 					if (output != null) {
 						if (!Text.EndsWith( NewLine )) AppendText( NewLine );
 						AppendText( output.TrimEnd() );
