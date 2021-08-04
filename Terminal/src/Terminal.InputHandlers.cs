@@ -23,12 +23,12 @@ namespace Limcap.TextboxTerminal {
 				_inputHandler = null;
 				var input = _passwordInput.ToString();
 				var caretIndexBefore = CaretIndex;
-				TypeText( NewLine );
+				TypeText( NEW_LINE );
 				var output = processor( input );
 				_passwordInput.Clear();
 				_usePasswordMask = false;
 				if (output != null) {
-					if (!Text.EndsWith( NewLine )) AppendText( NewLine );
+					if (!Text.EndsWith( NEW_LINE )) AppendText( NEW_LINE );
 					AppendText( output.TrimEnd() );
 					_statusArea.Text = $"Saída: {output.Length} caracteres";
 				}
@@ -101,10 +101,10 @@ namespace Limcap.TextboxTerminal {
 					var processor = _inputHandler is null ? ProcessInput : _inputHandler;
 					_inputHandler = null;
 					var caretIndexBefore = CaretIndex;
-					TypeText( NewLine );
+					TypeText( NEW_LINE );
 					var output = processor( input );
 					if (output != null) {
-						if (!Text.EndsWith( NewLine )) AppendText( NewLine );
+						if (!Text.EndsWith( NEW_LINE )) AppendText( NEW_LINE );
 						AppendText( output.TrimEnd() );
 						_statusArea.Text = $"Saída: {output.Length} caracteres";
 					}

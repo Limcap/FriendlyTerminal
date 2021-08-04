@@ -1,23 +1,29 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Limcap.TextboxTerminal {
 	public class Raise : ICommand {
 
-		public const string INVOKE_STRING = "raise";
+		//public const string INVOKE_STRING = "raise";
 
 		public string HelpInfo => "Raises your user privilege in this terminal.";
 
 		public string MainFunction( Terminal t, Args args ) {
 			t.TypeText( "Password: " );
 			t.ReadPassword( input => {
-				if (input == "admin1234") {
-					t.vars.Add( new Dux.DuxValue( "privilegios", "1", null ) );
-					return "Privilege level: 1";
-				}
-				t.vars["privilegios"] = "0";
-				return "Nível de privilégios: 0";
+				var level = levels.IndexOf( input ) + 1;
+				t.CurrentPrivilege = level;
+				return "Privilege level: " + level;
+				//if (input == "admin1234") {
+				//	t.vars.Add( new Dux.DuxValue( "privilegios", "1", null ) );
+				//	return "Privilege level: 1";
+				//}
+				//t.vars["privilegios"] = "0";
+				//return "Nível de privilégios: 0";
 			} );
 			return null;
 		}
+
+		private readonly List<string> levels = new List<string>() { "admin1234", "techsupport" };
 	}
 }

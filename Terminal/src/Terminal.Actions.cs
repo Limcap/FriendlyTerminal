@@ -66,9 +66,9 @@ namespace Limcap.TextboxTerminal {
 
 		public void StartNewInputBuffer( bool usePrompt = true ) {
 			if (usePrompt) {
-				bool newLineNeeded = !(Text.Length == 0 || Text.EndsWith( NewLine ));
+				bool newLineNeeded = !(Text.Length == 0 || Text.EndsWith( NEW_LINE ));
 				//Text += (newLineNeeded ? NewLine : string.Empty) + PromptString;
-				_mainArea.AppendText( (newLineNeeded ? NewLine : string.Empty) + PromptString );
+				_mainArea.AppendText( (newLineNeeded ? NEW_LINE : string.Empty) + PROMPT_STRING );
 			}
 			_bufferStartIndex = Text.Length;
 			CaretToEnd();

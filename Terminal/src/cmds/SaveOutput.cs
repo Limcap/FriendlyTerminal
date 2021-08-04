@@ -9,7 +9,8 @@ namespace Limcap.TextboxTerminal {
 		public const string INVOKE_STRING = "save output";
 
 
-		public string HelpInfo { get =>
+		public string HelpInfo {
+			get =>
 				"DESCRIPTION:\n" +
 				"Saves the current text on screen to a file.\n" +
 				"USAGE:\n" +

@@ -10,26 +10,35 @@ namespace Limcap.TextboxTerminal {
 		private List<ICommand> _cmds;
 		private Dictionary<string, Type> _cmdList;
 
-		public void RegisterCommands( params ICommand[] cmds ) {
-			_cmds = new List<ICommand>( cmds );
-		}
 
-		public void RegisterCommand<T>( string invokeString=null ) where T : ICommand, new() {
+
+
+		//public void RegisterCommands( params ICommand[] cmds ) {
+		//	_cmds = new List<ICommand>( cmds );
+		//}
+		//public void RegisterCommand( string invokeName, Func<string, string> function, string help ) {
+
+		//}
+
+
+
+
+		public void RegisterCommand<T>( string invokeString = null ) where T : ICommand, new() {
 			_cmds = _cmds ?? new List<ICommand>();
 
-			if (invokeString is null || invokeString.Length == 0)
-				invokeString = (string)typeof( T ).GetField( "INVOKE_STRING" ).GetValue( null );
+			if (invokeString is null || invokeString.Length == 0) {
+				try {
+					invokeString = (string)typeof( T ).GetField( "INVOKE_STRING" ).GetValue( null );
+				}
+				catch {
+					invokeString = typeof( T ).Name;
+				}
+			}
 			_cmdList.Add( invokeString, typeof( T ) );
 			//T instance = (T)Activator.CreateInstance( typeof(T) );
 		}
 
-		public void RegisterCommand( string invokeName, Func<string, string> function, string help ) {
 
-		}
-
-
-
-		//private Dictionary<string, Tuple<Func<string, string>, string>> _cmdList;
 
 
 
@@ -52,16 +61,16 @@ namespace Limcap.TextboxTerminal {
 				return "Comando não reconhecido.";
 			}
 			else {
+				Type cmdType = _cmdList[cmd];
+				try {
+					int requiredPrivilege = (int)cmdType.GetField( "REQUIRED_PRIVILEGE" ).GetValue( null );
+					if (CurrentPrivilege < requiredPrivilege) return INSUFICIENT_PRIVILEGE_MESSAGE;
+				}
+				catch { }
+				
 				var instance = (ICommand) Activator.CreateInstance( _cmdList[cmd] );
 				return instance.MainFunction(this,arg);
 			}
-
-			//var param = parts.Length > 1 ? parts[1].Trim() : string.Empty;
-
-			//if (cmd == "salvar arquivo" ) return SalvarArquivo( param );
-			//if (cmd == "exibir marcacoes enviadas") return ListarEnvios();
-			//if (cmd == "exibir inconsistencias de nsr") return ExibirInconsistencias();
-			//if (cmd == "ascender privilegios") return AscenderPrivilegios();
 		}
 	}
 }

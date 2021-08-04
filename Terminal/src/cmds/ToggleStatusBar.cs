@@ -8,7 +8,7 @@ namespace Limcap.TextboxTerminal {
 		//	term.RegisterCommand( "command2", MainFunction, HelpInfo );
 		//	Assembly assembly = Assembly.LoadFrom( "MyNice.dll" );
 		//	Type type = assembly.GetType( "MyType" );
-		//	ACommand instanceOfMyType = (ACommand) Activator.CreateInstance( type );
+		//	ICommand instanceOfMyType = (ICommand) Activator.CreateInstance( type );
 		//}
 
 		public const string INVOKE_STRING = "toggle status bar";

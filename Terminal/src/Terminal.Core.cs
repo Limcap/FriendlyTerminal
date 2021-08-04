@@ -15,8 +15,9 @@ namespace Limcap.TextboxTerminal {
 	public partial class Terminal : INotifyPropertyChanged {
 
 		//private static readonly string NewLine = Environment.NewLine;
-		private const string NewLine = "\n";
-		private const string PromptString = "> ";
+		private const string NEW_LINE = "\n";
+		private const string PROMPT_STRING = "> ";
+		public const string INSUFICIENT_PRIVILEGE_MESSAGE = "Este comando requer um nível de privilégio maior do que o definido no momento.";
 
 		private readonly string _introText = "Limcap Textbox Terminal";
 		private readonly ScrollViewer _scrollArea;
@@ -34,6 +35,7 @@ namespace Limcap.TextboxTerminal {
 		private readonly StringBuilder _passwordInput = new StringBuilder();
 
 		public Panel Panel { get; private set; }
+		public int CurrentPrivilege { get; set; }
 
 
 
@@ -114,7 +116,7 @@ namespace Limcap.TextboxTerminal {
 		public string LastLine {
 			get {
 				if (_mainArea.Text.Length == 0) return string.Empty;
-				var lastLineStartIndex = _mainArea.Text.LastIndexOf( NewLine ) + NewLine.Length;
+				var lastLineStartIndex = _mainArea.Text.LastIndexOf( NEW_LINE ) + NEW_LINE.Length;
 				return _mainArea.Text.Substring( lastLineStartIndex );
 			}
 		}
