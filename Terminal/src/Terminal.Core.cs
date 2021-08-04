@@ -23,15 +23,15 @@ namespace Limcap.TextboxTerminal {
 		private readonly TextBox _mainArea;
 		private readonly TextBox _statusArea;
 		private readonly TextBox _traceArea;
-		private int _minCaretIndex;
-		private CmdHistory _cmdHistory = new CmdHistory();
+		private int _bufferStartIndex;
+		private readonly CmdHistory _cmdHistory = new CmdHistory();
 
 		public Action onExit;
 		public event PropertyChangedEventHandler PropertyChanged;
 		public DuxNamedList vars;
 		private Func<string, string> _inputHandler;
 		private bool _usePasswordMask;
-		private StringBuilder _passwordInput = new StringBuilder();
+		private readonly StringBuilder _passwordInput = new StringBuilder();
 
 		public Panel Panel { get; private set; }
 
@@ -75,8 +75,8 @@ namespace Limcap.TextboxTerminal {
 			RegisterCommand<SaveOutput>();
 			RegisterCommand<Print_a_lot>();
 
-			Text += _introText;
-			StartNewInput();
+			AppendText( _introText );
+			StartNewInputBuffer();
 		}
 
 
@@ -114,8 +114,7 @@ namespace Limcap.TextboxTerminal {
 		private string LastLine {
 			get {
 				if (_mainArea.Text.Length == 0) return string.Empty;
-				var lastLineStartIndex = _mainArea.Text.LastIndexOf( NewLine );
-				lastLineStartIndex = lastLineStartIndex < 0 ? 0 : lastLineStartIndex;
+				var lastLineStartIndex = _mainArea.Text.LastIndexOf( NewLine ) + NewLine.Length;
 				return _mainArea.Text.Substring( lastLineStartIndex );
 			}
 		}
@@ -159,6 +158,20 @@ namespace Limcap.TextboxTerminal {
 
 
 
+		public bool IsControlDown {
+			get => Keyboard.IsKeyDown( Key.LeftCtrl ) || Keyboard.IsKeyDown( Key.RightCtrl );
+		}
+
+
+
+
+		public bool IsShiftDown {
+			get => Keyboard.IsKeyDown( Key.LeftShift ) || Keyboard.IsKeyDown( Key.RightShift );
+		}
+
+
+
+
 		private char CurrentChar {
 			get => CaretIndex == Text.Length ? ' ' : Text[CaretIndex];
 		}
@@ -167,10 +180,7 @@ namespace Limcap.TextboxTerminal {
 
 
 		public void OnPropertyChanged( string propertyName ) {
-			var handler = PropertyChanged;
-			if (handler != null) {
-				handler( this, new PropertyChangedEventArgs( propertyName ) );
-			}
+			PropertyChanged?.Invoke( this, new PropertyChangedEventArgs( propertyName ) );
 		}
 
 
@@ -186,16 +196,25 @@ namespace Limcap.TextboxTerminal {
 				BorderThickness = new Thickness( 0 ),
 				AcceptsReturn = false,
 				AcceptsTab = true,
-				VerticalAlignment = VerticalAlignment.Stretch
+				VerticalAlignment = VerticalAlignment.Stretch,
+				SelectionBrush = Brushes.White
 			};
 
 			mainArea.PreviewKeyDown += HandleRegularInput;
-			mainArea.PreviewKeyUp += ( object sender, KeyEventArgs e ) => UpdateDebugArea( e.Key );
+			mainArea.PreviewKeyUp += ( object sender, KeyEventArgs e ) => UpdateTraceArea( e.Key );
 			//if (_usePasswordMask) {
 			//	if (Text[Text.Length - 1] == 'p') Text = Text.Remove(Text.Length-1) + '*';
-			//	CaretIndex = Text.Length;
+			//	CaretToEnd();
 			//}
 			mainArea.Loaded += ( object sender, RoutedEventArgs e ) => mainArea.Focus();
+			mainArea.PreviewKeyUp += ( o, a ) => {
+				if (a.Key.IsIn( Key.Down, Key.PageDown )) {
+					var curlineIndex = mainArea.GetLineIndexFromCharacterIndex( CaretIndex );
+					var lastLineIndex = mainArea.GetLineIndexFromCharacterIndex( _bufferStartIndex );
+					if (curlineIndex == lastLineIndex)
+						_scrollArea.ScrollToBottom();
+				}
+			};
 			return mainArea;
 		}
 

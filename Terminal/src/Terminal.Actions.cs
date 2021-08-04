@@ -23,8 +23,26 @@ namespace Limcap.TextboxTerminal {
 
 
 		public void TypeText( string text ) {
-			_mainArea.Text += text;
-			_mainArea.CaretIndex = _mainArea.Text.Length;
+			AppendText( text );
+			CaretToEnd();
+		}
+
+
+
+
+		public void AppendText( string txt ) {
+			_mainArea.AppendText( txt );
+		}
+
+
+
+
+		public void CaretToEnd() {
+			CaretIndex = Text.Length;
+			// Only setting the caret to the last index will not scroll the scroll viewer completely to the bottom,
+			// a few pixels will still have to be scrolled manually. To counteract this, we manually scroll the 
+			// scroll viewer to the bottom.
+			_scrollArea.ScrollToBottom();
 		}
 
 
@@ -34,6 +52,10 @@ namespace Limcap.TextboxTerminal {
 			_usePasswordMask = false;
 			_inputHandler = inputHandler;
 		}
+
+
+
+
 		public void ReadPassword( Func<string, string> inputHandler ) {
 			_usePasswordMask = true;
 			_inputHandler = inputHandler;
@@ -42,45 +64,38 @@ namespace Limcap.TextboxTerminal {
 
 
 
-		public static void Send( Key key ) {
-
-
-			//var target = Keyboard.FocusedElement;    // Target element
-			//var routedEvent = Keyboard.KeyDownEvent; // Event to send
-
-			//target.RaiseEvent(
-			//  new KeyEventArgs(
-			//	 Keyboard.PrimaryDevice,
-			//	 PresentationSource.FromVisual( target ),
-			//	 0,
-			//	 key ) { RoutedEvent = routedEvent }
-			//);
-
-			if (Keyboard.PrimaryDevice != null) {
-				if (Keyboard.PrimaryDevice.ActiveSource != null) {
-					var e1 = new KeyEventArgs( Keyboard.PrimaryDevice, Keyboard.PrimaryDevice.ActiveSource, 0, Key.Down ) { RoutedEvent = Keyboard.KeyDownEvent };
-					InputManager.Current.ProcessInput( e1 );
-				}
-			}
-		}
-
-
-
-
-		public void StartNewInput( bool usePrompt = true ) {
+		public void StartNewInputBuffer( bool usePrompt = true ) {
 			if (usePrompt) {
 				bool newLineNeeded = !(Text.Length == 0 || Text.EndsWith( NewLine ));
-				Text += (newLineNeeded ? NewLine : string.Empty) + "> ";
+				//Text += (newLineNeeded ? NewLine : string.Empty) + PromptString;
+				_mainArea.AppendText( (newLineNeeded ? NewLine : string.Empty) + PromptString );
 			}
-			_minCaretIndex = Text.Length;
-			_mainArea.CaretIndex = Text.Length;
-			_scrollArea.ScrollToBottom();
+			_bufferStartIndex = Text.Length;
+			CaretToEnd();
 		}
 
 
 
 
-		private void UpdateDebugArea( Key pressedKey ) {
+		private void ClearInputBuffer() {
+			_mainArea.SelectionOpacity = 0;
+			_mainArea.Select( _bufferStartIndex, _mainArea.Text.Length - _bufferStartIndex );
+			_mainArea.SelectedText = string.Empty;
+			_mainArea.SelectionOpacity = 0.5;
+		}
+
+
+
+
+		private void SetInputBuffer( string text ) {
+			ClearInputBuffer();
+			_mainArea.AppendText( text );
+		}
+
+
+
+
+		private void UpdateTraceArea( Key pressedKey ) {
 			//var lastLineStartIndex = mainArea.Text.LastIndexOf( NewLine );
 			//lastLineStartIndex = lastLineStartIndex < 0 ? 0 : lastLineStartIndex;
 			//_lastLine = mainArea.Text.Substring( lastLineStartIndex );
@@ -99,6 +114,9 @@ namespace Limcap.TextboxTerminal {
 			set => _statusArea.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
 		}
 
+
+
+
 		public bool ShowTraceBar {
 			get => _traceArea.Visibility == Visibility.Visible ? true : false;
 			set => _traceArea.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
@@ -107,13 +125,24 @@ namespace Limcap.TextboxTerminal {
 
 
 
-		//public void ToggleTraceBar( bool toggle ) {
-		//	_traceArea.Visibility = toggle ? Visibility.Collapsed : Visibility.Visible;
-		//}
+		public static void Send( Key key ) {
+			//var target = Keyboard.FocusedElement;    // Target element
+			//var routedEvent = Keyboard.KeyDownEvent; // Event to send
 
-		public void CaretToEnd() {
-			CaretIndex = Text.Length;
-			_scrollArea.ScrollToBottom();
+			//target.RaiseEvent(
+			//  new KeyEventArgs(
+			//	 Keyboard.PrimaryDevice,
+			//	 PresentationSource.FromVisual( target ),
+			//	 0,
+			//	 key ) { RoutedEvent = routedEvent }
+			//);
+
+			if (Keyboard.PrimaryDevice != null) {
+				if (Keyboard.PrimaryDevice.ActiveSource != null) {
+					var e1 = new KeyEventArgs( Keyboard.PrimaryDevice, Keyboard.PrimaryDevice.ActiveSource, 0, Key.Down ) { RoutedEvent = Keyboard.KeyDownEvent };
+					InputManager.Current.ProcessInput( e1 );
+				}
+			}
 		}
 	}
 }
