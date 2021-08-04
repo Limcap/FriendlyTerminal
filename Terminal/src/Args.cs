@@ -16,7 +16,7 @@ namespace Limcap.TextboxTerminal {
 			var v = caseSensitive ? Value : Value.ToLower();
 			var a = caseSensitive ? arg : arg.ToLower();
 			if (!v.Contains( a + '=' )) return null;
-			var temp = v.Substring( v.IndexOf( a ) + 4 );
+			var temp = Value.Substring( v.IndexOf( a ) + a.Length + 1 );
 			return temp.IndexOf( ' ' ) == -1 ? temp : temp.Remove( temp.IndexOf( ' ' ) );
 		}
 
