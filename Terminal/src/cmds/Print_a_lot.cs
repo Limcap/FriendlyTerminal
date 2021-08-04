@@ -3,7 +3,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 
-namespace Limcap.TextboxTerminal {
+namespace Limcap.TextboxTerminal.Cmds {
 	public class Print_a_lot : ICommand {
 
 		//public static void Register( TerminalClient term ) {
@@ -20,11 +20,9 @@ namespace Limcap.TextboxTerminal {
 		public const int REQUIRED_PRIVILEGE = 2;
 
 
-		public string HelpInfo {
-			get =>
-				"DESCRIPTION:\n" +
-				"\tVery long repetitive text.";
-		}
+		public const string HELP_INFO =
+			"DESCRIPTION:\n" +
+			"\tVery long repetitive text.";
 
 
 		public string MainFunction( Terminal t, Args args ) {

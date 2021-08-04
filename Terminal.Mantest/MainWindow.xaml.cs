@@ -20,13 +20,17 @@ namespace Limcap.TextboxTerminal.Mantest {
 	public partial class MainWindow : Window {
 		public MainWindow() {
 			InitializeComponent();
+			
 			var t = new Terminal( null );
+			t.onExit += Close;
+
 			MainPanel.Children.Add( t.Panel );
 
-			//t.RegisterCommand<Raise>();
-			//t.RegisterCommand<ToggleTraceBar>();
-			//t.RegisterCommand<ToggleStatusBar>();
-			//t.RegisterCommand<SaveOutput>();
+			t.RegisterCommand<Cmds.Raise>();
+			t.RegisterCommand<Cmds.ToggleStatusBar>();
+			t.RegisterCommand<Cmds.ToggleTraceBar>();
+			t.RegisterCommand<Cmds.SaveOutput>();
+			t.RegisterCommand<Cmds.Print_a_lot>();
 		}
 	}
 }

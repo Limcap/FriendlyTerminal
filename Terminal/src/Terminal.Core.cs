@@ -1,4 +1,5 @@
 ﻿using Limcap.Dux;
+using Cmds = Limcap.TextboxTerminal.Cmds;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -70,12 +71,6 @@ namespace Limcap.TextboxTerminal {
 				UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
 			};
 			_ = BindingOperations.SetBinding( _mainArea, TextBox.TextProperty, myBinding );
-
-			RegisterCommand<Raise>();
-			RegisterCommand<ToggleStatusBar>();
-			RegisterCommand<ToggleTraceBar>();
-			RegisterCommand<SaveOutput>();
-			RegisterCommand<Print_a_lot>();
 
 			AppendText( _introText );
 			StartNewInputBuffer();

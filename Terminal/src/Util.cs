@@ -60,6 +60,7 @@ namespace Limcap.TextboxTerminal {
 		}
 	}
 
+
 	public static class Extensions {
 
 		public static bool IsIn<T>( this T searched, params T[] group ) {
@@ -98,6 +99,13 @@ namespace Limcap.TextboxTerminal {
 		public static bool IsPasswordAllowedChar( this Key key ) {
 			int c = (int) Util.GetCharFromKey( key );
 			return c.IsInBetween( 32, 126 ) && c != 92;
+		}
+
+		public static object GetConst( this Type type, string fieldName ) {
+			var field = type.GetField( fieldName );
+			return field != null && field.IsLiteral
+				? field.GetValue( null )
+				: null;
 		}
 	}
 }

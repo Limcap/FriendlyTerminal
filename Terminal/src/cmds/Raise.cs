@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Limcap.TextboxTerminal {
+namespace Limcap.TextboxTerminal.Cmds {
+
 	public class Raise : ICommand {
 
-		//public const string INVOKE_STRING = "raise";
+		public const string INVOKE_STRING = "raise";
 
-		public string HelpInfo => "Raises your user privilege in this terminal.";
+		public const string HELP_INFO = "Raises your user privilege in this terminal.";
 
 		public string MainFunction( Terminal t, Args args ) {
 			t.TypeText( "Password: " );
