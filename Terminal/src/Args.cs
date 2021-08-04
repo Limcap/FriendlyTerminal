@@ -12,9 +12,11 @@ namespace Limcap.TextboxTerminal {
 			this.Value = value;
 		}
 
-		public string GetArg( string arg ) {
-			if (!Value.Contains( arg + '=' )) return null;
-			var temp = Value.Substring( Value.IndexOf( arg ) + 4 );
+		public string GetArg( string arg, bool caseSensitive = false  ) {
+			var v = caseSensitive ? Value : Value.ToLower();
+			var a = caseSensitive ? arg : arg.ToLower();
+			if (!v.Contains( a + '=' )) return null;
+			var temp = v.Substring( v.IndexOf( a ) + 4 );
 			return temp.IndexOf( ' ' ) == -1 ? temp : temp.Remove( temp.IndexOf( ' ' ) );
 		}
 
