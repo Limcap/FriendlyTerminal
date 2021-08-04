@@ -111,12 +111,19 @@ namespace Limcap.TextboxTerminal {
 
 
 
-		private string LastLine {
+		public string LastLine {
 			get {
 				if (_mainArea.Text.Length == 0) return string.Empty;
 				var lastLineStartIndex = _mainArea.Text.LastIndexOf( NewLine ) + NewLine.Length;
 				return _mainArea.Text.Substring( lastLineStartIndex );
 			}
+		}
+
+
+
+
+		public string InputBuffer {
+			get => _mainArea.Text.Substring( _bufferStartIndex );
 		}
 
 

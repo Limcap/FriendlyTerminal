@@ -9,7 +9,6 @@ namespace Limcap.TextboxTerminal {
 	public partial class Terminal {
 
 		private void HandlePasswordInput( KeyEventArgs e ) {
-			//var shift = Keyboard.IsKeyDown( Key.LeftShift ) || Keyboard.IsKeyDown( Key.RightShift );
 			CaretToEnd();
 			if (e.Key == Key.Back) {
 				if (CaretIndex <= _bufferStartIndex) {
@@ -75,43 +74,26 @@ namespace Limcap.TextboxTerminal {
 				}
 			}
 
-			//else if (e.Key == Key.Tab || e.Key == Key.Return && IsControlDown) {
-			//	if (_cmdHistory.IsSelected) {
-			//		Status = string.Empty;
-			//		Text += _cmdHistory.Current();
-			//		_cmdHistory.Deselect();
-			//		CaretToEnd();
-			//	}
-			//	e.Handled = true;
-			//}
 
-			else if (e.Key.IsIn( Key.Left, Key.Right, Key.Up, Key.Down )) {
+			else if (e.Key.IsIn( Key.Left, Key.Right, Key.Up, Key.Down, Key.Home, Key.End, Key.PageUp, Key.PageDown )) {
 				// freedom of caret movement
 			}
 
-			//else if (e.Key == Key.PageUp || e.Key == Key.PageDown) {
-			//	e.Handled = true;
-			//}
 
 			else if (e.Key == Key.Back || e.Key == Key.Left) {
 				if (CaretIndex <= _bufferStartIndex) e.Handled = true;
 			}
 
-			//else if (e.Key == Key.Home) {
-			//	CaretIndex = _bufferStartIndex;
-			//	e.Handled = true;
-			//}
 
 			else if (e.Key == Key.Return) {
-				var input = Text.Substring( _bufferStartIndex );
 				UpdateTraceArea( e.Key );
-				if (input.Trim().Length == 0) {
+				if (InputBuffer.Trim().Length == 0) {
 					e.Handled = true;
 					// pede um novo prompt somente se não existir um input handler.
 					StartNewInputBuffer( usePrompt: _inputHandler is null );
 				}
 				else {
-					_cmdHistory.Add( input );
+					_cmdHistory.Add( InputBuffer );
 					// Se houver um inputHandler esperando por input, copia ele para a variavel processos e já reseta
 					// oo _inputHandler para que caso o handler atual defina outro inputHandler, não haja problema de 
 					// substituição e para que 
@@ -119,7 +101,7 @@ namespace Limcap.TextboxTerminal {
 					_inputHandler = null;
 					var caretIndexBefore = CaretIndex;
 					TypeText( NewLine );
-					var output = processor( input );
+					var output = processor( InputBuffer );
 					if (output != null) {
 						if (!Text.EndsWith( NewLine )) AppendText( NewLine );
 						AppendText( output.TrimEnd() );

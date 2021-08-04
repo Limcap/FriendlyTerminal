@@ -88,8 +88,8 @@ namespace Limcap.TextboxTerminal {
 
 
 		private void SetInputBuffer( string text ) {
-			ClearInputBuffer();
-			_mainArea.AppendText( text );
+			_mainArea.Select( _bufferStartIndex, _mainArea.Text.Length - _bufferStartIndex );
+			_mainArea.SelectedText = text;
 		}
 
 
