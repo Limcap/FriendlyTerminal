@@ -51,8 +51,27 @@ namespace Limcap.TextboxTerminal {
 
 
 
+		private void ClearInputBuffer() {
+			//var brush = _mainArea.SelectionBrush;
+			//_mainArea.SelectionBrush = System.Windows.Media.Brushes.Transparent;
+			_mainArea.SelectionOpacity = 0;
+			_mainArea.Select( _minCaretIndex, _mainArea.Text.Length - _minCaretIndex );
+			_mainArea.SelectedText = string.Empty;
+			_mainArea.SelectionOpacity = 0.5;
+			//_mainArea.SelectionBrush = brush;
+			//_mainArea.Cut();
+		}
+		private void SetInputBuffer( string text ) {
+			ClearInputBuffer();
+			_mainArea.AppendText( text );
+		}
+
+
+
+
 		private void HandleRegularInput( object sender, KeyEventArgs e ) {
 			var control = Keyboard.IsKeyDown( Key.LeftCtrl ) || Keyboard.IsKeyDown( Key.RightCtrl );
+			_mainArea.SelectionBrush = System.Windows.Media.Brushes.Green;
 
 			if (e.IsRepeat)
 				UpdateDebugArea( e.Key );
@@ -64,35 +83,17 @@ namespace Limcap.TextboxTerminal {
 
 			if (e.Key == Key.PageUp || e.Key == Key.Up && control) {
 				if (_inputHandler == null) {
-					var cmd = _cmdHistory.Prev();
-					//Status = cmd == "" ? "" : $"Repetir comando: <{cmd}> Pressione 'tab' para confirmar.";
-					Status = cmd;
+					SetInputBuffer( _cmdHistory.Prev() );
 					CaretToEnd();
 					e.Handled = true;
-
-
-					//if (_cmdHistory.TempText is null) _cmdHistory.TempText = Text;
-					////Text = _cmdHistory.TempText + cmd;
-					//_text.Remove( _minCaretIndex, (_text.Length-1) - (_minCaretIndex-1) );
-					//_text.Append( cmd );
-					//Text = Text;
-					//CaretToEnd();
 				}
 			}
 
 			else if (e.Key == Key.PageDown || e.Key == Key.Down && control) {
 				if (_inputHandler == null) {
-					var cmd = _cmdHistory.Next();
-					//Status = cmd == "" ? "" : $"Repetir comando: <{cmd}> Pressione 'tab' para confirmar.";
-					Status = cmd;
+					SetInputBuffer( _cmdHistory.Next() );
+					CaretToEnd();
 					e.Handled = true;
-
-					//if (_cmdHistory.TempText is null) _cmdHistory.TempText = Text;
-					////Text = _cmdHistory.TempText + cmd;
-					//_text.Remove( _minCaretIndex, (_text.Length - 1) - (_minCaretIndex - 1) );
-					//_text.Append( cmd );
-					//Text = Text;
-					//CaretToEnd();
 				}
 			}
 

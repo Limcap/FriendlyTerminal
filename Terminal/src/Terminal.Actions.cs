@@ -111,6 +111,9 @@ namespace Limcap.TextboxTerminal {
 		//	_traceArea.Visibility = toggle ? Visibility.Collapsed : Visibility.Visible;
 		//}
 
-		public void CaretToEnd() { CaretIndex = Text.Length; }
+		public void CaretToEnd() {
+			CaretIndex = Text.Length;
+			_scrollArea.ScrollToBottom();
+		}
 	}
 }
