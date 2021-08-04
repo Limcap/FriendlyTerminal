@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
-namespace Limcap.TextboxTerminal {
+namespace Limcap.UTerminal {
 	public partial class Terminal {
 
 		public void Exit() {

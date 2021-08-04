@@ -1,5 +1,5 @@
 ﻿using Limcap.Dux;
-using Cmds = Limcap.TextboxTerminal.Cmds;
+using Cmds = Limcap.UTerminal.Cmds;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,7 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Linq;
 
-namespace Limcap.TextboxTerminal {
+namespace Limcap.UTerminal {
 
 	public partial class Terminal : INotifyPropertyChanged {
 

@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace Limcap.TextboxTerminal {
+namespace Limcap.UTerminal {
 	class Util {
 		public enum MapType : uint {
 			MAPVK_VK_TO_VSC = 0x0,

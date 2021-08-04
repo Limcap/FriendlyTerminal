@@ -101,16 +101,16 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Terminal\Terminal.csproj">
-      <Project>{b094e712-a262-431a-9b4c-79861284df63}</Project>
-      <Name>TextboxTerminal</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Terminal.ico" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="cmds\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Terminal\UTerminal.csproj">
+      <Project>{b094e712-a262-431a-9b4c-79861284df63}</Project>
+      <Name>UTerminal</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Limcap.TextboxTerminal {
+namespace Limcap.UTerminal {
 	public partial class Terminal {
 
 		private List<ICommand> _cmds;

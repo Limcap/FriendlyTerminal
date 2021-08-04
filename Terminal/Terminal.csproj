@@ -7,8 +7,8 @@
     <ProjectGuid>{B094E712-A262-431A-9B4C-79861284DF63}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Limcap.TextboxTerminal</RootNamespace>
-    <AssemblyName>Limcap.Terminal</AssemblyName>
+    <RootNamespace>Limcap.UTerminal</RootNamespace>
+    <AssemblyName>Limcap.UTerminal</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>

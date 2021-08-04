@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Limcap.TextboxTerminal.Cmds {
+namespace Limcap.UTerminal.Cmds {
 
 	public class Raise : ICommand {
 

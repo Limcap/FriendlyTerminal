@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace Limcap.TextboxTerminal.Cmds {
+namespace Limcap.UTerminal.Cmds {
 	public class SaveOutput : ICommand {
 
 		public const string INVOKE_STRING = "save output";

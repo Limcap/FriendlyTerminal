@@ -2,7 +2,7 @@
 using System.IO;
 using System.Reflection;
 
-namespace Limcap.TextboxTerminal.Cmds {
+namespace Limcap.UTerminal.Cmds {
 	public class ToggleTraceBar : ICommand {
 
 		//public static void Register( TerminalClient term ) {

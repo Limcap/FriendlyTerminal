@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace Limcap.TextboxTerminal.Cmds {
+namespace Limcap.UTerminal.Cmds {
 	public class ToggleStatusBar : ICommand {
 
 		//public static void Register( TerminalClient term ) {

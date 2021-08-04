@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace Limcap.TextboxTerminal {
+namespace Limcap.UTerminal {
 	public partial class Terminal {
 
 		private void HandlePasswordInput( KeyEventArgs e ) {

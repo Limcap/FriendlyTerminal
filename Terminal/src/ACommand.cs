@@ -3,7 +3,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Limcap.TextboxTerminal {
+namespace Limcap.UTerminal {
 	public abstract class ACommand : ICommand {
 
 		public static string INVOKE_STRING = null;

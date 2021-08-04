@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Limcap.TextboxTerminal {
+namespace Limcap.UTerminal {
 	public class Args {
 		public readonly string Value;
 
