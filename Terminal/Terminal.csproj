@@ -53,6 +53,7 @@
     <Compile Include="src\cmds\Raise.cs" />
     <Compile Include="src\cmds\SaveOutput.cs" />
     <Compile Include="src\cmds\ToggleStatusBar.cs" />
+    <Compile Include="src\cmds\Print_a_lot.cs" />
     <Compile Include="src\cmds\ToggleTraceBar.cs" />
     <Compile Include="src\KeyedSet.cs" />
     <Compile Include="src\Terminal.Actions.cs" />

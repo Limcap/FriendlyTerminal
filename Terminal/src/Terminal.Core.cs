@@ -73,6 +73,7 @@ namespace Limcap.TextboxTerminal {
 			RegisterCommand<ToggleStatusBar>();
 			RegisterCommand<ToggleTraceBar>();
 			RegisterCommand<SaveOutput>();
+			RegisterCommand<Print_a_lot>();
 
 			Text += _introText;
 			StartNewInput();
@@ -87,6 +88,24 @@ namespace Limcap.TextboxTerminal {
 				_text = value;
 				OnPropertyChanged( "Text" );
 			}
+		}
+
+		//private StringBuilder _text = new StringBuilder();
+		//public string Text {
+		//	get => _text.ToString();
+		//	set {
+		//		_text.Clear();
+		//		_text.Append( value );
+		//		OnPropertyChanged( "Text" );
+		//	}
+		//}
+
+
+
+
+		public string Status {
+			get => _statusArea.Text;
+			set => _statusArea.Text = value;
 		}
 
 
@@ -166,6 +185,7 @@ namespace Limcap.TextboxTerminal {
 				Padding = new Thickness( 5 ),
 				BorderThickness = new Thickness( 0 ),
 				AcceptsReturn = false,
+				AcceptsTab = true,
 				VerticalAlignment = VerticalAlignment.Stretch
 			};
 

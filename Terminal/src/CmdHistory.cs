@@ -6,33 +6,52 @@ using System.Threading.Tasks;
 
 namespace Limcap.TextboxTerminal {
 	public class CmdHistory {
-		private readonly List<string> _cmdHistory = new List<string>();
-		public int Index { get; private set; } = int.MaxValue - 1;
+		private readonly List<string> _history = new List<string>();
+
+		private int _index = -1;
+
+		public int Index {
+			get => _index;
+			private set => _index = _history.Count == 0 ? -1 : value.MinMax( MinIndex - 1, MaxIndex );
+		}
+
+		public int InversedIndex => Index == -1 ? -1 : _history.Count - (Index + 1);
+
+		private int MaxIndex => _history.Count == 0 ? 0 : _history.Count - 1;
+
+		private int MinIndex => 0;
+
+		public bool IsSelected => Index > -1;
+
 		public string TempText { get; set; }
 
-		public void Add( string value ) {
-			if (_cmdHistory.Count > 0 && value != _cmdHistory[_cmdHistory.Count-1] || _cmdHistory.Count == 0)
-				_cmdHistory.Add( value );
-			Reset();
+		public string Current() {
+			return Index == -1 ? string.Empty : _history[InversedIndex];
 		}
 
 		public string Prev() {
-			if (_cmdHistory.Count == 0) return string.Empty;
-			Index = (Index - 1).MinMax( 0, _cmdHistory.Count - 1 ); //Math.Min( Math.Max( Index - 1, -1 ), _cmdHistory.Count );
-																					  //return Index < 0 ? string.Empty : _cmdHistory[Index];
-			return _cmdHistory[Index];
+			Index++;
+			return Current();
 		}
 
-		public string Down() {
-			if (_cmdHistory.Count == 0) return string.Empty;
-			Index = (Index + 1).MinMax( 0, _cmdHistory.Count );// Math.Max( Index + 1, _cmdHistory.Count - 1 );
-			return Index >= _cmdHistory.Count ? string.Empty : _cmdHistory[Index];
+		public string Next() {
+			Index--;
+			return Current();
 		}
 
-		public void Reset() {
-			Index = int.MaxValue - 1;
+		public void Deselect() {
+			Index = -1;
 			TempText = null;
 		}
 
+		public void Reset() {
+			_history.Clear();
+		}
+
+		public void Add( string value ) {
+			if (_history.Count == 0 || value != _history[MaxIndex])
+				_history.Add( value );
+			Deselect();
+		}
 	}
 }

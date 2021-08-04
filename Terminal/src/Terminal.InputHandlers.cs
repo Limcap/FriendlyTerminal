@@ -52,7 +52,7 @@ namespace Limcap.TextboxTerminal {
 
 
 		private void HandleRegularInput( object sender, KeyEventArgs e ) {
-			var shift = Keyboard.IsKeyDown( Key.LeftCtrl ) || Keyboard.IsKeyDown( Key.RightCtrl );
+			var control = Keyboard.IsKeyDown( Key.LeftCtrl ) || Keyboard.IsKeyDown( Key.RightCtrl );
 
 			if (e.IsRepeat)
 				UpdateDebugArea( e.Key );
@@ -62,22 +62,48 @@ namespace Limcap.TextboxTerminal {
 				return;
 			}
 
-			if (e.Key == Key.Up) {
-				if (_inputHandler == null && shift) {
-					if (_cmdHistory.TempText is null) _cmdHistory.TempText = Text;
-					Text = _cmdHistory.TempText + _cmdHistory.Prev();
-					CaretIndex = Text.Length;
+			if (e.Key == Key.PageUp || e.Key == Key.Up && control) {
+				if (_inputHandler == null) {
+					var cmd = _cmdHistory.Prev();
+					//Status = cmd == "" ? "" : $"Repetir comando: <{cmd}> Pressione 'tab' para confirmar.";
+					Status = cmd;
+					CaretToEnd();
 					e.Handled = true;
+
+
+					//if (_cmdHistory.TempText is null) _cmdHistory.TempText = Text;
+					////Text = _cmdHistory.TempText + cmd;
+					//_text.Remove( _minCaretIndex, (_text.Length-1) - (_minCaretIndex-1) );
+					//_text.Append( cmd );
+					//Text = Text;
+					//CaretToEnd();
 				}
 			}
 
-			else if (e.Key == Key.Down) {
-				if (_inputHandler == null && shift) {
-					if (_cmdHistory.TempText is null) _cmdHistory.TempText = Text;
-					Text = _cmdHistory.TempText + _cmdHistory.Down();
-					CaretIndex = Text.Length;
+			else if (e.Key == Key.PageDown || e.Key == Key.Down && control) {
+				if (_inputHandler == null) {
+					var cmd = _cmdHistory.Next();
+					//Status = cmd == "" ? "" : $"Repetir comando: <{cmd}> Pressione 'tab' para confirmar.";
+					Status = cmd;
 					e.Handled = true;
+
+					//if (_cmdHistory.TempText is null) _cmdHistory.TempText = Text;
+					////Text = _cmdHistory.TempText + cmd;
+					//_text.Remove( _minCaretIndex, (_text.Length - 1) - (_minCaretIndex - 1) );
+					//_text.Append( cmd );
+					//Text = Text;
+					//CaretToEnd();
 				}
+			}
+
+			else if (e.Key == Key.Tab || e.Key == Key.Return && control) {
+				if (_cmdHistory.IsSelected) {
+					Status = string.Empty;
+					Text += _cmdHistory.Current();
+					_cmdHistory.Deselect();
+					CaretToEnd();
+				}
+				e.Handled = true;
 			}
 
 			else if (e.Key.IsIn( Key.Left, Key.Right )) {
