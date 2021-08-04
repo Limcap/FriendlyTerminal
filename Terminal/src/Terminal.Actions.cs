@@ -68,8 +68,8 @@ namespace Limcap.TextboxTerminal {
 
 
 		public void StartNewInput( bool usePrompt = true ) {
-			if( usePrompt ) {
-				bool newLineNeeded = !(Text.Length == 0 || Text.EndsWith( NewLine ) );
+			if (usePrompt) {
+				bool newLineNeeded = !(Text.Length == 0 || Text.EndsWith( NewLine ));
 				Text += (newLineNeeded ? NewLine : string.Empty) + "> ";
 			}
 			_minCaretIndex = Text.Length;

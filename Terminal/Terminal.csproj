@@ -7,7 +7,7 @@
     <ProjectGuid>{B094E712-A262-431A-9B4C-79861284DF63}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Limcap.Terminal</RootNamespace>
+    <RootNamespace>Limcap.TextboxTerminal</RootNamespace>
     <AssemblyName>Limcap.Terminal</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -60,6 +60,9 @@
     <Compile Include="src\ICommand.cs" />
     <Compile Include="src\Terminal.Interpreter.cs" />
     <Compile Include="src\Util.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="src\Terminal.InputHandlers.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
