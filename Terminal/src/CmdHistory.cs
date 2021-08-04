@@ -23,8 +23,6 @@ namespace Limcap.TextboxTerminal {
 
 		public bool IsSelected => Index > -1;
 
-		public string TempText { get; set; }
-
 		public string Current() {
 			return Index == -1 ? string.Empty : _history[InversedIndex];
 		}
@@ -41,7 +39,6 @@ namespace Limcap.TextboxTerminal {
 
 		public void Deselect() {
 			Index = -1;
-			TempText = null;
 		}
 
 		public void Reset() {
