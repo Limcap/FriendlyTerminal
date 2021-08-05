@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace Limcap.UTerminal {
-	class Util {
+	public class Util {
 		public enum MapType : uint {
 			MAPVK_VK_TO_VSC = 0x0,
 			MAPVK_VSC_TO_VK = 0x1,
@@ -75,15 +77,30 @@ namespace Limcap.UTerminal {
 		public static R As<T, R>( this T obj, Func<T, R> action ) {
 			return action( obj );
 		}
+
 		public static void As<T>( this T obj, Action<T> action ) {
 			action( obj );
 		}
 
+		//public static void AsNotNull<T>( this T o, Action<T> a ) {
+		//	if (o != null) a( o );
+		//}
+
+		//public static void AsNotNull<T, R>( this T o, Func<T, R> a ) {
+		//	if (o != null) a( o );
+		//}
+
 		public static O NullIf<O>( this O obj, Func<O, bool> check ) => check( obj ) ? obj : default( O );
+
+		public static int? MinMax( this int? num, int min, int max ) {
+			if (num is null) return null;
+			return num.Value < min ? min : num.Value > max ? max : num.Value;
+		}
 
 		public static int MinMax( this int num, int min, int max ) {
 			return num < min ? min : num > max ? max : num;
 		}
+
 		public static bool IsInBetween( this int num, int min, int max ) {
 			return num >= min && num <= max;
 		}
@@ -97,7 +114,7 @@ namespace Limcap.UTerminal {
 			//return keyCode.IsInBetween( 34, 79 ) || keyCode.IsIn(143);
 		}
 		public static bool IsPasswordAllowedChar( this Key key ) {
-			int c = (int) Util.GetCharFromKey( key );
+			int c = (int)Util.GetCharFromKey( key );
 			return c.IsInBetween( 32, 126 ) && c != 92;
 		}
 
@@ -106,6 +123,16 @@ namespace Limcap.UTerminal {
 			return field != null && field.IsLiteral
 				? field.GetValue( null )
 				: null;
+		}
+
+		public static int? SafeParseInt( this string s, int? d = null ) {
+			return int.TryParse( s, out int i ) ? i : d;
+		}
+
+		public static Brush SafeParseBrush( this string s, Brush defaultValue = null ) {
+			return typeof( Brushes ).GetProperties()
+			.FirstOrDefault( p => p.Name.ToLower() == s?.ToLower() )
+			.As( c => c != null ? (Brush)c.GetValue( null ) : defaultValue );
 		}
 	}
 }
