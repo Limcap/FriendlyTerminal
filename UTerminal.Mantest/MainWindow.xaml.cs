@@ -26,11 +26,12 @@ namespace Limcap.UTerminal.Mantest {
 
 			MainPanel.Children.Add( t.Panel );
 
-			t.RegisterCommand<Cmds.Raise>();
-			t.RegisterCommand<Cmds.ToggleStatusBar>();
-			t.RegisterCommand<Cmds.ToggleTraceBar>();
-			t.RegisterCommand<Cmds.SaveOutput>();
-			t.RegisterCommand<Cmds.Print_a_lot>();
+			t.RegisterAllCommandsInNamespace( "Limcap.UTerminal.Cmds" );
+			//t.RegisterCommand<Cmds.Raise>();
+			//t.RegisterCommand<Cmds.ToggleStatusBar>();
+			//t.RegisterCommand<Cmds.ToggleTraceBar>();
+			//t.RegisterCommand<Cmds.SaveOutput>();
+			//t.RegisterCommand<Cmds.Print_a_lot>();
 		}
 	}
 }

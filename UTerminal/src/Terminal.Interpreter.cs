@@ -8,32 +8,40 @@ using System.Threading.Tasks;
 namespace Limcap.UTerminal {
 	public partial class Terminal {
 
-		private List<ICommand> _cmds;
+		private List<ICommand> _cmds = new List<ICommand>();
 		private Dictionary<string, Type> _cmdList;
 
 
 
 
-		//public void RegisterCommands( params ICommand[] cmds ) {
-		//	_cmds = new List<ICommand>( cmds );
-		//}
-		//public void RegisterCommand( string invokeName, Func<string, string> function, string help ) {
-
-		//}
-
-
-
-
 		public void RegisterCommand<T>( string invokeString = null ) where T : ICommand, new() {
-			_cmds = _cmds ?? new List<ICommand>();
+			RegisterCommand( typeof( T ), invokeString );
+		}
 
+
+
+
+		public void RegisterAllCommandsInNamespace( string nspace ) {
+			//var q = from t in Assembly.GetExecutingAssembly().GetTypes()
+			//		  where t.IsClass && t.Namespace == nspace
+			//		  select t;
+			var type = typeof( ICommand );
+			var types = AppDomain.CurrentDomain.GetAssemblies()
+				 .SelectMany( s => s.GetTypes() )
+				 .Where( p => type.IsAssignableFrom( p ) && p.Namespace == nspace );
+			foreach (var t in types) RegisterCommand( t );
+		}
+
+
+
+
+		private void RegisterCommand( Type cmdType, string invokeString = null ) {
 			if (string.IsNullOrEmpty( invokeString )) {
-				var cmdType = typeof( T );
+				invokeString = cmdType.GetConst( "INVOKE_STRING" ) as string ?? cmdType.Name;
 				//invokeString = (string)cmdType.GetField( "INVOKE_STRING" )?.GetValue( null );
 				//if (invokeString is null) invokeString = cmdType.Name;
-				invokeString = cmdType.GetConst( "INVOKE_STRING" ) as string ?? cmdType.Name;
 			}
-			_cmdList.Add( invokeString, typeof( T ) );
+			_cmdList.Add( invokeString, cmdType );
 		}
 
 
