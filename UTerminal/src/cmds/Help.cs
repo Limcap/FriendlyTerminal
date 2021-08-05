@@ -8,31 +8,27 @@ using System.Collections;
 using System.Collections.Generic;
 
 namespace Limcap.UTerminal.Cmds {
-	public class Help : ICommand {
+	public class Help : ACommand {
 
 		public const string INVOKE_STRING = "help";
+		//public const string INVOKE_STRING = "help;pt-br:ajuda";
 
-		public const string HELP_INFO =
-			"DESCRIPTION:\n" +
-			"   list all commands available in this terminal.\n";
 
-		public static readonly Param[] PARAMETERS = new Param[] {
-			new Param{name="hhh",type="number",description="aaa"},
-			new Param{name="aaa",type="number",description="aaa"},
-			new Param{name="aaa",type="number",description="aaa"},
-			new Param("nome",ParamType.ALPHANUMERIC,false,"descricao"),
-		};
+		public override Information Info => new Information(
+			"Displays help information on the usage of this terminal."
+		);
 
-		public string MainFunction( Terminal t, Args args ) {
+
+		public override string MainFunction( Terminal t, Args args ) {
 			string output = "\nThe following commands are available in this terminal. For more information on any of them,\n" +
 				"type the corresponding command followed by :? (colon and question mark)\n\n";
-				//"Available commands:\n";
+			//"Available commands:\n";
 			//·•▸►▪▫
 			var cmds = string.Join( "\n • ", t.AvailableCommands );
 			output += cmds.Length == 0 ? "No command available" : (" • " + cmds);
 			return output + "\n\n";
 		}
+
+		//public override Translator GetTranslator( string locale ) => new Translator(locale) {};
 	}
-
-
 }

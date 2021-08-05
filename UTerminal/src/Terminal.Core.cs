@@ -41,6 +41,11 @@ namespace Limcap.UTerminal {
 		public string Locale { get; set; }
 
 
+		public Brush FontColor { get => _mainArea.Foreground; set => _mainArea.Foreground = value; }
+		public Brush BackColor { get => _mainArea.Background; set => _mainArea.Background = value; }
+		public double FontSize { get => _mainArea.FontSize; set => _mainArea.FontSize = value; }
+
+
 
 
 		public Terminal( string introText, Action onExit = null ) {

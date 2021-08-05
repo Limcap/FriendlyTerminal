@@ -21,12 +21,12 @@ namespace Limcap.UTerminal.Mantest {
 		public MainWindow() {
 			InitializeComponent();
 			
-			var t = new Terminal( null );
-			t.onExit += Close;
+			var t = new Terminal( null, Close ) { Locale="ptbr"} ;
+			t.RegisterAllCommandsInNamespace( "Limcap.UTerminal.Cmds" );
+			t.RegisterAllCommandsInNamespace( "Limcap.UTerminal.Cmds.TerminalConfiguration" );
 
 			MainPanel.Children.Add( t.Panel );
 
-			t.RegisterAllCommandsInNamespace( "Limcap.UTerminal.Cmds" );
 			//t.RegisterCommand<Cmds.Raise>();
 			//t.RegisterCommand<Cmds.ToggleStatusBar>();
 			//t.RegisterCommand<Cmds.ToggleTraceBar>();
