@@ -21,7 +21,7 @@ namespace Limcap.UTerminal {
 		private const string PROMPT_STRING = "> ";
 		public const string INSUFICIENT_PRIVILEGE_MESSAGE = "Este comando requer um nível de privilégio maior do que o definido no momento.";
 
-		private readonly string _introText = "Limcap Textbox Terminal";
+		private readonly string _introText = "Limcap Utility Terminal";
 		private readonly ScrollViewer _scrollArea;
 		private readonly TextBox _mainArea;
 		private readonly TextBox _statusArea;
