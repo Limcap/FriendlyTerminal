@@ -38,6 +38,7 @@ namespace Limcap.UTerminal {
 
 		public Panel Panel { get; private set; }
 		public int CurrentPrivilege { get; set; }
+		public string Locale { get; set; }
 
 
 

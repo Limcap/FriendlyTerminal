@@ -70,12 +70,28 @@ namespace Limcap.UTerminal {
 				Type cmdType = _cmdList[cmd];
 				int requiredPrivilege = (int)(cmdType.GetConst( "REQUIRED_PRIVILEGE" ) ?? 0);
 				if (arg == "?")
-					return cmdType.GetConst("HELP_INFO") as string ?? "Este comando não possui informação de ajuda.";
+					return GetCommandHelp( cmdType );
+					//return cmdType.GetConst("HELP_INFO") as string ?? "Este comando não possui informação de ajuda.";
 				if (CurrentPrivilege < requiredPrivilege)
 					return INSUFICIENT_PRIVILEGE_MESSAGE;
 				var instance = (ICommand)Activator.CreateInstance( cmdType );
-				return instance.MainFunction( this, arg );
+				try {
+					return instance.MainFunction( this, arg );
+				}
+				catch( Exception ex ) {
+					return ex.ToString();
+				}
 			}
+		}
+
+		public string GetCommandHelp( Type t ) {
+			if (t.IsSubclassOf( typeof( ACommand ) )) {
+				var instance = Activator.CreateInstance( t ) as ACommand;
+				return instance?.TranslatedInfo( Locale );
+			}
+			else if (t.IsAssignableFrom( typeof( ICommand ) ))
+				return t.GetConst( "HELP_INFO" ) as string ?? "Este comando não possui informação de ajuda.";
+			return null;
 		}
 	}
 }
