@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 
-namespace Limcap.UTerminal.Cmds.TerminalConfiguration {
+namespace Limcap.UTerminal.Cmds.Customization {
 
 	public class ConfigTerminal_Theme : ACommand {
 		public ConfigTerminal_Theme( string locale ) : base( locale ) { }

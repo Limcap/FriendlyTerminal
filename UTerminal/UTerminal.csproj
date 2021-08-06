@@ -55,13 +55,13 @@
     <Compile Include="src\ACommand.Parameter.cs" />
     <Compile Include="src\Args.cs" />
     <Compile Include="src\CmdHistory.cs" />
-    <Compile Include="src\cmds\ConfigTerminal_Theme.cs" />
-    <Compile Include="src\cmds\Help.cs" />
-    <Compile Include="src\cmds\Raise.cs" />
-    <Compile Include="src\cmds\SaveOutput.cs" />
-    <Compile Include="src\cmds\ToggleStatusBar.cs" />
-    <Compile Include="src\cmds\Print_a_lot.cs" />
-    <Compile Include="src\cmds\ToggleTraceBar.cs" />
+    <Compile Include="src\cmds\customization\ConfigTerminal_Theme.cs" />
+    <Compile Include="src\cmds\misc\Help.cs" />
+    <Compile Include="src\cmds\access_control\Raise.cs" />
+    <Compile Include="src\cmds\io\SaveOutput.cs" />
+    <Compile Include="src\cmds\customization\ToggleStatusBar.cs" />
+    <Compile Include="src\cmds\dev\Print_a_lot.cs" />
+    <Compile Include="src\cmds\config\ToggleTraceBar.cs" />
     <Compile Include="src\ICommand.cs" />
     <Compile Include="src\KeyedSet.cs" />
     <Compile Include="src\Terminal.Actions.cs" />
@@ -76,26 +76,24 @@
     <Compile Include="src\Terminal.InputHandlers.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="src\cmds\ConfigTerminal_Theme.locale.json" />
+    <EmbeddedResource Include="src\cmds\customization\ConfigTerminal_Theme.locale.json" />
     <EmbeddedResource Include="src\ACommand.Information.locale.json" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="src\cmds\Help.locale.json" />
+    <EmbeddedResource Include="src\cmds\misc\Help.locale.json" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="src\cmds\access_control\Raise.locale.json" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="src\cmds\terminal\" />
+    <EmbeddedResource Include="src\cmds\io\SaveOutput.locale.json" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="src\cmds\Raise.locale.json" />
+    <EmbeddedResource Include="src\cmds\customization\ToggleStatusBar.locale.json" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="src\cmds\SaveOutput.locale.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="src\cmds\ToggleStatusBar.locale.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="src\cmds\ToggleTraceBar.locale.json" />
+    <EmbeddedResource Include="src\cmds\config\ToggleTraceBar.locale.json" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

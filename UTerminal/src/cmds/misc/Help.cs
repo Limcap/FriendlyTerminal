@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Limcap.UTerminal.Cmds {
+namespace Limcap.UTerminal.Cmds.Misc {
 	public class Help : ACommand {
 
 		public Help( string locale ) : base( locale ) {}

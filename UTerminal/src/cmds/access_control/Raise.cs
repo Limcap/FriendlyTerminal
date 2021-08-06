@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Limcap.UTerminal.Cmds {
+namespace Limcap.UTerminal.Cmds.AccessControl {
 
 	public class Raise : ACommand {
 		public Raise( string locale ) : base( locale ) { }
