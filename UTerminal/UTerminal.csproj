@@ -55,7 +55,7 @@
     <Compile Include="src\ACommand.Parameter.cs" />
     <Compile Include="src\Args.cs" />
     <Compile Include="src\CmdHistory.cs" />
-    <Compile Include="src\cmds\terminal\ConfigTerminal_Theme.cs" />
+    <Compile Include="src\cmds\ConfigTerminal_Theme.cs" />
     <Compile Include="src\cmds\Help.cs" />
     <Compile Include="src\cmds\Raise.cs" />
     <Compile Include="src\cmds\SaveOutput.cs" />
@@ -76,8 +76,26 @@
     <Compile Include="src\Terminal.InputHandlers.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="src\cmds\terminal\ConfigTerminal_Theme.locale.json" />
+    <EmbeddedResource Include="src\cmds\ConfigTerminal_Theme.locale.json" />
     <EmbeddedResource Include="src\ACommand.Information.locale.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="src\cmds\Help.locale.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="src\cmds\terminal\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="src\cmds\Raise.locale.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="src\cmds\SaveOutput.locale.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="src\cmds\ToggleStatusBar.locale.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="src\cmds\ToggleTraceBar.locale.json" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

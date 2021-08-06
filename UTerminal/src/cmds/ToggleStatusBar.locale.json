@@ -1,0 +1,8 @@
+{
+	"invoke": { "ptbr": "alternar barra de status" },
+	"desc": { "ptbr": "Exibe ou esconde a a barra de status." },
+	"param1": { "ptbr": "estado" },
+	"param1desc": { "ptbr": "mostrar/ocultar" },
+	"on": { "ptbr": "mostrar" },
+	"off": { "ptbr": "ocultar" },
+}

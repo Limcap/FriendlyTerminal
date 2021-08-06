@@ -1,0 +1,8 @@
+{
+	"invoke": { "ptbr": "alternar barra de trace" },
+	"desc": { "ptbr": "Exibe ou esconde a barra de trace (informações tecnicas)." },
+	"param1": { "ptbr": "estado" },
+	"param1desc": { "ptbr": "mostrar/ocultar" },
+	"on": { "ptbr": "mostrar" },
+	"off": { "ptbr": "ocultar" },
+}

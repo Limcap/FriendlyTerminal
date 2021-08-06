@@ -1,0 +1,8 @@
+{
+	"0": { "ptbr": "ajuda" },
+
+	"1": { "ptbr": "Exibe informações de como usar este terminal." },
+
+	"2": { "ptbr": "\nOs seguintes comandos estão disponíveis neste termianal. Para mais informações sobre cada um,\ndigite o comando correspondente seguido de :? (dois pontos e interrogação)\n\n" },
+	"3": { "ptbr": "Nenhum comando disponível" }
+}
