@@ -38,22 +38,22 @@ namespace Limcap.UTerminal {
 
 
 
-		void RegisterCommand( Type type, string invokeText = null ) {
+		void RegisterCommand( Type type, string customInvokeText = null ) {
 			string defaultLocale = (string)(type.GetConst( "DEFAULT_LOCALE" ) ?? Locale);
-			if (invokeText != null) _cmdList.Add( invokeText, type );
+			if (customInvokeText != null) _cmdList.Add( customInvokeText, type );
 			else {
-				Tstring invokeText2 = type.GetConst( "INVOKE_STRING" ) as string;
+				Tstring embeddedInvokeText = type.GetConst( "INVOKE_STRING" ) as string;
 				if (type.IsSubclassOf( typeof( ACommand ) ) && defaultLocale != Locale)
-					invokeText2 = GetTranslatedInvokeText( Locale, type );
-				_cmdList.Add( invokeText2, type );
+					embeddedInvokeText = GetTranslatedInvokeText( type, Locale );
+				_cmdList.Add( embeddedInvokeText, type );
 			}
 		}
 
 
 
 
-		string GetTranslatedInvokeText( string locale, Type type ) {
-			var translator = LoadTranslator( locale, type );
+		string GetTranslatedInvokeText( Type type, string locale ) {
+			var translator = Translator.LoadTranslator( type, locale );
 			var invokeText = type.GetConst( "INVOKE_STRING" ) as string;
 			return translator.Translate( invokeText );
 		}
@@ -61,20 +61,20 @@ namespace Limcap.UTerminal {
 
 
 
-		Translator LoadTranslator( string locale, Type type ) {
-			//var resourcesNames = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceNames();
-			var executingAssembly = GetType().Assembly;
-			var resourcesNames = executingAssembly.GetManifestResourceNames();
-			var assemblyName = type.Name;
-			var translationSheetName = resourcesNames.FirstOrDefault( c => c.Contains( assemblyName ) );
-			if (translationSheetName is null) return new Translator();
-			using (Stream stream = executingAssembly.GetManifestResourceStream( translationSheetName )) {
-				using (StreamReader reader = new StreamReader( stream )) {
-					var translationJson = reader.ReadToEnd();
-					return new Translator( translationJson, locale );
-				}
-			}
-		}
+		//Translator LoadTranslator( Type type, string locale ) {
+		//	//var resourcesNames = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceNames();
+		//	var executingAssembly = GetType().Assembly;
+		//	var resourcesNames = executingAssembly.GetManifestResourceNames();
+		//	var assemblyName = type.Name;
+		//	var translationSheetName = resourcesNames.FirstOrDefault( c => c.Contains( assemblyName ) );
+		//	if (translationSheetName is null) return new Translator();
+		//	using (Stream stream = executingAssembly.GetManifestResourceStream( translationSheetName )) {
+		//		using (StreamReader reader = new StreamReader( stream )) {
+		//			var translationJson = reader.ReadToEnd();
+		//			return new Translator( translationJson, locale );
+		//		}
+		//	}
+		//}
 
 
 

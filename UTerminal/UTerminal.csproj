@@ -76,7 +76,8 @@
     <Compile Include="src\Terminal.InputHandlers.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="src\cmds\terminal\ConfigTerminal_Visuals.locale.json" />
+    <EmbeddedResource Include="src\cmds\terminal\ConfigTerminal_Theme.locale.json" />
+    <EmbeddedResource Include="src\ACommand.Information.locale.json" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

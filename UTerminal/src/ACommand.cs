@@ -15,7 +15,8 @@ namespace Limcap.UTerminal {
 		public ACommand( string locale ) {
 			Locale = locale;
 			Translator = LoadTranslator( locale );
-			Info = Translator.Translate( GetInfo() );
+			Info = GetInfo().Translate( Translator );
+			//Info = Translator.Translate( GetInfo() );
 		}
 
 

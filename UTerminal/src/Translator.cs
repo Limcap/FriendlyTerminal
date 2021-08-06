@@ -2,6 +2,9 @@
 using Limcap.Dux;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 
 namespace Limcap.UTerminal {
 	public class Translator {
@@ -11,17 +14,37 @@ namespace Limcap.UTerminal {
 			_t = translationDux;
 		}
 		public string CurrentLocale { get; set; }
-		private Dux.DuxNamedList _t;
-		public string Translate( Tstring tstrg ) => Translate( CurrentLocale, tstrg );
-		public string Translate( string locale, Tstring tstrg ) => _t?[tstrg.id][locale].AsString( null ) ?? tstrg.str;
+		private readonly Dux.DuxNamedList _t;
+		public string Translate( Tstring tstrg ) => Translate( tstrg, CurrentLocale );
+		public string Translate( Tstring tstrg, string locale ) => _t?[tstrg.id][locale].AsString( null ) ?? tstrg.str;
 
-		public ACommand.Information Translate( ACommand.Information info ) {
-			info.description = Translate( info.description );
-				for (int i = 0; i < info.parameters.Length; i++) {
-					info.parameters[i].name = Translate( info.parameters[i].name );
-					info.parameters[i].description = Translate( info.parameters[i].description );
+		//public ACommand.Information Translate( ACommand.Information info ) {
+		//	info.description = Translate( info.description );
+		//	for (int i = 0; i < info.parameters.Length; i++) {
+		//		info.parameters[i].name = Translate( info.parameters[i].name );
+		//		info.parameters[i].description = Translate( info.parameters[i].description );
+		//	}
+		//	return info;
+		//}
+
+
+
+
+		private static readonly Assembly executingAssembly;
+		private static readonly string[] resourceList;
+		static Translator() {
+			executingAssembly = Assembly.GetExecutingAssembly();
+			resourceList = executingAssembly.GetManifestResourceNames();
+		}
+		public static Translator LoadTranslator( Type type, string locale ) {
+			var translationSheetName = resourceList.FirstOrDefault( c => c.Contains( type.Name ) );
+			if (translationSheetName is null) return new Translator();
+			using (Stream stream = executingAssembly.GetManifestResourceStream( translationSheetName )) {
+				using (StreamReader reader = new StreamReader( stream )) {
+					var translationJson = reader.ReadToEnd();
+					return new Translator( translationJson, locale );
 				}
-			return info;
+			}
 		}
 	}
 
