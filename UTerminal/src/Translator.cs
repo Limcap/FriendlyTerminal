@@ -26,7 +26,7 @@ namespace Limcap.UTerminal {
 			var translationSheetName = resourceList.FirstOrDefault( c => c.Contains( type.Name ) );
 			if (translationSheetName is null) return new Translator();
 			using (Stream stream = executingAssembly.GetManifestResourceStream( translationSheetName )) {
-				using (StreamReader reader = new StreamReader( stream )) {
+				using (StreamReader reader = new StreamReader( stream, System.Text.Encoding.GetEncoding(1252) )) {
 					var translationJson = reader.ReadToEnd();
 					return new Translator( translationJson, locale );
 				}
@@ -51,8 +51,8 @@ namespace Limcap.UTerminal {
 
 
 		public string Translate( Tstring tstrg ) => Translate( tstrg, CurrentLocale );
-
-
+	
+		
 		public string Translate( Tstring tstrg, string locale ) => dux?[tstrg.id][locale].AsString( null ) ?? tstrg.str;
 	}
 }
