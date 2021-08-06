@@ -16,9 +16,6 @@ namespace Limcap.UTerminal.Cmds {
 		public const string INVOKE_STRING = "help";
 
 
-		//public const string INVOKE_STRING = "help;pt-br:ajuda";
-
-
 		public override Information GetInfo() => new Information(
 			"Displays help information on the usage of this terminal."
 		);
@@ -33,7 +30,5 @@ namespace Limcap.UTerminal.Cmds {
 			output += cmds.Length == 0 ? "No command available" : (" • " + cmds);
 			return output + "\n\n";
 		}
-
-		//public override Translator GetTranslator( string locale ) => new Translator(locale) {};
 	}
 }

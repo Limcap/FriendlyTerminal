@@ -42,24 +42,5 @@ namespace Limcap.UTerminal.Cmds.TerminalConfiguration {
 
 			return string.Empty;
 		}
-
-
-
-
-
-		//public static Translator translator;
-		//public override Translator GetTranslator( string locale ) {
-		//	var resourceName = GetType().Name + ".locale.json";
-		//	var json = Util.LoadTextResource( resourceName );// "ConfigTerminal_Visuals.locale.json"
-		//	var translationSheet = Dux.Dux.Import.FromJson( json );
-		//	return new Translator( translationSheet );
-		//	//return new Translator(locale) {
-		//	//	["1"] = new Dictionary<string,string> { ["ptbr"] = "Altera a configuração de fonte deste terminal." },
-		//	//	["2"] = new Dictionary<string, string> { ["ptbr"] = "cor" },
-		//	//	["3"] = new Dictionary<string, string> { ["ptbr"] = "Nome da cor." },
-		//	//	["4"] = new Dictionary<string, string> { ["ptbr"] = "tamanho" },
-		//	//	["5"] = new Dictionary<string, string> { ["ptbr"] = "Tamanho da fonte." },
-		//	//};
-		//}
 	}
 }

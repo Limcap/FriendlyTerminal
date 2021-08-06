@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 namespace Limcap.UTerminal {
 	public partial class Terminal {
 
-		//private List<ICommand> _cmds = new List<ICommand>();
 		private Dictionary<string, Type> _cmdList;
 
 
@@ -27,7 +26,6 @@ namespace Limcap.UTerminal {
 			var assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
 			foreach (var nspace in nspaces) {
-				//var resourceStream = executingAssembly.GetManifestResourceStream( translationSheetName )
 				var types = assemblies
 				.SelectMany( s => s.GetTypes() )
 				.Where( p => typeICommand.IsAssignableFrom( p ) && p.Namespace == nspace );
@@ -61,24 +59,6 @@ namespace Limcap.UTerminal {
 
 
 
-		//Translator LoadTranslator( Type type, string locale ) {
-		//	//var resourcesNames = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceNames();
-		//	var executingAssembly = GetType().Assembly;
-		//	var resourcesNames = executingAssembly.GetManifestResourceNames();
-		//	var assemblyName = type.Name;
-		//	var translationSheetName = resourcesNames.FirstOrDefault( c => c.Contains( assemblyName ) );
-		//	if (translationSheetName is null) return new Translator();
-		//	using (Stream stream = executingAssembly.GetManifestResourceStream( translationSheetName )) {
-		//		using (StreamReader reader = new StreamReader( stream )) {
-		//			var translationJson = reader.ReadToEnd();
-		//			return new Translator( translationJson, locale );
-		//		}
-		//	}
-		//}
-
-
-
-
 		public string ProcessInput( string input ) {
 			int splitter = Math.Max( 0, input.IndexOf( ':' ) );
 			var cmd = splitter == 0 ? input : input.Remove( splitter ).Trim();
@@ -101,7 +81,6 @@ namespace Limcap.UTerminal {
 				int requiredPrivilege = (int)(cmdType.GetConst( "REQUIRED_PRIVILEGE" ) ?? 0);
 				if (arg == "?")
 					return GetCommandInfo( cmdType );
-				//return cmdType.GetConst("HELP_INFO") as string ?? "Este comando não possui informação de ajuda.";
 				if (CurrentPrivilege < requiredPrivilege)
 					return INSUFICIENT_PRIVILEGE_MESSAGE;
 				var instance = cmdType.IsSubclassOf( typeof( ACommand ) )
@@ -122,8 +101,6 @@ namespace Limcap.UTerminal {
 		public string GetCommandInfo( Type t ) {
 			if (t.IsSubclassOf( typeof( ACommand ) )) {
 				var instance = Activator.CreateInstance( t, Locale ) as ACommand;
-				//var translator = instance.LoadTranslator( Locale );
-				//var translatedInfo = translator.Translate( instance.Info );
 				return instance.Info.ToString();
 			}
 			else if (t.IsAssignableFrom( typeof( ICommand ) ))
