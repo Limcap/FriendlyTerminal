@@ -2,7 +2,7 @@
 	public struct Tstring {
 		public Tstring( string idstr ) {
 			var separatorIndex = idstr.IndexOf( "#" );
-			id = (separatorIndex == -1) ? null : idstr.Remove( separatorIndex );
+			id = (separatorIndex == -1) ? idstr : idstr.Remove( separatorIndex );
 			str = (separatorIndex == -1) ? idstr : idstr.Substring( separatorIndex + 1 );
 		}
 		public readonly string id;
