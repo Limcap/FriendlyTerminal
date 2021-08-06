@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace Limcap.UTerminal {
@@ -84,6 +85,11 @@ namespace Limcap.UTerminal {
 				if (CaretIndex <= _bufferStartIndex) e.Handled = true;
 			}
 
+			else if (e.Key == Key.Tab) {
+				if (!e.IsRepeat) SelectNextAutocomplete();
+				e.Handled = true;
+			}
+
 
 			else if (e.Key == Key.Return) {
 				var input = InputBuffer;
@@ -125,6 +131,45 @@ namespace Limcap.UTerminal {
 				//	e.Handled = true;
 				//}
 				UpdateTraceArea( e.Key );
+			}
+		}
+
+
+
+
+		private void AdvanceAutoComplete( TextChangedEventArgs a ) {
+			if (InputBuffer.Length == 0) {
+				_statusArea.Text = string.Empty;
+				return;
+			}
+			var candidates = _cmdList.Where( c => c.Key.StartsWith( InputBuffer ) ).ToList();
+			string output = string.Empty;
+			foreach (var candidate in candidates) {
+				var threshold = candidate.Key.IndexOf( " ", InputBuffer.Length - 1 );
+				//threshold = threshold == -1 ? candidate.Key.Length - 1 : threshold;
+				output += threshold == -1 ? candidate.Key : candidate.Key.Remove( threshold );
+				output += "          ";
+			}
+			_statusArea.Text = output;
+		}
+		private void SelectNextAutocomplete() {
+			var options = _statusArea.Text.Split( new string[] { "          " }, StringSplitOptions.None );
+			SetInputBuffer( options[0] + ' ' );
+			CaretToEnd();
+		}
+
+
+		private void AdvanceAutoComplete( KeyEventArgs a = null ) {
+			if (a != null && !a.IsRepeat && CaretIndex < _bufferStartIndex) {
+				if (InputBuffer.Length == 0) return;
+				var candidates = _cmdList.Where( c => c.Key.StartsWith( InputBuffer ) ).ToList();
+				string output = string.Empty;
+				foreach (var candidate in candidates) {
+					var threshold = candidate.Key.IndexOf( " ", InputBuffer.Length - 1 );
+					threshold = threshold == -1 ? candidate.Key.Length - 1 : threshold;
+					output += candidate.Key.Remove( threshold ) + "          ";
+				}
+				_statusArea.Text = output;
 			}
 		}
 	}

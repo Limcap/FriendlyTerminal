@@ -230,6 +230,7 @@ namespace Limcap.UTerminal {
 						_scrollArea.ScrollToBottom();
 				}
 			};
+			mainArea.TextChanged += ( o, a ) => AdvanceAutoComplete( a );
 			mainArea.SelectionChanged += ( o, a ) => {
 				var isHelperSelection = !(mainArea.SelectionStart != _bufferStartIndex || mainArea.SelectionLength != mainArea.Text.Length - _bufferStartIndex);
 				_mainArea.SelectionOpacity = isHelperSelection ? 0 : 0.5;
