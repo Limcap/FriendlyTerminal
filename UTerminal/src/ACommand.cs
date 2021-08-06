@@ -20,9 +20,10 @@ namespace Limcap.UTerminal {
 
 
 
-		public string TranslatedInfo( string locale ) {
+		public Information TranslateInfo( string locale ) {
 			var translator = LoadTranslator( locale );
-			return Info.ToString( translator );
+			var translatedInfo = translator.Translate( Info );
+			return translatedInfo;
 		}
 
 
@@ -33,11 +34,11 @@ namespace Limcap.UTerminal {
 			var resourcesNames = GetType().Assembly.GetManifestResourceNames();
 			var assemblyName = GetType().Name;
 			var translationSheetName = resourcesNames.FirstOrDefault( c => c.Contains( assemblyName ) );
+			if (translationSheetName is null) return new Translator();
 			using (Stream stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream( translationSheetName )) {
 				using (StreamReader reader = new StreamReader( stream )) {
 					var translationJson = reader.ReadToEnd();
-					var translationDux = Dux.Dux.Import.FromJson( translationJson );
-					return new Translator( translationDux as DuxNamedList, locale );
+					return new Translator( translationJson, locale );
 				}
 			}
 		}

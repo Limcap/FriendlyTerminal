@@ -1,17 +1,27 @@
 ﻿
 using Limcap.Dux;
+using System;
 using System.Collections.Generic;
 
 namespace Limcap.UTerminal {
 	public class Translator {
-		public Translator( Dux.DuxNamedList translationDux, string locale = null ) : base() {
+		public Translator( string translationJson = "{}", string locale = null ) : base() {
 			CurrentLocale = locale;
+			var translationDux = Dux.Dux.Import.FromJson( translationJson ) as Dux.DuxNamedList ?? new DuxNamedList();
 			_t = translationDux;
 		}
 		public string CurrentLocale { get; set; }
 		private Dux.DuxNamedList _t;
 		public string Translate( Tstring tstrg ) => Translate( CurrentLocale, tstrg );
-		public string Translate( string locale, Tstring tstrg ) => _t?[tstrg.id][locale].AsString(null) ?? tstrg.str;
+		public string Translate( string locale, Tstring tstrg ) => _t?[tstrg.id][locale].AsString( null ) ?? tstrg.str;
+
+		public ACommand.Information Translate( ACommand.Information info ) {
+			info.description = Translate( info.description );
+				for (int i = 0; i < info.parameters.Length; i++) {
+					info.parameters[i].description = Translate( info.parameters[i].description );
+				}
+			return info;
+		}
 	}
 
 

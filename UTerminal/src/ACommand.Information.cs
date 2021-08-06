@@ -1,7 +1,7 @@
 ﻿namespace Limcap.UTerminal {
 	public abstract partial class ACommand {
 		public struct Information {
-			public readonly Tstring description;
+			public Tstring description;
 			public readonly Parameter[] parameters;
 
 			//public const string invokeString = "help;PT_BR:ajuda";
