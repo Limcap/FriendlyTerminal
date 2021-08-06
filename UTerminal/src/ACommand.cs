@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 namespace Limcap.UTerminal {
 	public abstract partial class ACommand : ICommand {
 
+		public const string NEW_LINE = Terminal.NEW_LINE;
+
 		//public const string DEFAULT_LOCALE = "enus";
 		//public const string INVOKE_STRING = null;
 		//public const int REQUIRED_PRIVILEGE = 0;

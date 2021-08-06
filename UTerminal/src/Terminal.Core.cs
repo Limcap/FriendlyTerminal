@@ -17,8 +17,8 @@ namespace Limcap.UTerminal {
 	public partial class Terminal : INotifyPropertyChanged {
 
 		//private static readonly string NewLine = Environment.NewLine;
-		private const string NEW_LINE = "\n";
-		private const string PROMPT_STRING = "> ";
+		public const string NEW_LINE = "\n";
+		public const string PROMPT_STRING = "> ";
 		public const string INSUFICIENT_PRIVILEGE_MESSAGE = "Este comando requer um nível de privilégio maior do que o definido no momento.";
 
 		private readonly string _introText = "Limcap Utility Terminal";
