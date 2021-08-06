@@ -14,13 +14,13 @@ namespace Limcap.UTerminal.Cmds.IO {
 		public const string INVOKE_STRING = "invoke#save output";
 
 
-		public const string HELP_INFO =
-			"DESCRIPTION:\n" +
-			"Saves the current text on screen to a file.\n" +
-			"USAGE:\n" +
-			"\tsave output: <filename>\n" +
-			"PARAMETERS:\n" +
-			"\tfilename: Desired name of file to save. Only Letters, numbers, underline and dots are accepted.";
+		//public const string HELP_INFO =
+		//	"DESCRIPTION:\n" +
+		//	"Saves the current text on screen to a file.\n" +
+		//	"USAGE:\n" +
+		//	"\tsave output: <filename>\n" +
+		//	"PARAMETERS:\n" +
+		//	"\tfilename: Desired name of file to save. Only Letters, numbers, underline and dots are accepted.";
 
 
 		public override Information GetInfo() => new Information(
@@ -32,7 +32,7 @@ namespace Limcap.UTerminal.Cmds.IO {
 		public override string MainFunction( Terminal t, Args args ) {
 			string filename = args;
 			if (args.Value.Length == 0)
-				return HELP_INFO;
+				return Info.ToString();
 			else if (!filename.All( c => char.IsLetterOrDigit( c ) || c == '_' || c == '.' )) {
 				return Txt["invalid"];
 			}

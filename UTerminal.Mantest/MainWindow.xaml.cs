@@ -21,9 +21,14 @@ namespace Limcap.UTerminal.Mantest {
 		public MainWindow() {
 			InitializeComponent();
 			
-			var t = new Terminal( null, Close ) { Locale="ptbr"} ;
-			t.RegisterCommandsInNamespaces( "Limcap.UTerminal.Cmds" );
-			t.RegisterCommandsInNamespaces( "Limcap.UTerminal.Cmds.TerminalConfiguration" );
+			var t = new Terminal( null, Close ) { Locale="enus"};
+
+			t.RegisterCommandsInNamespaces( "Limcap.UTerminal.Cmds.Misc" );
+			t.RegisterCommandsInNamespaces( "Limcap.UTerminal.Cmds.AccessControl" );
+			t.RegisterCommandsInNamespaces( "Limcap.UTerminal.Cmds.Customization" );
+			t.RegisterCommandsInNamespaces( "Limcap.UTerminal.Cmds.IO" );
+			t.RegisterCommandsInNamespaces( "Limcap.UTerminal.Cmds.Config" );
+			t.RegisterCommandsInNamespaces( "Limcap.UTerminal.Cmds.Dev" );
 
 			MainPanel.Children.Add( t.Panel );
 

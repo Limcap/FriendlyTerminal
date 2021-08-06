@@ -1,13 +1,13 @@
 {
-	"0": { "ptbr": "configurar terminal, tema" },
+	"invoke": { "ptbr": "configurar terminal, tema" },
 
-	"1": { "ptbr": "Altera as cores e fonte deste terminal." },
+	"desc": { "ptbr": "Altera as cores e fonte deste terminal." },
 
-	"2": { "ptbr": "Nome da cor da fonte." },
-	"3": { "ptbr": "Tamanho da fonte." },
-	"4": { "ptbr": "Nome da cor do fundo." },
+	"param1desc": { "ptbr": "Tamanho da fonte." },
+	"param2desc": { "ptbr": "Nome da cor da fonte." },
+	"param3desc": { "ptbr": "Nome da cor do fundo." },
 
-	"5": { "ptbr": "cor-da-fonte" },
-	"6": { "ptbr": "tamanho-da-fonte" },
-	"7": { "ptbr": "cor-do-fundo" }
+	"param1": { "ptbr": "tamanho-da-fonte" },
+	"param2": { "ptbr": "cor-da-fonte" },
+	"param3": { "ptbr": "cor-do-fundo" }
 }

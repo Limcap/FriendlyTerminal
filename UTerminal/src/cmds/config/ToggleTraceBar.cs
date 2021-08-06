@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace Limcap.UTerminal.Cmds {
+namespace Limcap.UTerminal.Cmds.Dev {
 	public class ToggleTraceBar : ACommand {
 
 		//public static void Register( TerminalClient term ) {
