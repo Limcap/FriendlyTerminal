@@ -8,18 +8,20 @@ using System.Windows.Media;
 
 namespace Limcap.UTerminal.Cmds.TerminalConfiguration {
 
-	public class ConfigTerminal_Visuals : ACommand {
+	public class ConfigTerminal_Theme : ACommand {
+		public ConfigTerminal_Theme( string locale ) : base( locale ) { }
 
-		public const string INVOKE_STRING = "config terminal, visuals";
+		public const string DEFAULT_LOCALE = "enus";
+		public const string INVOKE_STRING = "0#config terminal, visuals";
 
 
 
 
-		public override Information Info => new Information(
+		public override Information GetInfo() => new Information(
 			"1#Change the appearance of this terminal.",
-			new Parameter( "fontcolor", Parameter.Type.LETTERS, true, "2#Name of the color for the font." ),
-			new Parameter( "fontsize", Parameter.Type.NUMBER, true, "3#Size of the font." ),
-			new Parameter( "backcolor", Parameter.Type.LETTERS, true, "4#Name of the color for the background." )
+			new Parameter( "5#fontcolor", Parameter.Type.LETTERS, true, "2#Name of the color for the font." ),
+			new Parameter( "6#fontsize", Parameter.Type.NUMBER, true, "3#Size of the font." ),
+			new Parameter( "7#backcolor", Parameter.Type.LETTERS, true, "4#Name of the color for the background." )
 		);
 
 
@@ -40,6 +42,8 @@ namespace Limcap.UTerminal.Cmds.TerminalConfiguration {
 
 			return string.Empty;
 		}
+
+
 
 
 

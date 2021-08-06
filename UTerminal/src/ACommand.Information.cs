@@ -22,15 +22,15 @@
 				}
 				return output;
 			}
-			public string ToString( Translator t ) {
-				string output = "\nDESCRIPTION\n" + t.Translate( description ) + "\n\n";
-				if (parameters.Length > 0) {
-					output += "PARAMETERS\n";
-					foreach (var param in parameters)
-						output += $"{param.name}{(param.optional ? " (optional) " : " ")}- type: {param.type}; {t.Translate( param.description )}\n";
-				}
-				return output;
-			}
+			//public string ToString( Translator t ) {
+			//	string output = "\nDESCRIPTION\n" + t.Translate( description ) + "\n\n";
+			//	if (parameters.Length > 0) {
+			//		output += "PARAMETERS\n";
+			//		foreach (var param in parameters)
+			//			output += $"{param.name}{(param.optional ? " (optional) " : " ")}- type: {param.type}; {t.Translate( param.description )}\n";
+			//	}
+			//	return output;
+			//}
 		}
 	}
 

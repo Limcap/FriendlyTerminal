@@ -22,8 +22,8 @@ namespace Limcap.UTerminal.Mantest {
 			InitializeComponent();
 			
 			var t = new Terminal( null, Close ) { Locale="ptbr"} ;
-			t.RegisterAllCommandsInNamespace( "Limcap.UTerminal.Cmds" );
-			t.RegisterAllCommandsInNamespace( "Limcap.UTerminal.Cmds.TerminalConfiguration" );
+			t.RegisterCommandsInNamespaces( "Limcap.UTerminal.Cmds" );
+			t.RegisterCommandsInNamespaces( "Limcap.UTerminal.Cmds.TerminalConfiguration" );
 
 			MainPanel.Children.Add( t.Panel );
 

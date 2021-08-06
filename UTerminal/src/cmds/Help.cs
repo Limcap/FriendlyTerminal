@@ -10,11 +10,16 @@ using System.Collections.Generic;
 namespace Limcap.UTerminal.Cmds {
 	public class Help : ACommand {
 
+		public Help( string locale ) : base( locale ) {}
+		
+		
 		public const string INVOKE_STRING = "help";
+
+
 		//public const string INVOKE_STRING = "help;pt-br:ajuda";
 
 
-		public override Information Info => new Information(
+		public override Information GetInfo() => new Information(
 			"Displays help information on the usage of this terminal."
 		);
 

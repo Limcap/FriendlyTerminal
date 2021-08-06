@@ -18,6 +18,7 @@ namespace Limcap.UTerminal {
 		public ACommand.Information Translate( ACommand.Information info ) {
 			info.description = Translate( info.description );
 				for (int i = 0; i < info.parameters.Length; i++) {
+					info.parameters[i].name = Translate( info.parameters[i].name );
 					info.parameters[i].description = Translate( info.parameters[i].description );
 				}
 			return info;

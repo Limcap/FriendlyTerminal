@@ -1,6 +1,10 @@
 {
+	"0": { "ptbr": "configurar terminal, tema" },
 	"1": { "ptbr": "Altera a fonte e cores deste terminal." },
 	"2": { "ptbr": "Nome da cor da fonte." },
 	"3": { "ptbr": "Tamanho da fonte." },
-	"4": { "ptbr": "Nome da cor do fundo." }
+	"4": { "ptbr": "Nome da cor do fundo." },
+	"5": { "ptbr": "cor-da-fonte" },
+	"6": { "ptbr": "tamanho-da-fonte" },
+	"7": { "ptbr": "cor-do-fundo" }
 }

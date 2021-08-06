@@ -1,13 +1,13 @@
 ﻿namespace Limcap.UTerminal {
 	public abstract partial class ACommand {
 		public struct Parameter {
-			public Parameter( string name, Type type, bool optional, Tstring description ) {
+			public Parameter( Tstring name, Type type, bool optional, Tstring description ) {
 				this.name = name;
 				this.type = type;
 				this.optional = optional;
 				this.description = description;
 			}
-			public string name;
+			public Tstring name;
 			public Type type;
 			public bool optional;
 			public Tstring description;
