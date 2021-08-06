@@ -8,7 +8,7 @@ namespace Limcap.UTerminal {
 			public Parameter[] parameters;
 			private Words words;
 
-			public Information( Tstring description, params Parameter[] parameters ) {
+			public Information( string description, params Parameter[] parameters ) {
 				this.description = description;
 				this.parameters = parameters;
 				words = new Words() {
@@ -25,7 +25,7 @@ namespace Limcap.UTerminal {
 				if (parameters.Length > 0) {
 					output += words.Parameters + "\n";
 					foreach (var param in parameters)
-						output += $"{param.name}{(param.optional ? $" ({words.Optional}) " : " ")}- {words.Type}: {param.type}; {param.description}\n";
+						output += $"{param.name}{(param.optional ? $" ({words.Optional}) " : " ")}: {param.description} - {words.Type}: {param.type};\n";
 				}
 				return output;
 			}
