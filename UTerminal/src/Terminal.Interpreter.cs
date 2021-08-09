@@ -46,7 +46,7 @@ namespace Limcap.UTerminal {
 					invokeText = GetTranslatedInvokeText( type, Locale );
 			}
 			_cmdList.Add( invokeText, type );
-			_predictor.ExtendInternalTree( invokeText );
+			//_predictor.ExtendInternalTree( invokeText );
 		}
 
 

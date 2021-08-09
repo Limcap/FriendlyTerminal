@@ -68,6 +68,7 @@ namespace Limcap.UTerminal {
 
 			_scrollArea = new ScrollViewer() { VerticalScrollBarVisibility = ScrollBarVisibility.Auto };
 			_mainArea = BuildMainArea();
+			_mainArea.IsEnabled = false;
 			_scrollArea.Content = _mainArea;
 			Panel.Children.Add( _scrollArea );
 			DockPanel.SetDock( _mainArea, Dock.Top );
@@ -79,10 +80,13 @@ namespace Limcap.UTerminal {
 				UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
 			};
 			_ = BindingOperations.SetBinding( _mainArea, TextBox.TextProperty, myBinding );
-
+		}
+		public void Start() {
+			_mainArea.IsEnabled = true;
 			AppendText( _introText );
 			StartNewInputBuffer();
-			
+			_predictor.SetAvailableCommands( _cmdList.Keys );
+			_statusArea.Text = _predictor.GetPredictions(string.Empty);
 		}
 
 
