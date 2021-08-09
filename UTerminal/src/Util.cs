@@ -134,5 +134,12 @@ namespace Limcap.UTerminal {
 			.FirstOrDefault( p => p.Name.ToLower() == s?.ToLower() )
 			.As( c => c != null ? (Brush)c.GetValue( null ) : defaultValue );
 		}
+
+		public static void ForEach<T>( this IEnumerable<T> list, Action<int, T> action ) {
+			for (int i = 0; i < list.Count(); i++) {
+				var item = list.ElementAt( i );
+				action( i, item );
+			}
+		}
 	}
 }

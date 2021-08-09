@@ -28,6 +28,7 @@ namespace Limcap.UTerminal {
 		private readonly TextBox _traceArea;
 		private int _bufferStartIndex;
 		private readonly CmdHistory _cmdHistory = new CmdHistory();
+		private CommandPredictor _predictor = new CommandPredictor();
 
 		public Action onExit;
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -81,6 +82,7 @@ namespace Limcap.UTerminal {
 
 			AppendText( _introText );
 			StartNewInputBuffer();
+			
 		}
 
 
@@ -230,7 +232,10 @@ namespace Limcap.UTerminal {
 						_scrollArea.ScrollToBottom();
 				}
 			};
-			mainArea.TextChanged += ( o, a ) => AdvanceAutoComplete( a );
+			//mainArea.TextChanged += ( o, a ) => AdvanceAutoComplete( a );
+			mainArea.TextChanged += ( o, a ) => {
+				if (_predictor.Activated) _statusArea.Text = _predictor.GetPredictions( InputBuffer );
+			};
 			mainArea.SelectionChanged += ( o, a ) => {
 				var isHelperSelection = !(mainArea.SelectionStart != _bufferStartIndex || mainArea.SelectionLength != mainArea.Text.Length - _bufferStartIndex);
 				_mainArea.SelectionOpacity = isHelperSelection ? 0 : 0.5;

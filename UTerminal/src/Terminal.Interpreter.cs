@@ -38,13 +38,15 @@ namespace Limcap.UTerminal {
 
 		void RegisterCommand( Type type, string customInvokeText = null ) {
 			string defaultLocale = (string)(type.GetConst( "DEFAULT_LOCALE" ) ?? Locale);
-			if (customInvokeText != null) _cmdList.Add( customInvokeText, type );
+			Tstring invokeText;
+			if (customInvokeText != null) invokeText = customInvokeText;
 			else {
-				Tstring embeddedInvokeText = type.GetConst( "INVOKE_STRING" ) as string;
+				invokeText = type.GetConst( "INVOKE_STRING" ) as string;
 				if (type.IsSubclassOf( typeof( ACommand ) ) && defaultLocale != Locale)
-					embeddedInvokeText = GetTranslatedInvokeText( type, Locale );
-				_cmdList.Add( embeddedInvokeText, type );
+					invokeText = GetTranslatedInvokeText( type, Locale );
 			}
+			_cmdList.Add( invokeText, type );
+			_predictor.ExtendInternalTree( invokeText );
 		}
 
 

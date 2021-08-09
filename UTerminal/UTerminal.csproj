@@ -71,6 +71,7 @@
     <Compile Include="src\Translator.cs" />
     <Compile Include="src\Tstring.cs" />
     <Compile Include="src\Util.cs" />
+    <Compile Include="src\CommandPredictor.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="src\Terminal.InputHandlers.cs" />

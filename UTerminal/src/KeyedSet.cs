@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Agente.Core.Jobs2 {
+namespace Limcap.DataStructures {
+	
+	[DebuggerDisplay( "{Preview(), nq}" )]
 	public class KeyedSet<K,V> : IEnumerable<V> {
 
 		public KeyedSet( Func<V, K> keyDefinition ) {
@@ -13,8 +16,10 @@ namespace Agente.Core.Jobs2 {
 			_dict = new Dictionary<K, V>();
 		}
 
+		[DebuggerBrowsable( DebuggerBrowsableState.Never )]
 		private readonly Func<V, K> _keyDef;
 
+		[DebuggerBrowsable( DebuggerBrowsableState.RootHidden )]
 		private readonly Dictionary<K, V> _dict;
 
 		public V Current => throw new NotImplementedException();
@@ -61,6 +66,11 @@ namespace Agente.Core.Jobs2 {
 
 		public bool HasKey( K key ) {
 			return _dict.ContainsKey( key );
+		}
+
+
+		private string Preview() {
+			return "Dictionary";
 		}
 
 		////private enumerator class

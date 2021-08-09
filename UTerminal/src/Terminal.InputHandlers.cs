@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -86,7 +86,10 @@ namespace Limcap.UTerminal {
 			}
 
 			else if (e.Key == Key.Tab) {
-				if (!e.IsRepeat) SelectNextAutocomplete();
+				if (!e.IsRepeat) {
+					SetInputBuffer( _predictor.GetNextPredictionEntry(), predict: false );
+					CaretToEnd();
+				}
 				e.Handled = true;
 			}
 

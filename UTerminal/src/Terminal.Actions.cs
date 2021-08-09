@@ -23,15 +23,17 @@ namespace Limcap.UTerminal {
 
 
 		public void TypeText( string text ) {
-			AppendText( text );
+			AppendText( text, false );
 			CaretToEnd();
 		}
 
 
 
 
-		public void AppendText( string txt ) {
+		public void AppendText( string txt, bool noPredictions = true ) {
+			_predictor.Activated = !noPredictions;
 			_mainArea.AppendText( txt );
+			_predictor.Activated = true;
 		}
 
 
@@ -68,7 +70,7 @@ namespace Limcap.UTerminal {
 			if (usePrompt) {
 				bool newLineNeeded = !(Text.Length == 0 || Text.EndsWith( NEW_LINE ));
 				//Text += (newLineNeeded ? NewLine : string.Empty) + PromptString;
-				_mainArea.AppendText( (newLineNeeded ? NEW_LINE : string.Empty) + PROMPT_STRING );
+				AppendText( (newLineNeeded ? NEW_LINE : string.Empty) + PROMPT_STRING );
 			}
 			_bufferStartIndex = Text.Length;
 			CaretToEnd();
@@ -87,9 +89,11 @@ namespace Limcap.UTerminal {
 
 
 
-		private void SetInputBuffer( string text ) {
+		private void SetInputBuffer( string text, bool predict = true ) {
+			_predictor.Activated = predict;
 			_mainArea.Select( _bufferStartIndex, _mainArea.Text.Length - _bufferStartIndex );
 			_mainArea.SelectedText = text;
+			_predictor.Activated = true;
 		}
 
 
