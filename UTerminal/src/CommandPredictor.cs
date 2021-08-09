@@ -1,4 +1,5 @@
 ﻿using Limcap.DataStructures;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -11,6 +12,14 @@ namespace Limcap.UTerminal {
 			_commands = new List<string>();
 			SetAvailableCommands( commands );
 		}
+		//public CommandPredictor( Dictionary<string,Type> commands = null ) {
+		//	_startNode = new Node();
+		//	_confirmedNodes = new List<Node>();
+		//	_currentPrediction = new List<Node>();
+		//	_commands = new List<string>();
+		//	SetAvailableCommands( commands.Keys );
+		//	_commands2 = commands;
+		//}
 
 
 
@@ -19,12 +28,12 @@ namespace Limcap.UTerminal {
 		private List<string> _commands;
 		private List<Node> _confirmedNodes;
 		private List<Node> _currentPrediction;
-
+		//private Dictionary<string, Type> _commands2;
 
 
 
 		public int Index { get; private set; }
-		public bool Activated { get; internal set; }
+		//public bool Activated { get; internal set; }
 
 
 
@@ -50,7 +59,8 @@ namespace Limcap.UTerminal {
 
 
 		public string GetPredictions( string inputBuffer ) {
-			if (!Activated) return null;
+			//if (!Activated) return null;
+			if(inputBuffer.Contains( ':' )) { }
 			var words = inputBuffer.Split( ' ' );
 			int length = words.Length;
 			Node lastConfirmedNode = _startNode;
@@ -101,6 +111,19 @@ namespace Limcap.UTerminal {
 			if( Index > -1 ) output += _currentPrediction[Index].word;
 			return output;
 		}
+
+
+		//private string GetParametersPrediction(string input) {
+		//	var inputParts = input.Split( ':' );
+		//	var invokeText = inputParts[0];
+		//	var parameters = inputParts.Length > 0 ? inputParts[1] : string.Empty;
+		//	if (!_commands2.ContainsKey( inputParts[0] )) return "Command not found";
+		//	var cmdType = _commands2[invokeText];
+		//	var cmd = Activator.CreateInstance( _commands2[invokeText] );
+		//	var instance = cmdType.IsSubclassOf( typeof( ACommand ) )
+		//	? (ICommand)Activator.CreateInstance( cmdType, Locale )
+		//	: (ICommand)Activator.CreateInstance( cmdType );
+		//}
 	}
 
 

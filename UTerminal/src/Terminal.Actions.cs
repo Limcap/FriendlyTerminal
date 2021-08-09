@@ -31,9 +31,9 @@ namespace Limcap.UTerminal {
 
 
 		public void AppendText( string txt, bool noPredictions = true ) {
-			_predictor.Activated = !noPredictions;
+			_predictorActivated = !noPredictions;
 			_mainArea.AppendText( txt );
-			_predictor.Activated = true;
+			_predictorActivated = true;
 		}
 
 
@@ -90,10 +90,10 @@ namespace Limcap.UTerminal {
 
 
 		private void SetInputBuffer( string text, bool predict = true ) {
-			_predictor.Activated = predict;
+			_predictorActivated = predict;
 			_mainArea.Select( _bufferStartIndex, _mainArea.Text.Length - _bufferStartIndex );
 			_mainArea.SelectedText = text;
-			_predictor.Activated = true;
+			_predictorActivated = true;
 		}
 
 

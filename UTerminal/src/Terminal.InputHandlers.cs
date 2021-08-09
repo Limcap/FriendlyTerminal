@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -140,6 +141,37 @@ namespace Limcap.UTerminal {
 
 
 
+		private void HandleTextChanged( object sender, TextChangedEventArgs args ) {
+			if (InputBuffer.Contains( ':' )) {
+				var inputParts = InputBuffer.Split( ':' );
+				var invokeText = inputParts[0];
+				var parameters = inputParts.Length > 0 ? inputParts[1] : string.Empty;
+				if (!_cmdList.ContainsKey( inputParts[0] )) {
+					_statusArea.Text = "Command not found";
+					return;
+				}
+				var cmdType = _cmdList[invokeText];
+				var instance = cmdType.IsSubclassOf( typeof( ACommand ) )
+				? (ACommand)Activator.CreateInstance( cmdType, Locale )
+				: null;
+				var output = instance?.Parameters?.Aggregate( string.Empty, ( agg, p ) => agg += (p.optional ? $"[{p.name}=]" : $"{p.name}=") + "     " );
+				_statusArea.Text = output;
+			}
+			else
+			if (_predictorActivated) _statusArea.Text = _predictor.GetPredictions( InputBuffer );
+		}
+
+
+
+
+		private void HandleSelectionChanged( object sender, RoutedEventArgs args ) {
+			var isHelperSelection = !(_mainArea.SelectionStart != _bufferStartIndex || _mainArea.SelectionLength != _mainArea.Text.Length - _bufferStartIndex);
+			_mainArea.SelectionOpacity = isHelperSelection ? 0 : 0.5;
+		}
+
+
+
+
 		private void AdvanceAutoComplete( TextChangedEventArgs a ) {
 			if (InputBuffer.Length == 0) {
 				_statusArea.Text = string.Empty;
@@ -155,6 +187,10 @@ namespace Limcap.UTerminal {
 			}
 			_statusArea.Text = output;
 		}
+
+
+
+
 		private void SelectNextAutocomplete() {
 			var options = _statusArea.Text.Split( new string[] { "          " }, StringSplitOptions.None );
 			SetInputBuffer( options[0] + ' ' );

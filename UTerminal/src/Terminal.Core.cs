@@ -27,7 +27,8 @@ namespace Limcap.UTerminal {
 		private readonly TextBox _statusArea;
 		private readonly TextBox _traceArea;
 		private readonly CmdHistory _cmdHistory = new CmdHistory();
-		private readonly CommandPredictor _predictor = new CommandPredictor();
+		private CommandPredictor _predictor;
+		private bool _predictorActivated;
 		private int _bufferStartIndex;
 
 		public Action onExit;
@@ -81,11 +82,15 @@ namespace Limcap.UTerminal {
 			};
 			_ = BindingOperations.SetBinding( _mainArea, TextBox.TextProperty, myBinding );
 		}
+
+
+
+
 		public void Start() {
 			_mainArea.IsEnabled = true;
 			AppendText( _introText );
 			StartNewInputBuffer();
-			_predictor.SetAvailableCommands( _cmdList.Keys );
+			_predictor = new CommandPredictor( _cmdList.Keys );
 			_statusArea.Text = _predictor.GetPredictions(string.Empty);
 		}
 
@@ -107,16 +112,6 @@ namespace Limcap.UTerminal {
 				OnPropertyChanged( "Text" );
 			}
 		}
-
-		//private StringBuilder _text = new StringBuilder();
-		//public string Text {
-		//	get => _text.ToString();
-		//	set {
-		//		_text.Clear();
-		//		_text.Append( value );
-		//		OnPropertyChanged( "Text" );
-		//	}
-		//}
 
 
 
@@ -143,34 +138,6 @@ namespace Limcap.UTerminal {
 		public string InputBuffer {
 			get => _mainArea.Text.Substring( _bufferStartIndex );
 		}
-
-
-
-
-		//private bool _showStatusArea = true;
-		//public bool ShowStatusArea {
-		//	get => _showStatusArea;
-		//	set {
-		//		_showStatusArea = value;
-		//		_statusArea.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
-		//	}
-		//}
-
-		//private int _lastLineCaretIndex;
-		//private string _lastLine = string.Empty;
-		//private readonly Func<string, string> _cmdProcessor = ( cmd ) => cmd;
-
-		//private int CaretIndex {
-		//	get => _mainArea.CaretIndex - (_mainArea.Text.Length - LastLine.Length);
-		//}
-
-		//private char CurrentChar {
-		//	get {
-		//		var i = CaretIndex;
-		//		var ll = LastLine;
-		//		return i == ll.Length ? ' ' : ll[i];
-		//	}
-		//}
 
 
 
@@ -237,13 +204,8 @@ namespace Limcap.UTerminal {
 				}
 			};
 			//mainArea.TextChanged += ( o, a ) => AdvanceAutoComplete( a );
-			mainArea.TextChanged += ( o, a ) => {
-				if (_predictor.Activated) _statusArea.Text = _predictor.GetPredictions( InputBuffer );
-			};
-			mainArea.SelectionChanged += ( o, a ) => {
-				var isHelperSelection = !(mainArea.SelectionStart != _bufferStartIndex || mainArea.SelectionLength != mainArea.Text.Length - _bufferStartIndex);
-				_mainArea.SelectionOpacity = isHelperSelection ? 0 : 0.5;
-			};
+			mainArea.TextChanged += HandleTextChanged;
+			mainArea.SelectionChanged += HandleSelectionChanged;
 			return mainArea;
 		}
 
