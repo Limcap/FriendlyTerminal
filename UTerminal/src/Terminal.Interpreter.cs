@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Limcap.UTerminal {
 	public partial class Terminal {
 
-		private Dictionary<string, Type> _cmdList;
+		private readonly Dictionary<string, Type> _cmdList;
 
 
 
@@ -38,13 +38,14 @@ namespace Limcap.UTerminal {
 
 		void RegisterCommand( Type type, string customInvokeText = null ) {
 			string defaultLocale = (string)(type.GetConst( "DEFAULT_LOCALE" ) ?? Locale);
-			Tstring invokeText;
+			string invokeText;
 			if (customInvokeText != null) invokeText = customInvokeText;
 			else {
-				invokeText = type.GetConst( "INVOKE_STRING" ) as string;
+				invokeText = type.GetConst( "INVOKE_TEXT" ) as string;
 				if (type.IsSubclassOf( typeof( ACommand ) ) && defaultLocale != Locale)
 					invokeText = GetTranslatedInvokeText( type, Locale );
 			}
+			if (invokeText is null) throw new UninvokableCommandException( type );
 			_cmdList.Add( invokeText, type );
 			//_predictor.ExtendInternalTree( invokeText );
 		}
@@ -54,8 +55,8 @@ namespace Limcap.UTerminal {
 
 		string GetTranslatedInvokeText( Type type, string locale ) {
 			var translator = Translator.LoadTranslator( type, locale );
-			var invokeText = type.GetConst( "INVOKE_STRING" ) as string;
-			return translator.Translate( invokeText );
+			//var invokeText = type.GetConst( "INVOKE_TEXT" ) as string;
+			return translator.Translate( "INVOKE_TEXT" );
 		}
 
 
@@ -103,7 +104,7 @@ namespace Limcap.UTerminal {
 		public string GetCommandInfo( Type t ) {
 			if (t.IsSubclassOf( typeof( ACommand ) )) {
 				var instance = Activator.CreateInstance( t, Locale ) as ACommand;
-				return instance.Info.ToString();
+				return instance.Info;
 			}
 			else if (t.IsAssignableFrom( typeof( ICommand ) ))
 				return t.GetConst( "HELP_INFO" ) as string ?? "Este comando não possui informação de ajuda.";

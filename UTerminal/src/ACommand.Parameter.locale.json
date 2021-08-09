@@ -1,0 +1,14 @@
+{
+	"DESCRIPTION": {
+		"ptbr": "DESCRIÇÃO"
+	},
+	"PARAMETERS": {
+		"ptbr": "PARAMETROS"
+	},
+	"OPTIONAL": {
+		"ptbr": "OPCIONAL"
+	},
+	"TYPE": {
+		"ptbr": "TIPO"
+	}
+}

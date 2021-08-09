@@ -114,7 +114,7 @@ namespace Limcap.UTerminal {
 
 
 		public bool ShowStatusBar {
-			get => _statusArea.Visibility == Visibility.Visible ? true : false;
+			get => _statusArea.Visibility == Visibility.Visible;
 			set => _statusArea.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
 		}
 
@@ -122,7 +122,7 @@ namespace Limcap.UTerminal {
 
 
 		public bool ShowTraceBar {
-			get => _traceArea.Visibility == Visibility.Visible ? true : false;
+			get => _traceArea.Visibility == Visibility.Visible;
 			set => _traceArea.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
 		}
 

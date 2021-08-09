@@ -1,8 +1,22 @@
 {
-	"invoke": { "ptbr": "ajuda" },
+	"INVOKE_TEXT": {
+		"enus":  "help",
+		"ptbr": "ajuda"
+	},
 
-	"desc": { "ptbr": "Exibe informações de como usar este terminal." },
 
-	"intro": { "ptbr": "Os seguintes comandos estão disponíveis neste termianal. Para mais informações sobre cada um,\ndigite o comando correspondente seguido de :? (dois pontos e interrogação)\n\n" },
-	"no-cmds": { "ptbr": "Nenhum comando disponível" }
+	"desc": {
+		"enus": "Displays help information on the usage of this terminal.",
+		"ptbr": "Exibe informações de como usar este terminal."
+	},
+
+
+	"intro": {
+		"enus": "The following commands are available in this terminal. For more information on any of them,\ntype the corresponding command followed by :? (colon and question mark)\n\n",
+		"ptbr": "Os seguintes comandos estão disponíveis neste termianal. Para mais informações sobre cada um,\ndigite o comando correspondente seguido de :? (dois pontos e interrogação)\n\n"
+	},
+	"no-cmds": {
+		"enus": "No command available",
+		"ptbr": "Nenhum comando disponível"
+	}
 }

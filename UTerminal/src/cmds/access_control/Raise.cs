@@ -8,42 +8,38 @@ namespace Limcap.UTerminal.Cmds.AccessControl {
 
 
 		public const string DEFAULT_LOCALE = "enus";
-		public const string INVOKE_STRING = "invoke#raise";
+		public const string INVOKE_TEXT = "raise";
 		public const string HELP_INFO = "Raises your user privilege in this terminal.";
 
 
-		public override Information GetInfo() => new Information( Txt["desc"] );
+		protected private override string DescriptionBuilder() {
+			return Txt("desc");
+		}
+		
+		
+		protected private override Parameter[] ParametersBuilder() {
+			return null;
+		}
 
 
 		public override string MainFunction( Terminal t, Args args ) {
-			t.TypeText( Txt["0"] );
+			t.TypeText( Txt("0","Password") + ": " );
 			t.ReadPassword( input => {
-				var level = levels.IndexOf( input ) + 1;
+				var level = _levels.IndexOf( input ) + 1;
 				t.CurrentPrivilege = level;
-				return Txt["1"] + level;
-				//if (input == "admin1234") {
-				//	t.vars.Add( new Dux.DuxValue( "privilegios", "1", null ) );
-				//	return "Privilege level: 1";
-				//}
-				//t.vars["privilegios"] = "0";
-				//return "Nível de privilégios: 0";
+				return Txt("1","Privilege level") + ": " + level;
 			} );
 			return null;
 		}
 
 
-		private readonly List<string> levels = new List<string>() { "admin1234", "techsupport" };
+		private readonly List<string> _levels = new List<string>() { "admin1234", "techsupport" };
 
 
-		protected override TextLibrary Txt { get; set; } = new TextLibrary {
-			["desc"] = "Raises your user privilege in this terminal.",
-			["0"] = "Password: ",
-			["1"] = "Privilege level: "
-		};
-		//protected override string[] Txt { get; set; } = {
-		//	"desc#Raises your user privilege in this terminal.",
-		//	"0#Password: ",
-		//	"1#Privilege level: "
+		//protected override TextSource DefaultTextSource { get; set; } = new TextSource {
+		//	["desc"] = "Raises your user privilege in this terminal.",
+		//	["0"] = "Password: ",
+		//	["1"] = "Privilege level: "
 		//};
 	}
 }

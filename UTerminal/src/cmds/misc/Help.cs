@@ -13,7 +13,7 @@ namespace Limcap.UTerminal.Cmds.Misc {
 		public Help( string locale ) : base( locale ) { }
 
 		public const string DEFAULT_LOCALE = "enus";
-		public const string INVOKE_STRING = "invoke#help";
+		public const string INVOKE_TEXT = "help";
 
 
 		//public override Information GetInfo() => new Information(
@@ -35,21 +35,29 @@ namespace Limcap.UTerminal.Cmds.Misc {
 		//}
 
 
-		public override Information GetInfo() => new Information( Txt["desc"] );
+		//public override Information InfoBuilder() => new Information( DefaultTextSource["desc"] );
+		protected private override string DescriptionBuilder() {
+			return Txt("desc");
+		}
+
+
+		protected private override Parameter[] ParametersBuilder() {
+			return null;
+		}
 
 
 		public override string MainFunction( Terminal t, Args args ) {
-			string output = NEW_LINE + Txt["intro"];
+			string output = NEW_LINE + Txt("intro");
 			var cmds = string.Join( NEW_LINE + " • ", t.AvailableCommands );
-			output += cmds.Length == 0 ? Txt["no-cmds"] : (" • " + cmds);
+			output += cmds.Length == 0 ? Txt("no-cmds") : (" • " + cmds);
 			return output + NEW_LINE + NEW_LINE;
 		}
 
 
-		protected override TextLibrary Txt { get; set; } = new TextLibrary() {
-			["desc"] = "Displays help information on the usage of this terminal.",
-			["intro"] = "The following commands are available in this terminal. For more information on any of them,\ntype the corresponding command followed by :? (colon and question mark)\n\n",
-			["no-cmds"] = "No command available",
-		};
+		//protected override TextSource DefaultTextSource { get; set; } = new TextSource() {
+		//	["desc"] = "Displays help information on the usage of this terminal.",
+		//	["intro"] = "The following commands are available in this terminal. For more information on any of them,\ntype the corresponding command followed by :? (colon and question mark)\n\n",
+		//	["no-cmds"] = "No command available",
+		//};
 	}
 }

@@ -1,11 +1,30 @@
 {
-	"invoke":		{ "ptbr": "salvar tela" },
+	"INVOKE_TEXT": {
+		"enus": "",
+		"ptbr": "salvar tela"
+	},
+	"desc": {
+		"enus": "",
+		"ptbr": "Salva o texto exibido no terminal em um arquivo."
+	},
 
-	"desc":			{ "ptbr": "Salva o texto exibido no terminal em um arquivo." },
 
-	"param1":		{ "ptbr": "nome-do-arquivo" },
-	"param1desc":	{ "ptbr": "Nome do arquivo a ser salvo." },
+	"param1": {
+		"enus": "",
+		"ptbr": "nome-do-arquivo"
+	},
+	"param1desc": {
+		"enus": "",
+		"ptbr": "Nome do arquivo a ser salvo."
+	},
 
-	"invalid":		{ "ptbr": "O nome do arquivo escolhido é inválido.\nDeve conter somente letras, números ou os caractere '_' e '.'" },
-	"success":		{ "ptbr": "Arquivo salvo: " }
+
+	"invalid": {
+		"enus": "",
+		"ptbr": "O nome do arquivo escolhido é inválido.\nDeve conter somente letras, números ou os caractere '_' e '.'"
+	},
+	"success": {
+		"enus": "",
+		"ptbr": "Arquivo salvo: "
+	}
 }

@@ -15,8 +15,8 @@ namespace Limcap.UTerminal {
 
 
 
+		private readonly Node _startNode;
 		private List<string> _commands;
-		private Node _startNode;
 		private List<Node> _confirmedNodes;
 		private List<Node> _currentPrediction;
 
@@ -116,7 +116,7 @@ namespace Limcap.UTerminal {
 		public Node prev;
 		public string word;
 		public Node GetNext( string value ) => nextNodes.FirstOrDefault( n => n.word == value );
-		public override string ToString() => word;
+		
 
 		internal Node AddIfNotPresent( string word ) {
 			var node = nextNodes.FirstOrDefault( n => n.word == word );

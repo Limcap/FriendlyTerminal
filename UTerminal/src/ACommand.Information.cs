@@ -6,12 +6,12 @@ namespace Limcap.UTerminal {
 
 			public Tstring description;
 			public Parameter[] parameters;
-			private Words words;
+			private Words _words;
 
 			public Information( string description, params Parameter[] parameters ) {
 				this.description = description;
 				this.parameters = parameters;
-				words = new Words() {
+				_words = new Words() {
 					Description = "1#DESCRIPTION",
 					Parameters = "2#PARAMETERS",
 					Optional = "3#optional",
@@ -20,15 +20,15 @@ namespace Limcap.UTerminal {
 			}
 
 
-			public override string ToString() {
-				string output = $"\n{words.Description}\n{description}\n\n";
-				if (parameters.Length > 0) {
-					output += words.Parameters + "\n";
-					foreach (var param in parameters)
-						output += $"{param.name}{(param.optional ? $" ({words.Optional}) " : " ")}: {param.description} - {words.Type}: {param.type};\n";
-				}
-				return output;
-			}
+			//public override string InformationBuilder() {
+			//	string output = $"\n{words.Description}\n{description}\n\n";
+			//	if (parameters.Length > 0) {
+			//		output += words.Parameters + "\n";
+			//		foreach (var param in parameters)
+			//			output += $"{param.name}{(param.optional ? $" ({words.Optional}) " : " ")}: {param.description} - {words.Type}: {param.type};\n";
+			//	}
+			//	return output;
+			//}
 
 
 			public Information Translate( Translator t ) {
@@ -40,10 +40,10 @@ namespace Limcap.UTerminal {
 				}
 				// Traduz os termos genéricos.
 				var wt = Translator.LoadTranslator( typeof( Information ), t.CurrentLocale );
-				words.Description = wt.Translate( words.Description );
-				words.Parameters = wt.Translate( words.Parameters );
-				words.Optional = wt.Translate( words.Optional );
-				words.Type = wt.Translate( words.Type );
+				_words.Description = wt.Translate( _words.Description );
+				_words.Parameters = wt.Translate( _words.Parameters );
+				_words.Optional = wt.Translate( _words.Optional );
+				_words.Type = wt.Translate( _words.Type );
 				return this;
 			}
 

@@ -1,8 +1,30 @@
 {
-	"invoke": { "ptbr": "alternar barra de status" },
-	"desc": { "ptbr": "Exibe ou esconde a a barra de status." },
-	"param1": { "ptbr": "estado" },
-	"param1desc": { "ptbr": "mostrar/ocultar" },
-	"on": { "ptbr": "mostrar" },
-	"off": { "ptbr": "ocultar" },
+	"INVOKE_TEXT": {
+		"enus": "toggle status bar",
+		"ptbr": "alternar barra de status"
+	},
+	"desc": {
+		"enus": "Shows or hides the status bar.",
+		"ptbr": "Exibe ou esconde a barra de status."
+	},
+
+
+	"param1": {
+		"enus": "state",
+		"ptbr": "estado"
+	},
+	"param1desc": {
+		"enus": "on/off",
+		"ptbr": "mostrar/ocultar"
+	},
+
+
+	"on": {
+		"enus": "on",
+		"ptbr": "mostrar"
+	},
+	"off": {
+		"enus": "off",
+		"ptbr": "ocultar"
+	}
 }

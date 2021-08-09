@@ -12,7 +12,7 @@ namespace Limcap.UTerminal.Cmds.Customization {
 		public ConfigTerminal_Theme( string locale ) : base( locale ) { }
 
 		public const string DEFAULT_LOCALE = "enus";
-		public const string INVOKE_STRING = "invoke#config terminal, theme";
+		public const string INVOKE_TEXT = "config terminal, theme";
 
 
 		//public override Information GetInfo() => new Information(
@@ -22,18 +22,32 @@ namespace Limcap.UTerminal.Cmds.Customization {
 		//	new Parameter( "7#backcolor", Parameter.Type.LETTERS, true, "4#Name of the color for the background." )
 		//);
 
-		public override Information GetInfo() => new Information(
-			Txt["desc"],
-			new Parameter( Txt["param1"], Parameter.Type.LETTERS, true, Txt["param1desc"] ),
-			new Parameter( Txt["param2"], Parameter.Type.NUMBER, true, Txt["param2desc"] ),
-			new Parameter( Txt["param3"], Parameter.Type.LETTERS, true, Txt["param3desc"] )
-		);
+		//public override Information InfoBuilder() => new Information(
+		//	DefaultTextSource["desc"],
+		//	new Parameter( DefaultTextSource["param1"], Parameter.Type.LETTERS, true, DefaultTextSource["param1desc"] ),
+		//	new Parameter( DefaultTextSource["param2"], Parameter.Type.NUMBER, true, DefaultTextSource["param2desc"] ),
+		//	new Parameter( DefaultTextSource["param3"], Parameter.Type.LETTERS, true, DefaultTextSource["param3desc"] )
+		//);
 
+
+		protected private override string DescriptionBuilder() {
+			return Txt( "desc" );
+		}
+
+
+		protected private override Parameter[] ParametersBuilder() {
+			return new Parameter[] {
+				new Parameter( Txt("param1"), Parameter.Type.LETTERS, true, Txt("param1desc") ),
+				new Parameter( Txt("param2"), Parameter.Type.NUMBER, true, Txt("param2desc") ),
+				new Parameter( Txt("param3"), Parameter.Type.LETTERS, true, Txt("param3desc") )
+			};
+		}
+		
 
 		public override string MainFunction( Terminal t, Args args ) {
-			var arg_fontsize = args.GetArg( Info.parameters[0] );
-			var arg_fontcolor = args.GetArg( Info.parameters[1] );
-			var arg_backcolor = args.GetArg( Info.parameters[2] );
+			var arg_fontsize = args.GetArg( Parameters[0] );
+			var arg_fontcolor = args.GetArg( Parameters[1] );
+			var arg_backcolor = args.GetArg( Parameters[2] );
 
 			if (arg_fontsize == "") t.FontSize = 14;
 			if (arg_fontcolor == "") t.FontColor = Brushes.GreenYellow;
@@ -47,14 +61,14 @@ namespace Limcap.UTerminal.Cmds.Customization {
 		}
 
 
-		protected override TextLibrary Txt { get; set; } = new TextLibrary() {
-			["desc"] = "Change the appearance of this terminal.",
-			["param1"] = "fontsize",
-			["param1desc"] = "Size of the font.",
-			["param2"] = "fontcolor",
-			["param2desc"] = "Name of the color for the font.",
-			["param3"] = "backcolor",
-			["param3desc"] = "Name of the color for the background.",
-		};
+		//protected override TextSource DefaultTextSource { get; set; } = new TextSource() {
+		//	["desc"] = "Change the appearance of this terminal.",
+		//	["param1"] = "fontsize",
+		//	["param1desc"] = "Size of the font.",
+		//	["param2"] = "fontcolor",
+		//	["param2desc"] = "Name of the color for the font.",
+		//	["param3"] = "backcolor",
+		//	["param3desc"] = "Name of the color for the background.",
+		//};
 	}
 }

@@ -1,13 +1,37 @@
 {
-	"invoke": { "ptbr": "configurar terminal, tema" },
+	"INVOKE_TEXT": {
+		"enus": "config termianl, theme",
+		"ptbr": "configurar terminal, tema"
+	},
+	"desc": {
+		"enus": "Change the appearance of this terminal.",
+		"ptbr": "Altera as cores e fonte deste terminal."
+	},
 
-	"desc": { "ptbr": "Altera as cores e fonte deste terminal." },
 
-	"param1desc": { "ptbr": "Tamanho da fonte." },
-	"param2desc": { "ptbr": "Nome da cor da fonte." },
-	"param3desc": { "ptbr": "Nome da cor do fundo." },
 
-	"param1": { "ptbr": "tamanho-da-fonte" },
-	"param2": { "ptbr": "cor-da-fonte" },
-	"param3": { "ptbr": "cor-do-fundo" }
+	"param1": {
+		"enus": "fontsize",
+		"ptbr": "tamanho-da-fonte"
+	},
+	"param1desc": {
+		"enus": "Size of the font.",
+		"ptbr": "Tamanho da fonte."
+	},
+	"param2": {
+		"enus": "fontcolor",
+		"ptbr": "cor-da-fonte"
+	},
+	"param2desc": {
+		"enus": "Name of the color for the font.",
+		"ptbr": "Nome da cor da fonte."
+	},
+	"param3": {
+		"enus": "backcolor",
+		"ptbr": "cor-do-fundo"
+	},
+	"param3desc": {
+		"enus": "Name of the color for the background.",
+		"ptbr": "Nome da cor do fundo."
+	}
 }

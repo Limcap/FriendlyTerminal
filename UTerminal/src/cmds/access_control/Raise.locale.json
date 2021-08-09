@@ -1,8 +1,16 @@
 {
-	"invoke": { "ptbr": "ascender" },
+	"INVOKE_TEXT": {
+		"ptbr": "ascender"
+	},
+	"desc": {
+		"ptbr": "Eleva os privilégios do usuário neste terminal."
+	},
 
-	"desc": { "ptbr": "Eleva os privilégios do usuário neste terminal." },
 
-	"0": { "ptbr": "Senha: " },
-	"1": { "ptbr": "Nível de privilégio: " }
+	"0": {
+		"ptbr": "Senha"
+	},
+	"1": {
+		"ptbr": "Nível de privilégio"
+	}
 }

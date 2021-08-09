@@ -1,8 +1,30 @@
 {
-	"invoke": { "ptbr": "alternar barra de trace" },
-	"desc": { "ptbr": "Exibe ou esconde a barra de trace (informações tecnicas)." },
-	"param1": { "ptbr": "estado" },
-	"param1desc": { "ptbr": "mostrar/ocultar" },
-	"on": { "ptbr": "mostrar" },
-	"off": { "ptbr": "ocultar" },
+	"INVOKE_TEXT": {
+		"enus": "toggle trace bar",
+		"ptbr": "alternar barra de trace"
+	},
+	"desc": {
+		"enus": "Makes the trace bar visible or invisible.",
+		"ptbr": "Exibe ou esconde a barra de trace (informações tecnicas)."
+	},
+
+
+	"param1": {
+		"enus": "state",
+		"ptbr": "estado"
+	},
+	"param1desc": {
+		"enus": "on/off",
+		"ptbr": "mostrar/ocultar"
+	},
+
+
+	"on": {
+		"enus": "on",
+		"ptbr": "mostrar"
+	},
+	"off": {
+		"enus": "off",
+		"ptbr": "ocultar"
+	}
 }

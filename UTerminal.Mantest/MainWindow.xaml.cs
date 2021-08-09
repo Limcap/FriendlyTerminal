@@ -21,7 +21,7 @@ namespace Limcap.UTerminal.Mantest {
 		public MainWindow() {
 			InitializeComponent();
 			
-			var t = new Terminal( null, Close ) { Locale="enus"};
+			var t = new Terminal( null, Close ) { Locale="ptbr"};
 			t.RegisterCommandsInNamespaces(
 				"Limcap.UTerminal.Cmds.Misc",
 				"Limcap.UTerminal.Cmds.AccessControl",

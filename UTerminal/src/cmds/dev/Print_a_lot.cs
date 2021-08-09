@@ -14,7 +14,7 @@ namespace Limcap.UTerminal.Cmds.Dev {
 		//}
 
 
-		public const string INVOKE_STRING = "print a lot";
+		public const string INVOKE_TEXT = "print a lot";
 
 
 		public const int REQUIRED_PRIVILEGE = 2;

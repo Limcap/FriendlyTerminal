@@ -7,26 +7,26 @@ using static Limcap.UTerminal.ACommand;
 
 namespace Limcap.UTerminal {
 	public class Args {
-		public readonly string Value;
+		public readonly string value;
 
 		public Args(string value) {
-			this.Value = value;
+			this.value = value;
 		}
 
 		public string GetArg( string arg, bool caseSensitive = false  ) {
-			var v = caseSensitive ? Value : Value.ToLower();
+			var v = caseSensitive ? value : value.ToLower();
 			var a = caseSensitive ? arg : arg.ToLower();
 			if (!v.Contains( a + '=' )) return null;
-			var temp = Value.Substring( v.IndexOf( a ) + a.Length + 1 );
+			var temp = value.Substring( v.IndexOf( a ) + a.Length + 1 );
 			return temp.IndexOf( ' ' ) == -1 ? temp : temp.Remove( temp.IndexOf( ' ' ) );
 		}
 
 		public string GetArg( Parameter param, bool caseSensitive = false ) {
 			string arg = param.name;
-			var v = caseSensitive ? Value : Value.ToLower();
+			var v = caseSensitive ? value : value.ToLower();
 			var a = caseSensitive ? arg : arg.ToLower();
 			if (!v.Contains( a + '=' )) return null;
-			var temp = Value.Substring( v.IndexOf( a ) + a.Length + 1 );
+			var temp = value.Substring( v.IndexOf( a ) + a.Length + 1 );
 			return temp.IndexOf( ' ' ) == -1 ? temp : temp.Remove( temp.IndexOf( ' ' ) );
 		}
 
@@ -35,7 +35,7 @@ namespace Limcap.UTerminal {
 		}
 
 		public static implicit operator string(Args args) {
-			return args.Value;
+			return args.value;
 		}
 	}
 }

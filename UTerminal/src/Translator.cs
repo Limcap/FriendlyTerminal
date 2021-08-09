@@ -12,20 +12,20 @@ namespace Limcap.UTerminal {
 		#region Static members
 		#endregion
 
-		private static readonly Assembly executingAssembly;
-		private static readonly string[] resourceList;
+		private static readonly Assembly _executingAssembly;
+		private static readonly string[] _resourceList;
 		
 		
 		static Translator() {
-			executingAssembly = Assembly.GetExecutingAssembly();
-			resourceList = executingAssembly.GetManifestResourceNames();
+			_executingAssembly = Assembly.GetExecutingAssembly();
+			_resourceList = _executingAssembly.GetManifestResourceNames();
 		}
 
 
 		public static Translator LoadTranslator( Type type, string locale ) {
-			var translationSheetName = resourceList.FirstOrDefault( c => c.Contains( type.Name ) );
+			var translationSheetName = _resourceList.FirstOrDefault( c => c.Contains( type.Name ) );
 			if (translationSheetName is null) return new Translator();
-			using (Stream stream = executingAssembly.GetManifestResourceStream( translationSheetName )) {
+			using (Stream stream = _executingAssembly.GetManifestResourceStream( translationSheetName )) {
 				using (StreamReader reader = new StreamReader( stream, System.Text.Encoding.GetEncoding(1252) )) {
 					var translationJson = reader.ReadToEnd();
 					return new Translator( translationJson, locale );
@@ -42,17 +42,20 @@ namespace Limcap.UTerminal {
 		public Translator( string translationJson = "{}", string locale = null ) : base() {
 			CurrentLocale = locale;
 			var translationDux = Dux.Dux.Import.FromJson( translationJson ) as Dux.DuxNamedList ?? new DuxNamedList();
-			dux = translationDux;
+			_dux = translationDux;
 		}
 
 
 		public string CurrentLocale { get; set; }
-		private readonly Dux.DuxNamedList dux;
+		private readonly Dux.DuxNamedList _dux;
 
 
 		public string Translate( Tstring tstrg ) => Translate( tstrg, CurrentLocale );
 	
 		
-		public string Translate( Tstring tstrg, string locale ) => dux?[tstrg.id][locale].AsString( null ) ?? tstrg.str;
+		public string Translate( Tstring tstrg, string locale ) => _dux?[tstrg.id][locale].AsString( null ) ?? tstrg.str;
+
+		public string TranslateOrNull( string key ) => _dux?[key][CurrentLocale].AsString( null );
+		public string TranslateOrNull( string key, string locale ) => _dux?[key][locale].AsString( null );
 	}
 }

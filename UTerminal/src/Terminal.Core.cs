@@ -26,9 +26,9 @@ namespace Limcap.UTerminal {
 		private readonly TextBox _mainArea;
 		private readonly TextBox _statusArea;
 		private readonly TextBox _traceArea;
-		private int _bufferStartIndex;
 		private readonly CmdHistory _cmdHistory = new CmdHistory();
-		private CommandPredictor _predictor = new CommandPredictor();
+		private readonly CommandPredictor _predictor = new CommandPredictor();
+		private int _bufferStartIndex;
 
 		public Action onExit;
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -262,9 +262,5 @@ namespace Limcap.UTerminal {
 				IsReadOnly = true,
 			};
 		}
-
-
-
-
 	}
 }
