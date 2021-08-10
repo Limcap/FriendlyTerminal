@@ -88,12 +88,11 @@ namespace Limcap.UTerminal {
 
 			else if (e.Key == Key.Tab) {
 				if (!e.IsRepeat) {
-					SetInputBuffer( _predictor.GetNextPredictionEntry(), predict: false );
+					SetInputBuffer( _cmdAssist.GetNextPredictionEntry(), predict: false );
 					CaretToEnd();
 				}
 				e.Handled = true;
 			}
-
 
 			else if (e.Key == Key.Return) {
 				var input = InputBuffer;
@@ -124,8 +123,10 @@ namespace Limcap.UTerminal {
 				}
 
 			}
+
 			else if (e.Key.IsIn( Key.LeftShift, Key.RightShift, Key.LeftAlt, Key.RightAlt, Key.LeftCtrl, Key.RightCtrl, Key.CapsLock, Key.Insert, Key.RWin, Key.LWin )) {
 			}
+
 			else {
 				if (CaretIndex < _bufferStartIndex) CaretToEnd();
 				//if (_usePasswordMaskForInput && e.Key != Key.Back && e.Key != Key.Delete ) {
@@ -142,23 +143,29 @@ namespace Limcap.UTerminal {
 
 
 		private void HandleTextChanged( object sender, TextChangedEventArgs args ) {
-			if (InputBuffer.Contains( ':' )) {
-				var inputParts = InputBuffer.Split( ':' );
-				var invokeText = inputParts[0];
-				var parameters = inputParts.Length > 0 ? inputParts[1] : string.Empty;
-				if (!_cmdList.ContainsKey( inputParts[0] )) {
-					_statusArea.Text = "Command not found";
-					return;
-				}
-				var cmdType = _cmdList[invokeText];
-				var instance = cmdType.IsSubclassOf( typeof( ACommand ) )
-				? (ACommand)Activator.CreateInstance( cmdType, Locale )
-				: null;
-				var output = instance?.Parameters?.Aggregate( string.Empty, ( agg, p ) => agg += (p.optional ? $"[{p.name}=]" : $"{p.name}=") + "     " );
-				_statusArea.Text = output;
+			if ( InputBuffer.Count() > 0 &&  InputBuffer.Contains( ':' ) && InputBuffer.Last() != ':') {
+				var paramsString = _paramAssist.GetAutocompleteOtions( InputBuffer );
+				//if (paramsString is null)
+					_statusArea.Text = string.Join("     ",paramsString) ?? "Command not found";
 			}
-			else
-			if (_predictorActivated) _statusArea.Text = _predictor.GetPredictions( InputBuffer );
+			else if (_useCmdAssist)
+				_statusArea.Text = _cmdAssist.GetPredictions( InputBuffer );
+
+			//if (InputBuffer.Contains( ':' )) {
+			//	var inputParts = InputBuffer.Split( ':' );
+			//	var invokeText = inputParts[0];
+			//	var parameters = inputParts.Length > 0 ? inputParts[1] : string.Empty;
+			//	if (!_cmdList.ContainsKey( inputParts[0] )) {
+			//		_statusArea.Text = "Command not found";
+			//		return;
+			//	}
+			//	var cmdType = _cmdList[invokeText];
+			//	var instance = cmdType.IsSubclassOf( typeof( ACommand ) )
+			//	? (ACommand)Activator.CreateInstance( cmdType, Locale )
+			//	: null;
+			//	var output = instance?.Parameters?.Aggregate( string.Empty, ( agg, p ) => agg += (p.optional ? $"[{p.name}=]" : $"{p.name}=") + "     " );
+			//	_statusArea.Text = output;
+			//}
 		}
 
 
@@ -172,44 +179,44 @@ namespace Limcap.UTerminal {
 
 
 
-		private void AdvanceAutoComplete( TextChangedEventArgs a ) {
-			if (InputBuffer.Length == 0) {
-				_statusArea.Text = string.Empty;
-				return;
-			}
-			var candidates = _cmdList.Where( c => c.Key.StartsWith( InputBuffer ) ).ToList();
-			string output = string.Empty;
-			foreach (var candidate in candidates) {
-				var threshold = candidate.Key.IndexOf( " ", InputBuffer.Length - 1 );
-				//threshold = threshold == -1 ? candidate.Key.Length - 1 : threshold;
-				output += threshold == -1 ? candidate.Key : candidate.Key.Remove( threshold );
-				output += "          ";
-			}
-			_statusArea.Text = output;
-		}
+		//private void AdvanceAutoComplete( TextChangedEventArgs a ) {
+		//	if (InputBuffer.Length == 0) {
+		//		_statusArea.Text = string.Empty;
+		//		return;
+		//	}
+		//	var candidates = _cmdList.Where( c => c.Key.StartsWith( InputBuffer ) ).ToList();
+		//	string output = string.Empty;
+		//	foreach (var candidate in candidates) {
+		//		var threshold = candidate.Key.IndexOf( " ", InputBuffer.Length - 1 );
+		//		//threshold = threshold == -1 ? candidate.Key.Length - 1 : threshold;
+		//		output += threshold == -1 ? candidate.Key : candidate.Key.Remove( threshold );
+		//		output += "          ";
+		//	}
+		//	_statusArea.Text = output;
+		//}
 
 
 
 
-		private void SelectNextAutocomplete() {
-			var options = _statusArea.Text.Split( new string[] { "          " }, StringSplitOptions.None );
-			SetInputBuffer( options[0] + ' ' );
-			CaretToEnd();
-		}
+		//private void SelectNextAutocomplete() {
+		//	var options = _statusArea.Text.Split( new string[] { "          " }, StringSplitOptions.None );
+		//	SetInputBuffer( options[0] + ' ' );
+		//	CaretToEnd();
+		//}
 
 
-		private void AdvanceAutoComplete( KeyEventArgs a = null ) {
-			if (a != null && !a.IsRepeat && CaretIndex < _bufferStartIndex) {
-				if (InputBuffer.Length == 0) return;
-				var candidates = _cmdList.Where( c => c.Key.StartsWith( InputBuffer ) ).ToList();
-				string output = string.Empty;
-				foreach (var candidate in candidates) {
-					var threshold = candidate.Key.IndexOf( " ", InputBuffer.Length - 1 );
-					threshold = threshold == -1 ? candidate.Key.Length - 1 : threshold;
-					output += candidate.Key.Remove( threshold ) + "          ";
-				}
-				_statusArea.Text = output;
-			}
-		}
+		//private void AdvanceAutoComplete( KeyEventArgs a = null ) {
+		//	if (a != null && !a.IsRepeat && CaretIndex < _bufferStartIndex) {
+		//		if (InputBuffer.Length == 0) return;
+		//		var candidates = _cmdList.Where( c => c.Key.StartsWith( InputBuffer ) ).ToList();
+		//		string output = string.Empty;
+		//		foreach (var candidate in candidates) {
+		//			var threshold = candidate.Key.IndexOf( " ", InputBuffer.Length - 1 );
+		//			threshold = threshold == -1 ? candidate.Key.Length - 1 : threshold;
+		//			output += candidate.Key.Remove( threshold ) + "          ";
+		//		}
+		//		_statusArea.Text = output;
+		//	}
+		//}
 	}
 }

@@ -17,6 +17,9 @@ namespace Limcap.UTerminal {
 		public void RegisterCommand<T>( string invokeString = null ) where T : ICommand, new() {
 			RegisterCommand( typeof( T ), invokeString );
 		}
+		public void RegisterCommand<T>( params T[] commands  ) where T : ICommand, new() {
+			foreach( var command in commands ) RegisterCommand( typeof( T ) );
+		}
 
 
 

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Limcap.UTerminal {
-	public class CmdHistory {
+	public class HistoryNavigator {
 		private readonly List<string> _history = new List<string>();
 
 		private int _index = -1;
