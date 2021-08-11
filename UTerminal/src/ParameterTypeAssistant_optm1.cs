@@ -1,0 +1,349 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Stran = System.ReadOnlySpan<char>;
+using Chran = System.Span<char>;
+using TwoStrings = System.ValueTuple<string, string>;
+
+namespace Limcap.UTerminal {
+	internal class ParameterTypeAssistant_optm1 {
+
+		public ParameterTypeAssistant_optm1( Dictionary<string, Type> commandsSet, string locale ) {
+			_commandsSet = commandsSet;
+			_locale = locale;
+		}
+
+
+
+
+		private readonly Dictionary<string, Type> _commandsSet;
+		private readonly string _locale;
+		private ACommand _currentCmd;
+
+		internal List<string> GetAutocompleteOtions( string fullInput ) {
+			fullInput = "configurar terminal, tema: tamanho=, cor";
+			var parts = SplitInput_pf2( ref fullInput );
+			_currentCmd = GetCommand( parts.first );
+			if (_currentCmd == null) return null;
+			return GetAutocompleteOtions( _currentCmd, ref parts.second );
+			//return _commandsSet.Keys.ToList();
+		}
+
+
+
+
+
+
+
+
+		private List<string> GetAutocompleteOtions( ACommand cmd, ref Stran paramsInput ) {
+			// If the input is empty, returns all parameters
+			if (paramsInput.Trim().Length == 0) {
+				var paramNames = GetParamsNames( cmd.Parameters );
+				return paramNames;
+			}
+
+			// else select the parameters to return
+			else {
+				paramsInput = "tamanho=, cor".AsSpan();
+				//var paramsInputArr = SplitParamsInput( ref paramsInput );
+				var missingParams = GetMissingParams( cmd, ref paramsInput );
+
+				/*
+				// if the input ends right after a comma, shows all the missing params
+				if (LastCharOfParamsInputIsCommaOrEmpty( ref paramsInput )) {
+					if (missingParams.IsNullOrEmpty()) return new List<string>();
+					else return GetParamsNames( missingParams );
+				}
+
+				// else show only the predicted params
+				else {
+					var lastParamInput = paramsInputArr.Length == 0 ? paramsInputArr[0] : paramsInputArr[paramsInputArr.Length - 1];
+					var predictedParams = GetPossibleParameters( lastParamInput, missingParams );
+					if (predictedParams.IsNullOrEmpty()) return new List<string>();
+					return GetParamsNames( predictedParams );
+				}
+				*/
+				return new List<string>();
+			}
+		}
+
+
+
+
+
+
+
+
+		private TwoStran SplitInput_pf2( ref string inputText ) {
+			var inp = inputText.AsSpan();
+			var cmdEndIndex = inputText.IndexOf( ':' );
+
+			// In case there is no colon character, it is not time to assist with parameter typing since the command
+			// hasn't been defined yey.
+			if (cmdEndIndex == -1) return new TwoStran();
+
+			Stran invokeText = inp.Slice( 0, cmdEndIndex );
+			Stran paramsText = cmdEndIndex < inp.Length ? inp.Slice( cmdEndIndex + 1 ) : null;
+			//var a = new TwoStrings() { cmdText = invokeText, paramsText = paramsText };
+			var a = new TwoStran( invokeText, paramsText );
+			return a;
+		}
+		private ValueTuple<string, string> SplitInput_pf1( string input ) {
+			var inp = input.AsSpan();
+			var cmdEndIndex = input.IndexOf( ':' );
+
+			// In case there is no colon character, it is not time to assist with parameter typing since the command
+			// hasn't been defined yey.
+			if (cmdEndIndex == -1) return (null, null);
+
+			string invokeText = inp.Slice( 0, cmdEndIndex ).ToString();
+			string parameters = cmdEndIndex < inp.Length ? inp.Slice( cmdEndIndex + 1 ).ToString() : null;
+			return (invokeText.ToString(), parameters.ToString());
+		}
+		private ValueTuple<string, string> SplitInput_pf0( string input ) {
+			var inputParts = input.Split( ':' );
+
+			// In case there is no colon character, it is not time to assist with parameter typing since the command
+			// hasn't been defined yey.
+			if (inputParts.Length == 1) return (null, null);
+
+			var invokeText = inputParts[0];
+			var parameters = inputParts.Length > 0 ? inputParts[1].Trim() : string.Empty;
+			return (invokeText, parameters);
+		}
+
+
+
+
+
+
+
+
+		private ACommand GetCommand( Stran invokeText ) {
+			if (!_commandsSet.ContainsKey( invokeText.ToString() )) return null;
+			var cmdType = _commandsSet[invokeText.ToString()];
+			//if (_currentCmd?.GetType() == cmdType) return _currentCmd;
+			var instance = _currentCmd?.GetType() == cmdType ? _currentCmd
+			: cmdType.IsSubclassOf( typeof( ACommand ) ) ? (ACommand)Activator.CreateInstance( cmdType, _locale )
+			: null;
+			return instance;
+		}
+		//private ACommand GetCommand( string invokeText ) {
+		//	if (!_commandsSet.ContainsKey( invokeText )) return null;
+		//	var cmdType = _commandsSet[invokeText];
+		//	//if (_currentCmd?.GetType() == cmdType) return _currentCmd;
+		//	var instance = _currentCmd?.GetType() == cmdType ? _currentCmd
+		//	: cmdType.IsSubclassOf( typeof( ACommand ) ) ? (ACommand)Activator.CreateInstance( cmdType, _locale )
+		//	: null;
+		//	return instance;
+		//}
+
+
+
+
+
+
+
+
+		private List<string> GetParamsNames( IEnumerable<ACommand.Parameter> parameters ) {
+			return parameters?.Select( p => p.optional ? $"[{p.name}=]" : $"{p.name}=" ).ToList();
+		}
+
+
+
+
+
+
+
+
+		/// <summary>
+		/// Splits a string that represents the parameters part of a command invoke expression (the part after the
+		/// colon character) in an array of strings where the separator is the comma (,) character.
+		/// </summary>
+		/// <param name="paramsInput"></param>
+		/// <returns></returns>
+		//private string[] SplitParamsInput( ref Stran paramsInput ) {
+		//	var paramsInputArr = paramsInput.Split( ',' ).Select( p => p.Trim() ).ToArray();
+		//	return paramsInputArr;
+		//}
+
+
+
+
+
+
+
+		private readonly List<ACommand.Parameter> _aux_missingParams = new List<ACommand.Parameter>( 8 );
+		private ACommand.Parameter[] GetMissingParams( ACommand cmd, ref Stran paramsInput ) {
+			int idx = 0, commaIdx;
+			Stran param;
+			var missingParams = new Span<ACommand.Parameter>( cmd.Parameters );
+			_aux_missingParams.Clear();
+			_aux_missingParams.AddRange( cmd.Parameters );
+			Chran inputParamNames = RemoveRanges( ref paramsInput, ',', '=' );
+
+			/*
+			while ((commaIdx = paramsInput.IndexOf( ',', idx )) > -1) {
+				param = paramsInput.Slice( idx, commaIdx - idx ).Trim().Trim( ',' );
+				idx = commaIdx;
+				missingParams.FindAndRemove( p => p.name,)
+				for (int j =)
+			}
+
+
+			for (idx = 0; idx < paramsInput.Length; idx++) {
+				if (paramsInput[idx] != ',') continue;
+				commaIdx = paramsInput.IndexOf( ',' );
+				if (commaIdx > -1) {
+					param = paramsInput.Slice( idx, commaIdx - idx );
+					int equalIdx = param.Trim().IndexOf( '=' );
+				}
+			}
+
+			var missingParams = new List<ACommand.Parameter>( cmd.Parameters );
+			for (int i = 0; i < paramsInputArr.Length; i++) {
+				var paramArr = paramsInputArr[i].Split( '=' );
+				var paramName = paramArr[0];
+				// if the param input arr is length 1, it means the input does not have the equal sign,
+				// wich means the parameter is not yet completed, so we won't consider it for removing from
+				// the missing params list.
+				if (paramArr.Length == 1) continue;
+				if (cmd.Parameters.Where( p => p.name == paramName ).Count() > 0)
+					missingParams.RemoveAll( p => p.name == paramName );
+			}
+			return missingParams.ToArray();
+			*/
+
+			unsafe Chran RemoveRanges( ref Stran stran, char start, char stop ) {
+				int j = 0;
+				char* newStran = stackalloc char[stran.Length];
+				bool shouldCopy = true;
+				for (int i = 0; i < stran.Length; i++) {
+					if (stran[i] == start) { shouldCopy = true; continue; }
+					if (stran[i] == stop) { shouldCopy = false; newStran[j++] = '§'; }
+					if (shouldCopy) newStran[j++] = stran[i];
+				}
+				//var a = newStran.Slice( 0, j + 1 );
+				var a = new string( newStran );
+				
+				var b = new Chran( newStran, (j + 1));
+				return b;
+			}
+
+			return new ACommand.Parameter[2];
+		}
+
+
+
+
+
+
+
+		private bool LastCharOfParamsInputIsCommaOrEmpty( string input ) {
+			return input.Trim().Length == 0 || input.Trim().Last() == ',';
+		}
+
+
+
+
+
+
+
+
+		private ACommand.Parameter[] GetPossibleParameters( string aParamInput, IEnumerable<ACommand.Parameter> parameters ) {
+			if (aParamInput.Length == 0) return null;
+			var aParamInputArr = aParamInput.Split( '=' );
+
+			// if the last param input has the equal sign then there's no need for autocomplete at this time.
+			if (aParamInputArr.Length > 1) return null;
+
+			// else try to find the corresponding parameter.
+			return parameters.Where( p => p.name.StartsWith( aParamInputArr[0] ) ).ToArray();
+		}
+
+
+
+
+
+
+
+
+		//internal string AskForParameters( ACommand cmd ) {
+
+		//}
+
+
+		//internal class CommandNotFoundException : Exception {
+		//	public CommandNotFoundException( string invokeText ) : base( message ) {
+		//	}
+		//	public static string Msg(string invokeText ) {
+		//		return "The command was not found"
+		//	}
+		//}
+
+
+		public ref struct SplitedInput {
+			public ReadOnlySpan<char> cmdText;
+			public ReadOnlySpan<char> paramsText;
+		}
+		public ref struct TwoStran {
+			public TwoStran( Stran first, Stran second ) {
+				this.first = first;
+				this.second = second;
+			}
+			public Stran first;
+			public Stran second;
+		}
+	}
+
+	public static class OptimizedExtensions {
+		public static int IndexOf( this Stran stran, char searchedChar, int startIndex = 0 ) {
+			for (int i = startIndex; i < stran.Length; i++)
+				if (i == searchedChar) return i;
+			return -1;
+		}
+		public static Span<T> FindAndRemove<T, K>( this Span<T> span, Func<T, K> identifier, Span<K> elements ) {
+			Span<int> indexesFound = stackalloc int[span.Length];
+			int count = 0;
+			foreach (ref var i in indexesFound) i = -1;
+			for (int i = 0; i < span.Length; i++) if (elements.Contains( identifier( span[i] ) )) indexesFound[count++] = i;
+			Span<T> missing = span.Slice( 0, count );
+			for (int i = 0; i < indexesFound.Length; i++) if (indexesFound[i] > -1) missing[count++] = span[indexesFound[i]];
+			return missing;
+		}
+		//public static unsafe bool FindAndRemove<K>( this Span<ACommand.Parameter> span, Func<ACommand.Parameter, K> identifier, Span<K> elements ) {
+		//	Span<int> indexesFound = stackalloc int[span.Length];
+		//	int count = 0;
+		//	foreach (ref var i in indexesFound) i = -1;
+		//	for (int i = 0; i < span.Length; i++) if (elements.Contains( identifier( span[i] ) )) indexesFound[count++] = i;
+		//	Span<ACommand.Parameter> missing = stackalloc ACommand.Parameter[3];
+		//	var b = typeof( T );
+		//	var a = sizeof();
+		//	foreach (ref var i in indexesFound) {
+		//		if (i > -1)
+		//	}
+
+		//}
+		//public static bool FindAndRemove( this Span<ACommand.Parameter> span, Func<ACommand.Parameter, bool> identifier ) {
+		//	Span < ACommand.Pa >
+		//	for (int i = 0; i < span.Length; i++) {
+		//		if (identifier( span[i] ) == true) span[i].cle
+		//	}
+		//	var a = new Span<T>();
+		//	var a = sizeof( Span<char> );
+		//}
+		public static bool Contains<T>( ref this Span<T> collection, T element ) {
+			foreach (T item in collection) if (item.Equals( element )) return true;
+			return false;
+		}
+		public static int CountChar( ref this Stran stran, char searchedChar ) {
+			int count = 0;
+			foreach (char c in stran) if (c == searchedChar) count++;
+			return count;
+		}
+
+	}
+}

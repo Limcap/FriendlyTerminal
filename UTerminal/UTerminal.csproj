@@ -23,6 +23,7 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Debug\Limcap.UTerminal.xml</DocumentationFile>
     <NoWarn>1591</NoWarn>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -41,9 +42,6 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -66,6 +64,8 @@
     <Compile Include="src\cmds\config\ToggleTraceBar.cs" />
     <Compile Include="src\ICommand.cs" />
     <Compile Include="src\KeyedSet.cs" />
+    <Compile Include="src\ParameterTypeAssistant_optm1.cs" />
+    <Compile Include="src\ParameterTypeAssistant_optm0.cs" />
     <Compile Include="src\ParameterTypeAssistant.cs" />
     <Compile Include="src\Terminal.Actions.cs" />
     <Compile Include="src\Terminal.Core.cs" />
@@ -88,9 +88,6 @@
     <EmbeddedResource Include="src\cmds\misc\Help.locale.json" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="src\cmds\access_control\Raise.locale.json" />
   </ItemGroup>
   <ItemGroup>
@@ -101,6 +98,14 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="src\cmds\config\ToggleTraceBar.locale.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Memory">
+      <Version>4.5.4</Version>
+    </PackageReference>
+    <PackageReference Include="System.ValueTuple">
+      <Version>4.5.0</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
