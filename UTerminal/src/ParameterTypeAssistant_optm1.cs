@@ -28,7 +28,7 @@ namespace Limcap.UTerminal {
 
 
 		internal List<string> GetAutocompleteOtions( string fullInput ) {
-			//fullInput = "configurar terminal, tema: tamanho=,";
+			fullInput = "configurar terminal, tema: tamanho=,";
 			var parts = SplitInput_pf2( ref fullInput );
 			_currentCmd = GetCommand( parts.first );
 			var result = GetAutocompleteOtions( _currentCmd, ref parts.second );
@@ -193,10 +193,10 @@ namespace Limcap.UTerminal {
 		private static unsafe void GetMissingParams( ACommand cmd, ref Stan paramsInput, List<ACommand.Parameter> listToFill  ) {
 
 			// Works and no allocations are made, all is on the stack!
-			var charr = new ChanHoloArray3();
-			//paramsInput = "cor-da-fonte=,cor-do-fundo,".AsSpan();
+			var charr = new SlicedChan();
+			paramsInput = " cor-da-fonte= , cor-do-fundo ,  ".AsSpan();
 			charr.SetupLength_1st( ref paramsInput, '=', ',' );
-			var cva1_rangePtr = stackalloc Range[charr.Length];
+			var cva1_rangePtr = stackalloc Range[charr.NumberOfSlices];
 			charr.SetupRanges_2nd( cva1_rangePtr );
 
 			listToFill.Clear();
@@ -426,8 +426,8 @@ namespace Limcap.UTerminal {
 			for (int i = 0; i < stan.Length; i++) if (stan[i] != other[i]) return false;
 			return true;
 		}
-		public static bool Contains( ref this ChanHoloArray3 charr, string element ) {
-			for (int i = 0; i < charr.Length; i++) {
+		public static bool Contains( ref this SlicedChan charr, string element ) {
+			for (int i = 0; i < charr.NumberOfSlices; i++) {
 				var c = charr[i];
 				if (c.EqualsString( element )) return true;
 			}

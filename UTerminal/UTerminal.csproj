@@ -56,6 +56,7 @@
     <Compile Include="src\Args.cs" />
     <Compile Include="src\ChanHoloArray1.cs" />
     <Compile Include="src\ChanHoloArray2.cs" />
+    <Compile Include="src\ChanHoloArray4.cs" />
     <Compile Include="src\ChanHoloArray3.cs" />
     <Compile Include="src\HistoryNavigator.cs" />
     <Compile Include="src\cmds\customization\ConfigTerminal_Theme.cs" />
