@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
-using Stran = System.ReadOnlySpan<char>;
-using Chran = System.Span<char>;
+using Chan = System.Span<char>;
+using Stan = System.ReadOnlySpan<char>;
 using TwoStrings = System.ValueTuple<string, string>;
 
 namespace Limcap.UTerminal {
-	internal class ParameterTypeAssistant_optm1 {
+	internal partial class ParameterTypeAssistant_optm1 {
 
 		public ParameterTypeAssistant_optm1( Dictionary<string, Type> commandsSet, string locale ) {
 			_commandsSet = commandsSet;
@@ -38,7 +39,7 @@ namespace Limcap.UTerminal {
 
 
 
-		private List<string> GetAutocompleteOtions( ACommand cmd, ref Stran paramsInput ) {
+		private List<string> GetAutocompleteOtions( ACommand cmd, ref Stan paramsInput ) {
 			// If the input is empty, returns all parameters
 			if (paramsInput.Trim().Length == 0) {
 				var paramNames = GetParamsNames( cmd.Parameters );
@@ -85,8 +86,8 @@ namespace Limcap.UTerminal {
 			// hasn't been defined yey.
 			if (cmdEndIndex == -1) return new TwoStran();
 
-			Stran invokeText = inp.Slice( 0, cmdEndIndex );
-			Stran paramsText = cmdEndIndex < inp.Length ? inp.Slice( cmdEndIndex + 1 ) : null;
+			Stan invokeText = inp.Slice( 0, cmdEndIndex );
+			Stan paramsText = cmdEndIndex < inp.Length ? inp.Slice( cmdEndIndex + 1 ) : null;
 			//var a = new TwoStrings() { cmdText = invokeText, paramsText = paramsText };
 			var a = new TwoStran( invokeText, paramsText );
 			return a;
@@ -122,7 +123,7 @@ namespace Limcap.UTerminal {
 
 
 
-		private ACommand GetCommand( Stran invokeText ) {
+		private ACommand GetCommand( Stan invokeText ) {
 			if (!_commandsSet.ContainsKey( invokeText.ToString() )) return null;
 			var cmdType = _commandsSet[invokeText.ToString()];
 			//if (_currentCmd?.GetType() == cmdType) return _currentCmd;
@@ -177,14 +178,32 @@ namespace Limcap.UTerminal {
 
 
 		private readonly List<ACommand.Parameter> _aux_missingParams = new List<ACommand.Parameter>( 8 );
-		private ACommand.Parameter[] GetMissingParams( ACommand cmd, ref Stran paramsInput ) {
+		private unsafe ACommand.Parameter[] GetMissingParams( ACommand cmd, ref Stan paramsInput ) {
 			int idx = 0, commaIdx;
-			Stran param;
+			Chan param;
 			var missingParams = new Span<ACommand.Parameter>( cmd.Parameters );
 			_aux_missingParams.Clear();
 			_aux_missingParams.AddRange( cmd.Parameters );
-			Chran inputParamNames = RemoveRanges( ref paramsInput, ',', '=' );
+			Chan inputParamNames = ReplaceRanges( ref paramsInput, ',', '=', ',' );
+			var edgeMem = stackalloc Range[3];
 
+			Span<Range> sp = new Range[0];
+			var cva2 = new ChanHoloArray2( ref paramsInput, ref sp, '=', ',' );
+			var cva = new ChanHoloArray1( ref paramsInput, '=', ',' );
+			cva.ranges = new Range[cva.count];
+			cva.Split();
+			inputParamNames.IndexOf( ',', 1 );
+			while (idx < inputParamNames.Length && (commaIdx = inputParamNames.IndexOf( ',', idx )) > -1) {
+				//commaIdx = inputParamNames.IndexOf( ',', idx );
+				//if (commaIdx == -1) commaIdx = inputParamNames.Length - 1;
+				param = inputParamNames.Slice( idx, commaIdx );
+				idx = commaIdx;
+
+				foreach (var p in missingParams) {
+					var n = p.name.AsSpan();
+					//if (n.Equals( p )) missingParams.FindAndRemove( p => p.name, param )
+				}
+			}
 			/*
 			while ((commaIdx = paramsInput.IndexOf( ',', idx )) > -1) {
 				param = paramsInput.Slice( idx, commaIdx - idx ).Trim().Trim( ',' );
@@ -217,21 +236,37 @@ namespace Limcap.UTerminal {
 			return missingParams.ToArray();
 			*/
 
-			unsafe Chran RemoveRanges( ref Stran stran, char start, char stop ) {
+			unsafe Chan ReplaceRanges( ref Stan stran, char start, char stop, char replace = ';' ) {
 				int j = 0;
 				char* newStran = stackalloc char[stran.Length];
+				var o = stran.ToArray();
 				bool shouldCopy = true;
 				for (int i = 0; i < stran.Length; i++) {
 					if (stran[i] == start) { shouldCopy = true; continue; }
-					if (stran[i] == stop) { shouldCopy = false; newStran[j++] = '§'; }
+					if (stran[i] == stop) { shouldCopy = false; newStran[j++] = replace; }
 					if (shouldCopy) newStran[j++] = stran[i];
 				}
 				//var a = newStran.Slice( 0, j + 1 );
-				var a = new string( newStran );
-				
-				var b = new Chran( newStran, (j + 1));
-				return b;
+				//var a = new string( newStran );
+				var b = new Chan( newStran, j );
+				return new Chan( newStran, j );
 			}
+			//unsafe Chran SplitByRange( ref Stran stran, char start, char stop ) {
+			//	int j = 0;
+			//	char* newStran = stackalloc char[stran.Length];
+			//	var o = stran.ToArray();
+			//	bool shouldCopy = true;
+			//	for (int i = 0; i < stran.Length; i++) {
+			//		if (stran[i] == start) { shouldCopy = true; continue; }
+			//		if (stran[i] == stop) { shouldCopy = false; newStran[j++] = replace; }
+			//		if (shouldCopy) newStran[j++] = stran[i];
+			//	}
+			//	//var a = newStran.Slice( 0, j + 1 );
+			//	//var a = new string( newStran );
+			//	var b = new Chran( newStran, j );
+			//	return b;
+			//}
+
 
 			return new ACommand.Parameter[2];
 		}
@@ -290,22 +325,22 @@ namespace Limcap.UTerminal {
 			public ReadOnlySpan<char> paramsText;
 		}
 		public ref struct TwoStran {
-			public TwoStran( Stran first, Stran second ) {
+			public TwoStran( Stan first, Stan second ) {
 				this.first = first;
 				this.second = second;
 			}
-			public Stran first;
-			public Stran second;
+			public Stan first;
+			public Stan second;
 		}
 	}
 
 	public static class OptimizedExtensions {
-		public static int IndexOf( this Stran stran, char searchedChar, int startIndex = 0 ) {
+		public static int IndexOf( this Chan stran, char searchedChar, int startIndex = 0 ) {
 			for (int i = startIndex; i < stran.Length; i++)
 				if (i == searchedChar) return i;
 			return -1;
 		}
-		public static Span<T> FindAndRemove<T, K>( this Span<T> span, Func<T, K> identifier, Span<K> elements ) {
+		public static Span<T> FindAndRemove<T, K>( ref this Span<T> span, Func<T, K> identifier, Span<K> elements ) {
 			Span<int> indexesFound = stackalloc int[span.Length];
 			int count = 0;
 			foreach (ref var i in indexesFound) i = -1;
@@ -314,6 +349,15 @@ namespace Limcap.UTerminal {
 			for (int i = 0; i < indexesFound.Length; i++) if (indexesFound[i] > -1) missing[count++] = span[indexesFound[i]];
 			return missing;
 		}
+		//public static Span<T> FindAndRemove<T, K>( ref this Span<T> span, Func<T, K> identifier, Span<K> elements ) {
+		//	Span<int> indexesFound = stackalloc int[span.Length];
+		//	int count = 0;
+		//	foreach (ref var i in indexesFound) i = -1;
+		//	for (int i = 0; i < span.Length; i++) if (elements.Contains( identifier( span[i] ) )) indexesFound[count++] = i;
+		//	Span<T> missing = span.Slice( 0, count );
+		//	for (int i = 0; i < indexesFound.Length; i++) if (indexesFound[i] > -1) missing[count++] = span[indexesFound[i]];
+		//	return missing;
+		//}
 		//public static unsafe bool FindAndRemove<K>( this Span<ACommand.Parameter> span, Func<ACommand.Parameter, K> identifier, Span<K> elements ) {
 		//	Span<int> indexesFound = stackalloc int[span.Length];
 		//	int count = 0;
@@ -339,7 +383,7 @@ namespace Limcap.UTerminal {
 			foreach (T item in collection) if (item.Equals( element )) return true;
 			return false;
 		}
-		public static int CountChar( ref this Stran stran, char searchedChar ) {
+		public static int CountChar( ref this Stan stran, char searchedChar ) {
 			int count = 0;
 			foreach (char c in stran) if (c == searchedChar) count++;
 			return count;
