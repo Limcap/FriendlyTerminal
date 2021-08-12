@@ -3,12 +3,12 @@ using Stan = System.ReadOnlySpan<char>;
 
 namespace Limcap.UTerminal {
 	internal partial class ParameterTypeAssistant_optm1 {
-		public unsafe ref struct ChanHoloArray0 {
+		public unsafe ref struct ChanHoloArray1 {
 			public Span<char> fulltext;
 			public Span<Range> ranges;
 			public int count;
 
-			public unsafe ChanHoloArray0( ref Stan source, char gapStart = '=', char gapEnd = ',' ) {
+			public unsafe ChanHoloArray1( ref Stan source, char gapStart = '=', char gapEnd = ',' ) {
 				count = source.Length > 0 ? 1 : 0;
 				foreach (var c in source) if (c == gapStart) count++;
 				var ptr = stackalloc Range[count];

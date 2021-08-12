@@ -22,13 +22,17 @@ namespace Limcap.UTerminal {
 		private readonly Dictionary<string, Type> _commandsSet;
 		private readonly string _locale;
 		private ACommand _currentCmd;
+		private readonly List<ACommand.Parameter> _auxMissingParams_main = new List<ACommand.Parameter>( 8 );
+		private readonly List<ACommand.Parameter> _auxMissingParams_temp = new List<ACommand.Parameter>( 8 );
+		private readonly List<string> _auxMissingParamsNames = new List<string>( 8 );
+
 
 		internal List<string> GetAutocompleteOtions( string fullInput ) {
-			fullInput = "configurar terminal, tema: tamanho=, cor";
+			//fullInput = "configurar terminal, tema: tamanho=,";
 			var parts = SplitInput_pf2( ref fullInput );
 			_currentCmd = GetCommand( parts.first );
-			if (_currentCmd == null) return null;
-			return GetAutocompleteOtions( _currentCmd, ref parts.second );
+			var result = GetAutocompleteOtions( _currentCmd, ref parts.second );
+			return result;
 			//return _commandsSet.Keys.ToList();
 		}
 
@@ -48,9 +52,19 @@ namespace Limcap.UTerminal {
 
 			// else select the parameters to return
 			else {
-				paramsInput = "tamanho=, cor".AsSpan();
+				//paramsInput = "tamanho-da-fonte=, cor-d-fundo=,".AsSpan();
 				//var paramsInputArr = SplitParamsInput( ref paramsInput );
-				var missingParams = GetMissingParams( cmd, ref paramsInput );
+				GetMissingParams( cmd, ref paramsInput, _auxMissingParams_temp );
+				if (!_auxMissingParams_temp.All( _auxMissingParams_main.Contains )) {
+					_auxMissingParams_main.Clear();
+					_auxMissingParams_main.AddRange( _auxMissingParams_temp );
+					_auxMissingParamsNames.Clear();
+					foreach (var p in _auxMissingParams_main)
+						_auxMissingParamsNames.Add( p.name );
+					return _auxMissingParamsNames;
+				}
+				return null;
+				
 
 				/*
 				// if the input ends right after a comma, shows all the missing params
@@ -67,7 +81,6 @@ namespace Limcap.UTerminal {
 					return GetParamsNames( predictedParams );
 				}
 				*/
-				return new List<string>();
 			}
 		}
 
@@ -89,8 +102,8 @@ namespace Limcap.UTerminal {
 			Stan invokeText = inp.Slice( 0, cmdEndIndex );
 			Stan paramsText = cmdEndIndex < inp.Length ? inp.Slice( cmdEndIndex + 1 ) : null;
 			//var a = new TwoStrings() { cmdText = invokeText, paramsText = paramsText };
-			var a = new TwoStran( invokeText, paramsText );
-			return a;
+			var splittedInput = new TwoStran( ref invokeText, ref paramsText );
+			return splittedInput;
 		}
 		private ValueTuple<string, string> SplitInput_pf1( string input ) {
 			var inp = input.AsSpan();
@@ -177,21 +190,57 @@ namespace Limcap.UTerminal {
 
 
 
-		private readonly List<ACommand.Parameter> _aux_missingParams = new List<ACommand.Parameter>( 8 );
-		private unsafe ACommand.Parameter[] GetMissingParams( ACommand cmd, ref Stan paramsInput ) {
+		private static unsafe void GetMissingParams( ACommand cmd, ref Stan paramsInput, List<ACommand.Parameter> listToFill  ) {
+
+			// Works and no allocations are made, all is on the stack!
+			var charr = new ChanHoloArray3();
+			//paramsInput = "cor-da-fonte=,cor-do-fundo,".AsSpan();
+			charr.SetupLength_1st( ref paramsInput, '=', ',' );
+			var cva1_rangePtr = stackalloc Range[charr.Length];
+			charr.SetupRanges_2nd( cva1_rangePtr );
+
+			listToFill.Clear();
+
+			//foreach (var p in cmd.Parameters) {
+			//	bool isMissing = true;
+			//	var name = p.name.AsSpan();
+			//	for (int i = 0; i < charr.Length; i++) {
+			//		if (charr[i].Equals( name, StringComparison.Ordinal ))
+			//			isMissing = false;
+			//		if (isMissing) tempList.Add( p );
+			//	}
+			//}
+			
+			foreach (var p in cmd.Parameters)
+				if (!charr.Contains( p.name )) listToFill.Add( p );
+		}
+
+
+
+
+		private unsafe ACommand.Parameter[] GetMissingParams_old( ACommand cmd, ref Stan paramsInput ) {
 			int idx = 0, commaIdx;
 			Chan param;
 			var missingParams = new Span<ACommand.Parameter>( cmd.Parameters );
-			_aux_missingParams.Clear();
-			_aux_missingParams.AddRange( cmd.Parameters );
-			Chan inputParamNames = ReplaceRanges( ref paramsInput, ',', '=', ',' );
-			var edgeMem = stackalloc Range[3];
+			_auxMissingParams_main.Clear();
+			_auxMissingParams_main.AddRange( cmd.Parameters );
 
-			Span<Range> sp = new Range[0];
-			var cva2 = new ChanHoloArray2( ref paramsInput, ref sp, '=', ',' );
-			var cva = new ChanHoloArray1( ref paramsInput, '=', ',' );
-			cva.ranges = new Range[cva.count];
-			cva.Split();
+
+			Chan inputParamNames = ReplaceRanges( ref paramsInput, ',', '=', ',' );
+
+			// Does not work because the memory allocated inside is lost when the cnostructor returns.
+			var cva1 = new ChanHoloArray1( ref paramsInput, '=', ',' );
+
+			// Works but the cva2_ranges is allocated in the heap
+			Span<Range> cva2_ranges = new Range[0];
+			var cva2 = new ChanHoloArray2( ref paramsInput, ref cva2_ranges, '=', ',' );
+
+			// Works and no allocations are made, all is on the stack!
+			var cva3 = new ChanHoloArray3();
+			cva3.SetupLength_1st( ref paramsInput, '=', ',' );
+			var cva1_rangePtr = stackalloc Range[cva3.Length];
+			cva3.SetupRanges_2nd( cva1_rangePtr );
+
 			inputParamNames.IndexOf( ',', 1 );
 			while (idx < inputParamNames.Length && (commaIdx = inputParamNames.IndexOf( ',', idx )) > -1) {
 				//commaIdx = inputParamNames.IndexOf( ',', idx );
@@ -251,22 +300,6 @@ namespace Limcap.UTerminal {
 				var b = new Chan( newStran, j );
 				return new Chan( newStran, j );
 			}
-			//unsafe Chran SplitByRange( ref Stran stran, char start, char stop ) {
-			//	int j = 0;
-			//	char* newStran = stackalloc char[stran.Length];
-			//	var o = stran.ToArray();
-			//	bool shouldCopy = true;
-			//	for (int i = 0; i < stran.Length; i++) {
-			//		if (stran[i] == start) { shouldCopy = true; continue; }
-			//		if (stran[i] == stop) { shouldCopy = false; newStran[j++] = replace; }
-			//		if (shouldCopy) newStran[j++] = stran[i];
-			//	}
-			//	//var a = newStran.Slice( 0, j + 1 );
-			//	//var a = new string( newStran );
-			//	var b = new Chran( newStran, j );
-			//	return b;
-			//}
-
 
 			return new ACommand.Parameter[2];
 		}
@@ -325,7 +358,7 @@ namespace Limcap.UTerminal {
 			public ReadOnlySpan<char> paramsText;
 		}
 		public ref struct TwoStran {
-			public TwoStran( Stan first, Stan second ) {
+			public TwoStran( ref Stan first, ref Stan second ) {
 				this.first = first;
 				this.second = second;
 			}
@@ -388,6 +421,17 @@ namespace Limcap.UTerminal {
 			foreach (char c in stran) if (c == searchedChar) count++;
 			return count;
 		}
-
+		public static bool EqualsString( ref this Stan stan, string other ) {
+			if (stan.Length != other.Length) return false;
+			for (int i = 0; i < stan.Length; i++) if (stan[i] != other[i]) return false;
+			return true;
+		}
+		public static bool Contains( ref this ChanHoloArray3 charr, string element ) {
+			for (int i = 0; i < charr.Length; i++) {
+				var c = charr[i];
+				if (c.EqualsString( element )) return true;
+			}
+			return false;
+		}
 	}
 }

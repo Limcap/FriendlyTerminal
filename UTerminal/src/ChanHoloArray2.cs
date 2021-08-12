@@ -8,17 +8,17 @@ namespace Limcap.UTerminal {
 			private char _gapEnd;
 
 			private readonly char* _txtPtr;
-			private int _txtPtrLen;
+			private readonly int _txtPtrLen;
 
 			private readonly Range* _rangePtr;
 			private readonly int _rangePtrLen;
 
-			public Span<char> txt => new Span<char>( _txtPtr, _txtPtrLen );
-			public Span<Range> ranges => new Span<Range>( _rangePtr, _rangePtrLen );
+			public Span<char> Text => new Span<char>( _txtPtr, _txtPtrLen );
+			public Span<Range> Ranges => new Span<Range>( _rangePtr, _rangePtrLen );
 
 
 			public Span<char> this[int i] {
-				get => txt.Slice( _rangePtr[i].start, _rangePtr[i].length );
+				get => Text.Slice( _rangePtr[i].start, _rangePtr[i].length );
 			}
 
 
@@ -49,7 +49,7 @@ namespace Limcap.UTerminal {
 				_txtPtrLen = source.Length;
 				
 				rangeSpan = new Range[_txtPtrLen];
-				fixed (Range* ptr = &rangeSpan.GetPinnableReference()) { _rangePtr = ptr; IntPtr a = ptr; }
+				fixed (Range* ptr = &rangeSpan.GetPinnableReference()) { _rangePtr = ptr; }
 				_rangePtrLen = source.Length > 0 ? 1 : 0;
 				foreach (var c in source) if (c == gapStart) _rangePtrLen++;
 
