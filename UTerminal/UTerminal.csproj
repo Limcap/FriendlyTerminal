@@ -54,9 +54,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="src\ACommand.Parameter.cs" />
     <Compile Include="src\Args.cs" />
+    <Compile Include="src\PTA.Argument.cs" />
     <Compile Include="src\ChanHoloArray1.cs" />
     <Compile Include="src\ChanHoloArray2.cs" />
-    <Compile Include="src\ChanHoloArray4.cs" />
+    <Compile Include="src\ParameterTypeAssistant_optm2.cs" />
+    <Compile Include="src\SlicedChan.cs" />
     <Compile Include="src\ChanHoloArray3.cs" />
     <Compile Include="src\HistoryNavigator.cs" />
     <Compile Include="src\cmds\customization\ConfigTerminal_Theme.cs" />
@@ -72,6 +74,7 @@
     <Compile Include="src\ParameterTypeAssistant_optm0.cs" />
     <Compile Include="src\ParameterTypeAssistant.cs" />
     <Compile Include="src\Range.cs" />
+    <Compile Include="src\PTA.SorttedInput.cs" />
     <Compile Include="src\Terminal.Actions.cs" />
     <Compile Include="src\Terminal.Core.cs" />
     <Compile Include="src\ACommand.cs" />
@@ -81,6 +84,7 @@
     <Compile Include="src\Tstring.cs" />
     <Compile Include="src\Util.cs" />
     <Compile Include="src\CommandPredictor.cs" />
+    <Compile Include="src\Util_Optimization.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="src\Terminal.InputHandlers.cs" />

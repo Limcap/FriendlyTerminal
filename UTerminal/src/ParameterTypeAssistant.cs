@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 namespace Limcap.UTerminal {
-	internal class ParameterTypeAssistant : ParameterTypeAssistant_optm1 {
+	internal class ParameterTypeAssistant : ParameterTypeAssistant_optm2 {
 		public ParameterTypeAssistant( Dictionary<string, Type> commandsSet, string locale )
 		: base( commandsSet, locale ) {
 		}

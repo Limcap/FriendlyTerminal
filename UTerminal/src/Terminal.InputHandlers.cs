@@ -144,9 +144,10 @@ namespace Limcap.UTerminal {
 
 		private void HandleTextChanged( object sender, TextChangedEventArgs args ) {
 			if ( InputBuffer.Count() > 0 &&  InputBuffer.Contains( ':' ) && InputBuffer.Last() != ':') {
-				var paramsString = _paramAssist.GetAutocompleteOtions( InputBuffer );
-				if (paramsString != null)
-					_statusArea.Text = string.Join("     ",paramsString) ?? "Command not found";
+				var autocompleteString = _paramAssist.GetAutocompleteOtions( InputBuffer );
+				_statusArea.Text = autocompleteString.ToString();
+				//if (paramsString != null)
+				//	_statusArea.Text = string.Join("     ",paramsString) ?? "Command not found";
 			}
 			else if (_useCmdAssist)
 				_statusArea.Text = _cmdAssist.GetPredictions( InputBuffer );

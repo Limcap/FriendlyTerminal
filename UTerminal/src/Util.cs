@@ -60,10 +60,17 @@ namespace Limcap.UTerminal {
 			}
 			return ch;
 		}
+
+
+
+
+		public static unsafe char* GetPointer( ReadOnlySpan<char> span ) {
+			fixed (char* ptr = &span.GetPinnableReference()) { return ptr; }
+		}
 	}
 
 
-	public static class Extensions {
+	public static partial class Extensions {
 
 		public static bool IsIn<T>( this T searched, params T[] group ) {
 			foreach (T item in group) if (item.Equals( searched )) return true;

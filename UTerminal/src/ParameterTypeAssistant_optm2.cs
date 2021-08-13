@@ -9,9 +9,9 @@ using Stan = System.ReadOnlySpan<char>;
 using TwoStrings = System.ValueTuple<string, string>;
 
 namespace Limcap.UTerminal {
-	internal partial class ParameterTypeAssistant_optm1 {
+	internal partial class ParameterTypeAssistant_optm2 {
 
-		public ParameterTypeAssistant_optm1( Dictionary<string, Type> commandsSet, string locale ) {
+		public ParameterTypeAssistant_optm2( Dictionary<string, Type> commandsSet, string locale ) {
 			_commandsSet = commandsSet;
 			_locale = locale;
 		}
@@ -27,8 +27,16 @@ namespace Limcap.UTerminal {
 		private readonly StringBuilder _autocompleteResult = new StringBuilder( 60 );
 
 
-		internal StringBuilder GetAutocompleteOtions( string fullInput ) {
-			//fullInput = "configurar terminal, tema: tamanho=,";
+		internal unsafe StringBuilder GetAutocompleteOtions( string fullInput ) {
+			fullInput = "configurar terminal, tema: tamanho-da-fonte=, cor-de-fundo=,";
+
+			var sorttedInput = new SorttedInput( fullInput.AsSpan() );
+			sorttedInput.SortCommand( _commandsSet, ref _currentCmd, _locale );
+			int argsCount = sorttedInput.ProspectAmountOfArguments();
+			var argsMem = stackalloc Argument[argsCount];
+			sorttedInput.SetSorttedArgsMem( argsMem, argsCount );
+			sorttedInput.SortArguments();
+
 			var parts = SplitInput( ref fullInput );
 			_currentCmd = GetCommand( parts.item1 );
 			if (_currentCmd is null) return _autocompleteResult.Reset( "Command not found" );
