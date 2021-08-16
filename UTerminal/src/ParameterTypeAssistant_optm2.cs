@@ -28,12 +28,12 @@ namespace Limcap.UTerminal {
 
 
 		internal unsafe StringBuilder GetAutocompleteOtions( string fullInput ) {
-			fullInput = "configurar terminal, tema: tamanho-da-fonte=, cor-de-fundo=,";
+			fullInput = "configurar terminal, tema: tamanho-da-fonte=14, cor-de-fundo=,";
 
 			var sorttedInput = new SorttedInput( fullInput.AsSpan() );
 			sorttedInput.SortCommand( _commandsSet, ref _currentCmd, _locale );
 			int argsCount = sorttedInput.ProspectAmountOfArguments();
-			var argsMem = stackalloc Argument[argsCount];
+			var argsMem = stackalloc SorttedInput.Argument[argsCount];
 			sorttedInput.SetSorttedArgsMem( argsMem, argsCount );
 			sorttedInput.SortArguments();
 

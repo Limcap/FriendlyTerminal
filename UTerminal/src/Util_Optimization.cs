@@ -37,7 +37,7 @@ namespace Limcap.UTerminal {
 		public static int IndexOf( this Chan chan, char searchedChar, int startIndex = 0 ) {
 			startIndex = startIndex < 0 ? 0 : startIndex;
 			for (int i = startIndex; i < chan.Length; i++)
-				if (i == searchedChar) return i;
+				if (chan[i] == searchedChar) return i;
 			return -1;
 		}
 
