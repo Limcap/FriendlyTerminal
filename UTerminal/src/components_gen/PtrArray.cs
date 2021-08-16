@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
+using System.Diagnostics;
 
 namespace Limcap.UTerminal {
-	public unsafe ref struct RawArray<T> where T : struct {
+
+	[DebuggerDisplay( "{len} elements <{typeof(T).Name,nq}>" )]
+	public unsafe struct PtrArray<T> where T : struct {
 		public void* ptr;
 		public int len;
 		
 
 
 
-		public RawArray( void* ptr, int len ) {
+		public PtrArray( void* ptr, int len ) {
 			this.ptr = ptr;
 			this.len = len;
 		}
@@ -36,6 +39,9 @@ namespace Limcap.UTerminal {
 
 		public Span<T> AsSpan => new Span<T>( ptr, len );
 		
+
+
+
 		public T[] AsArray {
 			get {
 				var result = new T[len];
@@ -43,8 +49,8 @@ namespace Limcap.UTerminal {
 				IntPtr p = new IntPtr( (byte*)ptr );
 				for (int i=0; i<len; i++) {
 					//IntPtr p = new IntPtr( (byte*)ptr + (i * size) );
-					p += i * size;
 					result[i] = Marshal.PtrToStructure<T>( p );
+					p += size;
 				}
 				return result;
 			}
@@ -54,6 +60,9 @@ namespace Limcap.UTerminal {
 
 		//public T[] AsArray2 => ByteArrayToObject( ToByteArray() );
 
+
+
+
 		public byte[] ToByteArray() {
 			var size = Marshal.SizeOf( typeof( T ) );
 			var bytePtr = (byte*)ptr;
@@ -61,6 +70,9 @@ namespace Limcap.UTerminal {
 			for (int i = 0; i < len * size; i++) byteArr[i] = bytePtr[i];
 			return byteArr;
 		}
+
+
+
 
 		public T[] ByteArrayToObject( byte[] _ByteArray ) {
 			try {

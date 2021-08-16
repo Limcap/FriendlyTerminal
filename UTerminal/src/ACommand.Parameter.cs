@@ -60,6 +60,19 @@ namespace Limcap.UTerminal {
 			}
 			return listToFill;
 		}
+		public static List<ACommand.Parameter> GetByNamePrefix(
+			this ACommand.Parameter[] paramArray,
+			PtrText name,
+			List<ACommand.Parameter> listToFill = null
+		) {
+			if (listToFill is null) listToFill = new List<ACommand.Parameter>( paramArray.Length );
+			foreach (var p in paramArray) {
+				if (p.name.StartsWith( name )) {
+					listToFill.Add( p );
+				}
+			}
+			return listToFill;
+		}
 
 
 

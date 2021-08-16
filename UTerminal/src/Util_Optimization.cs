@@ -60,6 +60,11 @@ namespace Limcap.UTerminal {
 				if (str[i] != part[i]) return false;
 			return true;
 		}
+		public static bool StartsWith( this string str, PtrText txt ) {
+			if (txt.len < str.Length) return false;
+			for (int i = 0; i < txt.len; i++) if (str[i] != txt[i]) return false;
+			return true;
+		}
 
 		public static Span<T> FindAndRemove<T, K>( ref this Span<T> span, Func<T, K> identifier, Span<K> elements ) {
 			Span<int> indexesFound = stackalloc int[span.Length];
@@ -73,6 +78,10 @@ namespace Limcap.UTerminal {
 
 		public static bool Contains<T>( ref this Span<T> collection, T element ) {
 			foreach (T item in collection) if (item.Equals( element )) return true;
+			return false;
+		}
+		public static bool Contains( ref this PtrText text, char c ) {
+			for (int i=0; i<text.len;i++) if (text[i] == c ) return true;
 			return false;
 		}
 

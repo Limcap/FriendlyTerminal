@@ -2,7 +2,7 @@
 using Stan = System.ReadOnlySpan<char>;
 
 namespace Limcap.UTerminal {
-	public unsafe ref partial struct SorttedInput {
+	public unsafe ref partial struct InputSolver {
 		public unsafe struct Argument_Old {
 
 			private char* _paramPtr;

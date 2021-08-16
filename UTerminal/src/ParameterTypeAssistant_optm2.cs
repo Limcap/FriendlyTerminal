@@ -28,14 +28,25 @@ namespace Limcap.UTerminal {
 
 
 		internal unsafe StringBuilder GetAutocompleteOtions( string fullInput ) {
-			fullInput = "configurar terminal, tema: tamanho-da-fonte=14, cor-de-fundo=,";
+			fullInput = "configurar terminal, tema: tamanho-da-fonte=14, cor-de-fundo=, terceiro= , quarto";
 
-			var sorttedInput = new SorttedInput( fullInput.AsSpan() );
-			sorttedInput.SortCommand( _commandsSet, ref _currentCmd, _locale );
-			int argsCount = sorttedInput.ProspectAmountOfArguments();
-			var argsMem = stackalloc SorttedInput.Argument[argsCount];
-			sorttedInput.SetSorttedArgsMem( argsMem, argsCount );
-			sorttedInput.SortArguments();
+			var inputSolver = new InputSolver( fullInput.AsSpan() );
+			
+			inputSolver.SolveCommand( _commandsSet, ref _currentCmd, _locale );
+			if(inputSolver.cmd is null) return _autocompleteResult.Reset( "Command not found" );
+
+			int argsCount = inputSolver.CountArguments();
+			var argsMem = stackalloc InputSolver.Arg[argsCount];
+			inputSolver.SetMemoryForArgs( argsMem, argsCount );
+			inputSolver.SolveArguments();
+			if(argsCount == 0)
+				GetFormmattedParamsNames( inputSolver.cmd.Parameters, _autocompleteResult );
+			else {
+				GetMissingParams( inputSolver.cmd, ref inputSolver.args, _auxMissingParams_temp );
+				_auxMissingParams_main.Clear();
+				_auxMissingParams_main.AddRange( _auxMissingParams_temp );
+				GetFormmattedParamsNames( _auxMissingParams_main, result );
+			}
 
 			var parts = SplitInput( ref fullInput );
 			_currentCmd = GetCommand( parts.item1 );
@@ -160,6 +171,25 @@ namespace Limcap.UTerminal {
 						if (!slicedInput[i].Contains( '=' )) continue;
 						Stan inputtedName = slicedInput[i].SliceAtChar( '=' );
 						if (inputtedName.Equals( paramName, StringComparison.Ordinal ))
+							isMissing = false;
+					}
+					if (isMissing) result.Add( p );
+				}
+			}
+		}
+		private static unsafe void GetMissingParams( ACommand cmd, InputSolver.Arg.Array args, List<ACommand.Parameter> result ) {
+			result.Clear();
+
+			var lastArg = args[args.Length - 1];
+			if (args.Length > 0) {
+				cmd.Parameters.GetByNamePrefix( lastArg.name, result );
+			}
+			else {
+				foreach (var p in cmd.Parameters) {
+					bool isMissing = true;
+					for (int i = 0; i < args.Length; i++) {
+						if (!args[i].value.IsNull) continue;
+						if (args[i].name == p.name)
 							isMissing = false;
 					}
 					if (isMissing) result.Add( p );
