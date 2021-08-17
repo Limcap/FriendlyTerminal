@@ -102,7 +102,7 @@ namespace Limcap.UTerminal {
 
 
 		public PString SliceToChar( char c, int startIndex = 0 ) {
-			int index = IndexOf( ',', startIndex );
+			int index = IndexOf( c, startIndex );
 			if (index == -1) return PString.Null;
 			int length = index - startIndex;
 			return Slice( startIndex, length );
