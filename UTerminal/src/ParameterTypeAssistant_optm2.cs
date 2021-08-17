@@ -13,9 +13,22 @@ namespace Limcap.UTerminal {
 		private readonly Dictionary<string, Type> _commandsSet;
 		private readonly string _locale;
 		private ACommand _currentCmd;
+		private string _currentConfirmedText;
 		private readonly List<ACommand.Parameter> _aux_possibleParams_main = new List<ACommand.Parameter>( 8 );
 		private readonly List<ACommand.Parameter> _aux_possibleParams_temp = new List<ACommand.Parameter>( 8 );
-		private readonly StringBuilder _aux_autocompleteResult = new StringBuilder( 60 );
+		private readonly StringBuilder _aux_assistantResult = new StringBuilder( 60 );
+		
+
+
+
+		public List<ACommand.Parameter> CurrentPossibilities => _aux_possibleParams_main;
+		private int _currentSelectedPossibility;
+		public string NextPossibility() {
+			if (_currentCmd is null) return null;
+			_currentSelectedPossibility++;
+			if (_currentSelectedPossibility > _aux_possibleParams_main.Count) _currentSelectedPossibility = 0;
+			return _currentConfirmedText + (", " + _aux_possibleParams_main[_currentSelectedPossibility].name).Trim(',');
+		}
 
 
 
@@ -36,7 +49,7 @@ namespace Limcap.UTerminal {
 			inputSolver.SolveCommand( _commandsSet, ref _currentCmd, _locale );
 
 			if (inputSolver.cmd is null)
-				return _aux_autocompleteResult.Reset( "Command not found" );
+				return _aux_assistantResult.Reset( "Command not found" );
 
 			int argsCount = inputSolver.CountArguments();
 			var argsMem = stackalloc InputSolver.Arg[argsCount];
@@ -49,10 +62,17 @@ namespace Limcap.UTerminal {
 			FindPossibleParams( inputSolver.cmd, inputSolver.args, _aux_possibleParams_temp );
 			_aux_possibleParams_main.Clear();
 			_aux_possibleParams_main.AddRange( _aux_possibleParams_temp );
-			FormatParamsNames( _aux_possibleParams_main, _aux_autocompleteResult );
+			FormatParamsNames( _aux_possibleParams_main, _aux_assistantResult );
 			//}
 
-			return _aux_autocompleteResult;
+			_currentCmd = inputSolver.cmd;
+			_currentConfirmedText = inputSolver.cmdText.AsString + ": ";
+			for(int i=0; i< inputSolver.args.Length-1; i++ ) {
+				var arg = inputSolver.args[i];
+				_currentConfirmedText += arg.name + "=" + arg.value + ", ";
+			}
+			_currentSelectedPossibility = -1;
+			return _aux_assistantResult;
 		}
 
 

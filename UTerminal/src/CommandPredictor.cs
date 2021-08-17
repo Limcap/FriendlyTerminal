@@ -113,6 +113,47 @@ namespace Limcap.UTerminal {
 		}
 
 
+
+
+		public string GetConfirmedNodes( string fullInput ) {
+			bool hasColon = fullInput.Contains( ':' );
+			var input = ((PString)fullInput).SliceToChar( ':' );//.Split( ':' );
+			input.len++;
+			var words = input.AsString.Split( ' ' );
+			int length = words.Length;
+			Node lastConfirmedNode = _startNode;
+			int unpredictedWordIndex = -1;
+			for (int i = 0; i < words.Length-(hasColon?0:1); i++) {
+				if (_confirmedNodes.Count > i) {
+					if (_confirmedNodes[i].word == words[i]) {
+						lastConfirmedNode = _confirmedNodes[i];
+						unpredictedWordIndex = i + 1;
+						continue;
+					}
+					else {
+						unpredictedWordIndex = i;
+						_confirmedNodes = _confirmedNodes.Take( i ).ToList();
+						break;
+					}
+				}
+				else {
+					var existingNode = lastConfirmedNode.GetNext( words[i] );
+					if (existingNode != null) {
+						_confirmedNodes.Add( existingNode );
+						lastConfirmedNode = existingNode;
+						unpredictedWordIndex = i + 1;
+					}
+					else {
+						unpredictedWordIndex = i;
+						break;
+					}
+				}
+			}
+
+			return _confirmedNodes.Aggregate( string.Empty, ( agg, c ) => agg += c.word + ' ' );
+		}
+
+
 		//private string GetParametersPrediction(string input) {
 		//	var inputParts = input.Split( ':' );
 		//	var invokeText = inputParts[0];
