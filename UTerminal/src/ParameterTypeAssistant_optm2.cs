@@ -6,18 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Chan = System.Span<char>;
 using Stan = System.ReadOnlySpan<char>;
-using TwoStrings = System.ValueTuple<string, string>;
 
 namespace Limcap.UTerminal {
 	internal partial class ParameterTypeAssistant_optm2 {
-
-		public ParameterTypeAssistant_optm2( Dictionary<string, Type> commandsSet, string locale ) {
-			_commandsSet = commandsSet;
-			_locale = locale;
-		}
-
-
-
 
 		private readonly Dictionary<string, Type> _commandsSet;
 		private readonly string _locale;
@@ -27,103 +18,42 @@ namespace Limcap.UTerminal {
 		private readonly StringBuilder _autocompleteResult = new StringBuilder( 60 );
 
 
+
+
+		public ParameterTypeAssistant_optm2( Dictionary<string, Type> commandsSet, string locale ) {
+			_commandsSet = commandsSet;
+			_locale = locale;
+		}
+
+
+
+
 		internal unsafe StringBuilder GetAutocompleteOtions( string fullInput ) {
-			fullInput = "configurar terminal, tema: tamanho-da-fonte=14, cor-de-fundo=, terceiro= , quarto";
+			fullInput = "configurar terminal, tema: tamanho-da-fonte=14, cor-de-fundo=, terceiro= , ";
 
 			var inputSolver = new InputSolver( fullInput.AsSpan() );
-			
+
 			inputSolver.SolveCommand( _commandsSet, ref _currentCmd, _locale );
-			if(inputSolver.cmd is null) return _autocompleteResult.Reset( "Command not found" );
+
+			if(inputSolver.cmd is null)
+				return _autocompleteResult.Reset( "Command not found" );
 
 			int argsCount = inputSolver.CountArguments();
 			var argsMem = stackalloc InputSolver.Arg[argsCount];
 			inputSolver.SetMemoryForArgs( argsMem, argsCount );
 			inputSolver.SolveArguments();
+
 			if(argsCount == 0)
 				GetFormmattedParamsNames( inputSolver.cmd.Parameters, _autocompleteResult );
 			else {
-				GetMissingParams( inputSolver.cmd, ref inputSolver.args, _auxMissingParams_temp );
+				GetMissingParams( inputSolver.cmd, inputSolver.args, _auxMissingParams_temp );
 				_auxMissingParams_main.Clear();
 				_auxMissingParams_main.AddRange( _auxMissingParams_temp );
-				GetFormmattedParamsNames( _auxMissingParams_main, result );
+				GetFormmattedParamsNames( _auxMissingParams_main, _autocompleteResult );
 			}
 
-			var parts = SplitInput( ref fullInput );
-			_currentCmd = GetCommand( parts.item1 );
-			if (_currentCmd is null) return _autocompleteResult.Reset( "Command not found" );
-			ProcessAutocompleteOtions( _currentCmd, ref parts.item2, result: _autocompleteResult );
 			return _autocompleteResult;
 		}
-
-
-
-
-
-
-
-
-		private void ProcessAutocompleteOtions( ACommand cmd, ref Stan paramsInput, StringBuilder result ) {
-			// If the input is empty, returns all parameters
-			result.Length = 0;
-			if (paramsInput.Trim().Length == 0) {
-				GetFormmattedParamsNames( cmd.Parameters, result );
-			}
-
-			// else select the parameters to return
-			else {
-				//!DEBUG
-				//paramsInput = "tamanho-da-fonte=, cor-d-fundo=,".AsSpan();
-				GetMissingParams( cmd, ref paramsInput, _auxMissingParams_temp );
-				_auxMissingParams_main.Clear();
-				_auxMissingParams_main.AddRange( _auxMissingParams_temp );
-				GetFormmattedParamsNames( _auxMissingParams_main, result );
-			}
-		}
-
-
-
-
-
-
-
-
-		private StanTuple SplitInput( ref string inputText ) {
-			var inp = inputText.AsSpan();
-			var cmdEndIndex = inputText.IndexOf( ':' );
-
-			// In case there is no colon character, it is not time to assist with parameter typing since the command
-			// hasn't been defined yey.
-			if (cmdEndIndex == -1) return new StanTuple();
-
-			var splittedInput = new StanTuple();
-			// command name part
-			splittedInput.item1 = inp.Slice( 0, cmdEndIndex );
-			// parameters part
-			splittedInput.item2 = cmdEndIndex < inp.Length ? inp.Slice( cmdEndIndex + 1 ) : null;
-
-			return splittedInput;
-		}
-
-
-
-
-
-
-
-
-		private ACommand GetCommand( Stan invokeText ) {
-			if (!_commandsSet.ContainsKey( invokeText.ToString() )) return null;
-			var cmdType = _commandsSet[invokeText.ToString()];
-			//if (_currentCmd?.GetType() == cmdType) return _currentCmd;
-			var instance = _currentCmd?.GetType() == cmdType ? _currentCmd
-			: cmdType.IsSubclassOf( typeof( ACommand ) ) ? (ACommand)Activator.CreateInstance( cmdType, _locale )
-			: null;
-			return instance;
-		}
-
-
-
-
 
 
 
@@ -141,48 +71,12 @@ namespace Limcap.UTerminal {
 
 
 
-
-
-
-		private static unsafe void GetMissingParams( ACommand cmd, ref Stan paramsInput, List<ACommand.Parameter> result ) {
-			//!DEBUG
-			//paramsInput = " cor-da-fonte= , cor-do-fundo ,  ".AsSpan();
-
-			var slicedInput = new SlicedChan();
-			slicedInput.ProspectSlices( ref paramsInput, ',' );
-			var schanRangePtr = stackalloc Range[slicedInput.NumberOfSlices];
-			slicedInput.SetIndexMemory( schanRangePtr );
-			slicedInput.Slice();
-			slicedInput.Trim();
-
-			result.Clear();
-
-			Stan lastPart = slicedInput[slicedInput.NumberOfSlices - 1];
-			if (lastPart.Length > 0) {
-				var inputtedName = lastPart.Trim( '=' );
-				//if (inputtedName == null) inputtedName = lastPart;
-				cmd.Parameters.GetByNamePrefix( inputtedName, result );
-			}
-			else {
-				foreach (var p in cmd.Parameters) {
-					bool isMissing = true;
-					var paramName = p.name.AsSpan();
-					for (int i = 0; i < slicedInput.NumberOfSlices; i++) {
-						if (!slicedInput[i].Contains( '=' )) continue;
-						Stan inputtedName = slicedInput[i].SliceAtChar( '=' );
-						if (inputtedName.Equals( paramName, StringComparison.Ordinal ))
-							isMissing = false;
-					}
-					if (isMissing) result.Add( p );
-				}
-			}
-		}
 		private static unsafe void GetMissingParams( ACommand cmd, InputSolver.Arg.Array args, List<ACommand.Parameter> result ) {
 			result.Clear();
 
 			var lastArg = args[args.Length - 1];
 			if (args.Length > 0) {
-				cmd.Parameters.GetByNamePrefix( lastArg.name, result );
+				cmd.Parameters.GetByNamePrefix( args.Last.name, result );
 			}
 			else {
 				foreach (var p in cmd.Parameters) {
@@ -196,8 +90,6 @@ namespace Limcap.UTerminal {
 				}
 			}
 		}
-
-
 
 
 

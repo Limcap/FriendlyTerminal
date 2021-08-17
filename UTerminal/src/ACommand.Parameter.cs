@@ -60,6 +60,10 @@ namespace Limcap.UTerminal {
 			}
 			return listToFill;
 		}
+
+
+
+
 		public static List<ACommand.Parameter> GetByNamePrefix(
 			this ACommand.Parameter[] paramArray,
 			PtrText name,

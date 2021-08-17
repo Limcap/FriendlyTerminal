@@ -4,7 +4,7 @@ namespace Limcap.UTerminal {
 	public unsafe ref partial struct InputSolver {
 		public unsafe partial struct Arg {
 
-			[DebuggerDisplay( "{Preview(), nq}" )]
+			[DebuggerDisplay( "{Length, nq} Arguments" )]
 			public unsafe struct Array {
 				public PtrArray<Arg> ptrArr;
 				public int Length => ptrArr.len;
@@ -26,6 +26,12 @@ namespace Limcap.UTerminal {
 
 
 
+				public bool IsNull => ptrArr.ptr == null || ptrArr.len < 1;
+				public static Arg Null => new Arg( null );
+
+
+
+
 
 				public Arg this[int i] {
 					get => ((Arg*)ptrArr.ptr)[i];
@@ -34,11 +40,15 @@ namespace Limcap.UTerminal {
 
 
 
+				public Arg Last => IsNull ? new Arg( null ) : this[ptrArr.len - 1];
 
-				private string Preview() {
-					return $"{Length} Arguments";
-					//return $"PtrArray of {typeof( Arg ).Name}, {Length} elements";
-				}
+
+
+
+				//private string Preview() {
+				//	return $"{Length} Arguments";
+				//	//return $"PtrArray of {typeof( Arg ).Name}, {Length} elements";
+				//}
 			}
 		}
 	}

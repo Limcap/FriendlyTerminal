@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers;
 using System.Collections.Generic;
 using Chan = System.Span<char>;
 using Stan = System.ReadOnlySpan<char>;
@@ -10,19 +11,6 @@ namespace Limcap.UTerminal {
 		
 		public ACommand cmd;
 		public Arg.Array args;
-
-
-		//public PtrText Command => _cmdText;
-		//public Arg.Array Args => _argArray;
-
-
-		//private Argument[] ArgArray {
-		//	get {
-		//		var aarr = new Argument[_argArr.len];
-		//		for (var i = 0; i < _argArr.len; i++) aarr[i] = ((Argument*)_argArr.ptr)[i];
-		//		return aarr;
-		//	}
-		//}
 
 
 
@@ -40,10 +28,6 @@ namespace Limcap.UTerminal {
 				len = Math.Max( 0, fullInput.Length - splitIndex - 1 )
 			};
 
-			//_argArr = new PtrArray<Argument>() {
-			//	ptr = null,
-			//	len = 0
-			//};
 			args = new Arg.Array();
 
 			cmd = null;
@@ -54,8 +38,11 @@ namespace Limcap.UTerminal {
 
 		public void SolveCommand( Dictionary<string, Type> commandsSet, ref ACommand currentCmd, string locale ) {
 			var cmdTextString = _cmdText.ToString();
-			if (!commandsSet.ContainsKey(cmdTextString))
+			if (!commandsSet.ContainsKey( cmdTextString )) {
 				cmd = null;
+				return;
+			}
+		
 			var cmdType = commandsSet[cmdTextString];
 			cmd = currentCmd?.GetType() == cmdType ? currentCmd
 			: cmdType.IsSubclassOf( typeof( ACommand ) ) ? (ACommand)Activator.CreateInstance( cmdType, locale )
@@ -67,6 +54,7 @@ namespace Limcap.UTerminal {
 
 		public int CountArguments() {
 			return _argsText.Count( ',' );
+			//var ta = ArrayPool<char>.Shared.Rent( _argsText.Count( ',' ) );
 		}
 
 
@@ -74,8 +62,6 @@ namespace Limcap.UTerminal {
 
 		public void SetMemoryForArgs( Arg* argumentMemoryPtr, int argumentMemoryLength ) {
 			args = new Arg.Array( argumentMemoryPtr, argumentMemoryLength );
-			//_argArr.ptr = argumentMemoryPtr;
-			//_argArr.len = argumentMemoryLength;
 		}
 
 

@@ -39,75 +39,11 @@ namespace Limcap.UTerminal {
 
 
 
-		#region STATIC MEMBERS
+		#region PROPERTIES
 		#endregion
-		public static PtrText Null => new PtrText() { ptr = (char*)IntPtr.Zero.ToPointer(), len = -1 };
 		public bool IsNull => len < 0;
 
 
-
-
-
-
-
-
-		#region CONVERSION
-		#endregion
-		public Span<char> AsSpan => (len < 0) ? null : new Span<char>( ptr, len );
-		public string AsString => (len < 0) ? null : new string( ptr, 0, len );
-		public override string ToString() => AsString;
-
-
-
-
-
-
-
-
-		#region OPERATORS
-		#endregion
-		public char this[int i] {
-			get => ptr[i];
-			set => ptr[i] = value;
-		}
-
-
-
-
-		public static implicit operator PtrText( string txt ) => new PtrText( txt.AsSpan() );
-
-
-
-
-		public static bool operator ==( PtrText a, PtrText b ) {
-			if (a.len != b.len) return false;
-			for (int i = 0; i < a.len; i++) if (a[i] != b[i]) return false;
-			return true;
-		}
-		public static bool operator !=( PtrText a, PtrText b ) {
-			return !(a == b);
-		}
-
-
-
-
-		public static bool operator ==( PtrText a, string b ) {
-			if (a.len != b.Length) return false;
-			for (int i = 0; i < a.len; i++) if (a[i] != b[i]) return false;
-			return true;
-		}
-		public static bool operator !=( PtrText a, string b ) {
-			return !(a == b);
-		}
-
-
-
-		//private string Preview() {
-		//	//return ptr == null ? "\"{null pointer}\"" : $"\"{AsString}\"";
-		//	var a = ((int)ptr).ToString( "X" );
-		//	if (ptr == null) return $"[{a}] {{null pointer}}";
-		//	else return $"[{a}] \"{AsString}\"";
-		//}
 
 
 
@@ -183,6 +119,113 @@ namespace Limcap.UTerminal {
 
 		public Slicer GetSlicer( char slicerChar ) {
 			return new Slicer( slicerChar, this );
+		}
+
+
+
+
+
+
+
+
+		#region STATIC
+		#endregion
+		public static PtrText Null => new PtrText() { ptr = null, len = -1 };
+
+
+
+
+
+
+
+
+		#region OPERATORS
+		#endregion
+		public char this[int i] {
+			get => ptr[i];
+			set => ptr[i] = value;
+		}
+
+
+
+
+		public static bool operator ==( PtrText a, PtrText b ) {
+			if (a.len != b.len) return false;
+			for (int i = 0; i < a.len; i++) if (a[i] != b[i]) return false;
+			return true;
+		}
+
+
+
+
+		public static bool operator !=( PtrText a, PtrText b ) {
+			return !(a == b);
+		}
+
+
+
+
+		public static bool operator ==( PtrText a, string b ) {
+			if (a.len != b.Length) return false;
+			for (int i = 0; i < a.len; i++) if (a[i] != b[i]) return false;
+			return true;
+		}
+
+
+
+
+		public static bool operator !=( PtrText a, string b ) {
+			return !(a == b);
+		}
+
+
+
+
+
+
+
+
+		#region CONVERSION
+		#endregion
+		public static implicit operator PtrText( string txt ) => new PtrText( txt.AsSpan() );
+
+
+
+
+		public Span<char> AsSpan => IsNull ? null : new Span<char>( ptr, len );
+
+
+
+
+		public string AsString => IsNull ? null : new string( ptr, 0, len );
+
+
+
+
+		public override string ToString() => AsString;
+	}
+
+
+
+
+
+
+
+	#region EXTENSIONS
+	#endregion
+	public static partial class Extensions {
+		public static bool StartsWith( this string str, PtrText txt ) {
+			if (txt.len > str.Length) return false;
+			for (int i = 0; i < txt.len; i++) if (str[i] != txt[i]) return false;
+			return true;
+		}
+
+
+
+
+		public static bool Contains( ref this PtrText text, char c ) {
+			for (int i = 0; i < text.len; i++) if (text[i] == c) return true;
+			return false;
 		}
 	}
 }
