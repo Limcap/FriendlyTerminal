@@ -92,7 +92,8 @@ namespace Limcap.UTerminal {
 
 
 
-		public PString Slice( int startIndex, int length ) {
+		public PString Slice( int startIndex, int length=int.MaxValue ) {
+			if (length > len) length = len - startIndex;
 			//if (startIndex > len - 1) throw new IndexOutOfRangeException( "Slice start index is out of bounds" );
 			return new PString() { ptr = ptr + startIndex, len = length };
 		}
