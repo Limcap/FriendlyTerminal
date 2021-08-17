@@ -95,7 +95,19 @@ namespace Limcap.UTerminal {
 			}
 
 			else if (e.Key == Key.Return) {
-				var input = InputBuffer;
+				//var txt1 = _mainArea.Text;
+				//var p1 = (PString)txt1;
+				//var txt2 = _mainArea.Text;
+				//var p2 = (PString)txt2;
+				//p2[p2.len - 1] = 'B';
+				//_mainArea.AppendText( "3" );
+				//_mainArea.AppendText( "4" );
+				//_mainArea.AppendText( "5" );
+				//var txt3 = _mainArea.Text;
+				//var p3 = (PString)txt3;
+				//var p = (byte*)&pstr;
+
+				var input = GetInputBuffer();
 				UpdateTraceArea( e.Key );
 				if (input.Trim().Length == 0) {
 					e.Handled = true;
@@ -143,14 +155,15 @@ namespace Limcap.UTerminal {
 
 
 		private void HandleTextChanged( object sender, TextChangedEventArgs args ) {
-			if ( InputBuffer.Count() > 0 &&  InputBuffer.Contains( ':' ) && InputBuffer.Last() != ':') {
-				var autocompleteString = _paramAssist.GetAutocompleteOtions( InputBuffer );
+			var input = GetInputBuffer();
+			if (input.Count() > 0 && input.Contains( ':' ) && input.Last() != ':') {
+				var autocompleteString = _paramAssist.GetAutocompleteOtions( input );
 				_statusArea.Text = autocompleteString.ToString();
 				//if (paramsString != null)
 				//	_statusArea.Text = string.Join("     ",paramsString) ?? "Command not found";
 			}
 			else if (_useCmdAssist)
-				_statusArea.Text = _cmdAssist.GetPredictions( InputBuffer );
+				_statusArea.Text = _cmdAssist.GetPredictions( input );
 
 			//if (InputBuffer.Contains( ':' )) {
 			//	var inputParts = InputBuffer.Split( ':' );

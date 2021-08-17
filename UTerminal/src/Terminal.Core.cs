@@ -1,8 +1,8 @@
 ﻿using Limcap.Dux;
-using Cmds = Limcap.UTerminal.Cmds;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -10,7 +10,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Linq;
+using Cmds = Limcap.UTerminal.Cmds;
 
 namespace Limcap.UTerminal {
 
@@ -93,7 +93,7 @@ namespace Limcap.UTerminal {
 			StartNewInputBuffer();
 			_cmdAssist = new CommandPredictor( _cmdList.Keys );
 			_paramAssist = new ParameterTypeAssistant( _cmdList, Locale );
-			_statusArea.Text = _cmdAssist.GetPredictions(string.Empty);
+			_statusArea.Text = _cmdAssist.GetPredictions( string.Empty );
 		}
 
 
@@ -137,9 +137,17 @@ namespace Limcap.UTerminal {
 
 
 
-		public string InputBuffer {
-			get => _mainArea.Text.Substring( _bufferStartIndex );
+		public string GetInputBuffer() {
+			var lastLineStartIndex = _mainArea.GetCharacterIndexFromLineIndex( _mainArea.LineCount - 1 );
+			var lastLine = _mainArea.GetLineText( _mainArea.LineCount - 1 ) ?? string.Empty;
+			var lasLineBufferStartIndex = _bufferStartIndex - lastLineStartIndex;
+			if (lasLineBufferStartIndex < 0) return string.Empty;
+			return lastLine == string.Empty ? lastLine : lastLine.Substring( lasLineBufferStartIndex );
+			//return _mainArea.Text.Substring( _bufferStartIndex );
 		}
+		//public PString InputBuffer {
+		//	get => ((PString)_mainArea.Text).Slice( _bufferStartIndex );
+		//}
 
 
 
