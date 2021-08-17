@@ -6,14 +6,14 @@ using System.Diagnostics;
 namespace Limcap.UTerminal {
 
 	[DebuggerDisplay( "{len} elements <{typeof(T).Name,nq}>" )]
-	public unsafe struct PtrArray<T> where T : struct {
+	public unsafe struct PArray<T> where T : struct {
 		public void* ptr;
 		public int len;
 		
 
 
 
-		public PtrArray( void* ptr, int len ) {
+		public PArray( void* ptr, int len ) {
 			this.ptr = ptr;
 			this.len = len;
 		}

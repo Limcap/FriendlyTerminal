@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Buffers;
 using System.Collections.Generic;
-using Chan = System.Span<char>;
-using Stan = System.ReadOnlySpan<char>;
+using System.Diagnostics;
 
 namespace Limcap.UTerminal {
 	public unsafe ref partial struct InputSolver {
-		private PtrText _cmdText;
-		private PtrText _argsText;
+		private PString _cmdText;
+		private PString _argsText;
 		
 		public ACommand cmd;
 		public Arg.Array args;
@@ -15,15 +14,34 @@ namespace Limcap.UTerminal {
 
 
 
-		public unsafe InputSolver( Stan fullInput ) {
+		public unsafe InputSolver( string input ) {
+			var splitIndex = input.IndexOf( ':' );
+
+			_cmdText = new PString() {
+				ptr = ((PString)input).ptr,
+				len = splitIndex == -1 ? input.Length : splitIndex
+			};
+			//_cmdText = (PString)input;
+			//_cmdText.len = splitIndex == -1 ? input.Length : splitIndex;
+
+			_argsText = new PString() {
+				ptr = splitIndex == -1 ? null : _cmdText.ptr + splitIndex + 1,
+				len = Math.Max( 0, input.Length - splitIndex - 1 )
+			};
+
+			args = new Arg.Array();
+
+			cmd = null;
+		}
+		public unsafe InputSolver( ReadOnlySpan<char> fullInput ) {
 			var splitIndex = fullInput.IndexOf( ':' );
 
-			_cmdText = new PtrText() {
+			_cmdText = new PString() {
 				ptr = Util.GetPointer( fullInput ),
 				len = splitIndex == -1 ? fullInput.Length : splitIndex
 			};
 
-			_argsText = new PtrText() {
+			_argsText = new PString() {
 				ptr = splitIndex == -1 ? null : _cmdText.ptr + splitIndex + 1,
 				len = Math.Max( 0, fullInput.Length - splitIndex - 1 )
 			};
@@ -54,7 +72,6 @@ namespace Limcap.UTerminal {
 
 		public int CountArguments() {
 			return _argsText.Count( ',' );
-			//var ta = ArrayPool<char>.Shared.Rent( _argsText.Count( ',' ) );
 		}
 
 
@@ -73,22 +90,7 @@ namespace Limcap.UTerminal {
 			for (int i = 0; i < args.Length; i++) {
 				var slice = slicer.NextSlice();
 				args[i] = new Arg( ref slice );
-				//((ArgSolver*)_argArr._rawArr.ptr)[i] = new ArgSolver( slice );
 			}
-
-			//var a = ((ArgSolver*)_argArr._rawArr.ptr)[2];
-			//for(int u=0;u<10;u++) ((long*)_argArr._rawArr.ptr)[u] = 0;
-
-			//int lastIndex = -1;
-			//for (int i = 0; i < _argArr.Length - 1; i++) {
-			//	int index = _argsTxt.IndexOf( ',', lastIndex + 1 );
-			//	if (index == -1) index = lastIndex + 1;
-			//	int length = index - (lastIndex + 1);
-			//	var argText = _argsTxt.Slice( lastIndex + 1, length );
-			//	//((Argument*)_argArr.ptr)[i] = new Argument( ref argText );
-			//	_argArr[i] = new Argument( ref argText );
-			//	lastIndex = index;
-			//}
 		}
 	}
 }

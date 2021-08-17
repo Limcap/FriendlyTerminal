@@ -1,32 +1,30 @@
 ﻿using System;
 using System.Diagnostics;
-using Stan = System.ReadOnlySpan<char>;
-using Memstr = System.ReadOnlyMemory<char>;
 
 namespace Limcap.UTerminal {
 	public unsafe ref partial struct InputSolver {
 
-		//[DebuggerDisplay( "{Preview(), nq}" )]
-		[DebuggerDisplay( "name: {(name.IsNull ? \"{null}\" : name)}    value: {(value.IsNull ? \{null} : value), nq}" )]
+		[DebuggerDisplay( "{Preview(), nq}" )]
+		//[DebuggerDisplay( "name: {(name.IsNull ? \"{null}\" : name)}    value: {(value.IsNull ? \"{" +  "null}\" : value), nq}" )]
 		public unsafe partial struct Arg {
-
-			public PtrText name;
-			public PtrText value;
+			public PString name;
+			public PString value;
 
 
 
 
 			public Arg( void* nullPointer ) {
-				name = PtrText.Null;
-				value = PtrText.Null;
+				name = PString.Null;
+				value = PString.Null;
 			}
 
 
 
-			public Arg( ref PtrText ptxt ) {
+
+			public Arg( ref PString ptxt ) {
 				if( ptxt.IsNull) {
-					name = PtrText.Null;
-					value = PtrText.Null;
+					name = PString.Null;
+					value = PString.Null;
 				}
 				else {
 					var firstIndex = ptxt.IndexOf( '=' );
@@ -36,13 +34,19 @@ namespace Limcap.UTerminal {
 					name.Trim();
 
 					value = firstIndex < 0
-						? PtrText.Null
+						? PString.Null
 						: ptxt.Slice(
 							startIndex: Math.Min( firstIndex + 1, ptxt.len - 1 ),
 							length: ptxt.len - firstIndex - 1 );
 					value.Trim();
 				}
 			}
+
+
+
+
+			public bool NameIsComplete => !value.IsNull;
+			public bool ValueIsEmpty => value.IsNullOrEmty;
 
 
 

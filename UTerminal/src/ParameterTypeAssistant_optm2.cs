@@ -13,9 +13,9 @@ namespace Limcap.UTerminal {
 		private readonly Dictionary<string, Type> _commandsSet;
 		private readonly string _locale;
 		private ACommand _currentCmd;
-		private readonly List<ACommand.Parameter> _auxMissingParams_main = new List<ACommand.Parameter>( 8 );
-		private readonly List<ACommand.Parameter> _auxMissingParams_temp = new List<ACommand.Parameter>( 8 );
-		private readonly StringBuilder _autocompleteResult = new StringBuilder( 60 );
+		private readonly List<ACommand.Parameter> _aux_possibleParams_main = new List<ACommand.Parameter>( 8 );
+		private readonly List<ACommand.Parameter> _aux_possibleParams_temp = new List<ACommand.Parameter>( 8 );
+		private readonly StringBuilder _aux_autocompleteResult = new StringBuilder( 60 );
 
 
 
@@ -29,85 +29,62 @@ namespace Limcap.UTerminal {
 
 
 		internal unsafe StringBuilder GetAutocompleteOtions( string fullInput ) {
-			fullInput = "configurar terminal, tema: tamanho-da-fonte=14, cor-de-fundo=, terceiro= , ";
+			//fullInput = "configurar terminal, tema: tamanho-da-fonte=14, cor-de-fundo=, terceiro= , ";
 
-			var inputSolver = new InputSolver( fullInput.AsSpan() );
+			var inputSolver = new InputSolver( fullInput );
 
 			inputSolver.SolveCommand( _commandsSet, ref _currentCmd, _locale );
 
-			if(inputSolver.cmd is null)
-				return _autocompleteResult.Reset( "Command not found" );
+			if (inputSolver.cmd is null)
+				return _aux_autocompleteResult.Reset( "Command not found" );
 
 			int argsCount = inputSolver.CountArguments();
 			var argsMem = stackalloc InputSolver.Arg[argsCount];
 			inputSolver.SetMemoryForArgs( argsMem, argsCount );
 			inputSolver.SolveArguments();
 
-			if(argsCount == 0)
-				GetFormmattedParamsNames( inputSolver.cmd.Parameters, _autocompleteResult );
-			else {
-				GetMissingParams( inputSolver.cmd, inputSolver.args, _auxMissingParams_temp );
-				_auxMissingParams_main.Clear();
-				_auxMissingParams_main.AddRange( _auxMissingParams_temp );
-				GetFormmattedParamsNames( _auxMissingParams_main, _autocompleteResult );
-			}
+			//if (argsCount == 0)
+			//	FormtParamsNames( inputSolver.cmd.Parameters, _aux_autocompleteResult );
+			//else {
+			FindPossibleParams( inputSolver.cmd, inputSolver.args, _aux_possibleParams_temp );
+			_aux_possibleParams_main.Clear();
+			_aux_possibleParams_main.AddRange( _aux_possibleParams_temp );
+			FormatParamsNames( _aux_possibleParams_main, _aux_autocompleteResult );
+			//}
 
-			return _autocompleteResult;
+			return _aux_autocompleteResult;
 		}
 
 
 
 
-		private StringBuilder GetFormmattedParamsNames( IEnumerable<ACommand.Parameter> parameters, StringBuilder sb ) {
-			if (parameters.IsNullOrEmpty()) return sb;
+		private StringBuilder FormatParamsNames( IEnumerable<ACommand.Parameter> parameters, StringBuilder sb ) {
 			sb.Reset();
+			if (parameters.IsNullOrEmpty()) return sb;
 			foreach (var p in parameters) sb.Append( p.optional ? $"[{p.name}=]" : $"{p.name}=" ).Append( "     " );
 			return sb;
 		}
-		private StringBuilder GetFormmattedParamsNames( ACommand.Parameter p, StringBuilder sb ) {
-			return sb.Reset( p.optional ? $"[{p.name}=]" : $"{p.name}=" ).Append( "     " );
-		}
 
 
 
 
-		private static unsafe void GetMissingParams( ACommand cmd, InputSolver.Arg.Array args, List<ACommand.Parameter> result ) {
+		private static unsafe void FindPossibleParams( ACommand cmd, InputSolver.Arg.Array args, List<ACommand.Parameter> result ) {
 			result.Clear();
 
-			var lastArg = args[args.Length - 1];
-			if (args.Length > 0) {
+			//Initially we add to the result the possibilities, based on the name of the last argument.
+			if (args.Last.name.IsNullOrEmty)
+				result.AddRange( cmd.Parameters );
+			else if (!args.Last.NameIsComplete || args.Last.ValueIsEmpty)
 				cmd.Parameters.GetByNamePrefix( args.Last.name, result );
-			}
-			else {
-				foreach (var p in cmd.Parameters) {
-					bool isMissing = true;
-					for (int i = 0; i < args.Length; i++) {
-						if (!args[i].value.IsNull) continue;
-						if (args[i].name == p.name)
-							isMissing = false;
-					}
-					if (isMissing) result.Add( p );
+
+			// Then we remove from the result every parameter that has already been entered before.
+			for (int i = 0; i < args.Length - 1; i++) {
+				if (args[i].NameIsComplete) {
+					var paramIndex = result.GetIndexByName( args[i].name );
+					if (paramIndex > -1) result.RemoveAt( paramIndex );
 				}
 			}
 		}
-
-
-
-
-		private ACommand.Parameter[] GetPossibleParameters( string aParamInput, IEnumerable<ACommand.Parameter> parameters ) {
-			if (aParamInput.Length == 0) return null;
-			var aParamInputArr = aParamInput.Split( '=' );
-
-			// if the last param input has the equal sign then there's no need for autocomplete at this time.
-			if (aParamInputArr.Length > 1) return null;
-
-			// else try to find the corresponding parameter.
-			return parameters.Where( p => p.name.StartsWith( aParamInputArr[0] ) ).ToArray();
-		}
-
-
-
-
 
 
 
@@ -117,5 +94,4 @@ namespace Limcap.UTerminal {
 		//}
 
 	}
-
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Limcap.UTerminal {
 	public abstract partial class ACommand {
@@ -65,11 +66,11 @@ namespace Limcap.UTerminal {
 
 
 		public static List<ACommand.Parameter> GetByNamePrefix(
-			this ACommand.Parameter[] paramArray,
-			PtrText name,
+			this IEnumerable<ACommand.Parameter> paramArray,
+			PString name,
 			List<ACommand.Parameter> listToFill = null
 		) {
-			if (listToFill is null) listToFill = new List<ACommand.Parameter>( paramArray.Length );
+			if (listToFill is null) listToFill = new List<ACommand.Parameter>( paramArray.Count() );
 			foreach (var p in paramArray) {
 				if (p.name.StartsWith( name )) {
 					listToFill.Add( p );
@@ -91,6 +92,18 @@ namespace Limcap.UTerminal {
 				}
 			}
 			return null;
+		}
+
+		public static int GetIndexByName(
+			this List<ACommand.Parameter> array,
+			PString pString
+			) {
+			for (int i=0; i<array.Count; i++) {
+				if (array[i].name == pString ) {
+					return i;
+				}
+			}
+			return -1;
 		}
 	}
 }

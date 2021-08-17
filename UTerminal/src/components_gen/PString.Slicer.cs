@@ -1,14 +1,14 @@
 ﻿namespace Limcap.UTerminal {
-	public unsafe partial struct PtrText {
+	public unsafe partial struct PString {
 		public ref struct Slicer {
 			public int lastIndex;
-			public PtrText text;
+			public PString text;
 			public char sliceAt;
 
 
 
 
-			public Slicer( char sliceAt, PtrText text ) {
+			public Slicer( char sliceAt, PString text ) {
 				this.text = text;
 				this.lastIndex = -1;
 				this.sliceAt = sliceAt;
@@ -22,11 +22,11 @@
 
 
 
-			public PtrText NextSlice() {
+			public PString NextSlice() {
 				lastIndex++;
 				if (lastIndex < text.len) {
 					var index = text.IndexOf( sliceAt, lastIndex );
-					PtrText slice;
+					PString slice;
 					if (index == -1)
 						slice = text.Slice( lastIndex, text.len - lastIndex );
 					else
@@ -34,7 +34,7 @@
 					lastIndex = index;
 					return slice;
 				}
-				return PtrText.Null;
+				return Null;
 			}
 
 
@@ -45,6 +45,4 @@
 			}
 		}
 	}
-
-
 }
