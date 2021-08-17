@@ -40,7 +40,11 @@ namespace Limcap.UTerminal {
 
 
 		public void CaretToEnd() {
-			CaretIndex = Text.Length;
+			//Avoiding access to Text property since it causes allocation of a new string containing the whole text in
+			// the textbox.
+			//CaretIndex = Text.Length;
+			CaretIndex = int.MaxValue;
+
 			// Only setting the caret to the last index will not scroll the scroll viewer completely to the bottom,
 			// a few pixels will still have to be scrolled manually. To counteract this, we manually scroll the 
 			// scroll viewer to the bottom.
