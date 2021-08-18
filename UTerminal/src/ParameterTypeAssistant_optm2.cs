@@ -92,7 +92,7 @@ namespace Limcap.UTerminal {
 			result.Clear();
 
 			//Initially we add to the result the possibilities, based on the name of the last argument.
-			if (args.Last.name.IsNullOrEmty)
+			if (args.Last.name.IsNullOrEmpty)
 				result.AddRange( cmd.Parameters );
 			else if (!args.Last.NameIsComplete || args.Last.ValueIsEmpty)
 				cmd.Parameters.GetByNamePrefix( args.Last.name, result );

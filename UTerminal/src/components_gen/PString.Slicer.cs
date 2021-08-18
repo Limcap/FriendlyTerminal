@@ -17,7 +17,14 @@
 
 
 
-			public int Length => text.Count( sliceAt );
+			public int Count => text.Count( sliceAt );
+
+
+
+
+			public bool HasNextSlice() {
+				return lastIndex < text.len;
+			}
 
 
 
@@ -31,7 +38,7 @@
 						slice = text.Slice( lastIndex, text.len - lastIndex );
 					else
 						slice = text.Slice( lastIndex, index - lastIndex );
-					lastIndex = index;
+					lastIndex = index == -1 ? text.len : index;
 					return slice;
 				}
 				return Null;

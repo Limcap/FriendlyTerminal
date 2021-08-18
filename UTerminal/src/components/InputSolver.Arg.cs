@@ -46,7 +46,7 @@ namespace Limcap.UTerminal {
 
 
 			public bool NameIsComplete => !value.IsNull;
-			public bool ValueIsEmpty => value.IsNullOrEmty;
+			public bool ValueIsEmpty => value.IsNullOrEmpty;
 
 
 

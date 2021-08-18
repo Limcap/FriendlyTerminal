@@ -22,7 +22,8 @@ namespace Limcap.DataStructures {
 		[DebuggerBrowsable( DebuggerBrowsableState.RootHidden )]
 		private readonly Dictionary<K, V> _dict;
 
-		public V Current => throw new NotImplementedException();
+		public int Count => _dict.Count;
+		//public V Current => throw new NotImplementedException();
 
 		public void Add( V value ) {
 			_dict.Add( _keyDef( value ), value );

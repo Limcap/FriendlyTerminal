@@ -43,7 +43,7 @@ namespace Limcap.UTerminal {
 		#region PROPERTIES
 		#endregion
 		public bool IsNull => len < 0;
-		public bool IsNullOrEmty => len < 1;
+		public bool IsNullOrEmpty => len < 1;
 
 
 
@@ -120,6 +120,27 @@ namespace Limcap.UTerminal {
 
 
 
+		public bool StartsWith( PString prefix ) {
+			if (len < prefix.len) return false;
+			for (int i = 0; i < prefix.len; i++) if (this[i] != prefix[i]) return false;
+			return true;
+		}
+
+
+
+
+		public bool EndsWith( PString suffix ) {
+			if (len < suffix.len) return false;
+			for (int i = suffix.len-1; i >= 0; i--) if (this[i] != suffix[i]) return false;
+			return true;
+		}
+		public bool EndsWith( char suffix ) {
+			return len < 1 ? false : this[len - 1] == suffix;
+		}
+
+
+
+
 		public Slicer GetSlicer( char slicerChar ) {
 			return new Slicer( slicerChar, this );
 		}
@@ -133,7 +154,8 @@ namespace Limcap.UTerminal {
 
 		#region STATIC
 		#endregion
-		public static PString Null => new PString() { ptr = null, len = -1 };
+		public static PString Null => new PString() { len = -1 };
+		public static PString Empty => new PString();
 
 
 
@@ -169,6 +191,7 @@ namespace Limcap.UTerminal {
 
 
 		public static bool operator ==( PString a, string b ) {
+			if (a.IsNull && b is null) return true;
 			if (a.len != b.Length) return false;
 			for (int i = 0; i < a.len; i++) if (a[i] != b[i]) return false;
 			return true;
