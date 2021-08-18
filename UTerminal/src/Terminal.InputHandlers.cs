@@ -94,17 +94,19 @@ namespace Limcap.UTerminal {
 				//e.Handled = true;
 				if (!e.IsRepeat) {
 					var input = GetInputBuffer();
-					string assistant;
-					assistant = _cmdAssist.GetNextPredictionEntry();
-					var confirmedNodes = _cmdAssist.GetConfirmedNodes(input);
-					if ( confirmedNodes.Contains(':') ) {
-						assistant = _paramAssist.NextPossibility();
-						if (assistant != null) SetInputBuffer( assistant, predict: false );
-					}
-					else {
+					var autocomplete = _assistant.GetNextAutocompleteEntry( input );
+					if (autocomplete != null) SetInputBuffer( autocomplete.ToString(), predict: false );
 
-						if (assistant != null) SetInputBuffer( assistant, predict: false );
-					}
+					//var confirmedNodes = _cmdAssist.GetConfirmedNodes(input);
+					//if ( confirmedNodes.Contains(':') ) {
+					//	assistant = _paramAssist.NextPossibility();
+					//	if (assistant != null) SetInputBuffer( assistant, predict: false );
+					//}
+					//else {
+
+					//	if (assistant != null) SetInputBuffer( assistant, predict: false );
+					//}
+
 					CaretToEnd();
 				}
 				e.Handled = true;
@@ -159,15 +161,16 @@ namespace Limcap.UTerminal {
 
 
 		private void HandleTextChanged( object sender, TextChangedEventArgs args ) {
+			if (!_useCmdAssist) return;
 			var input = GetInputBuffer();
-			if (input.Count() > 0 && input.Contains( ':' ) && input.Last() != ':') {
-				var autocompleteString = _paramAssist.GetAutocompleteOtions( input );
-				_statusArea.Text = autocompleteString.ToString();
-				//if (paramsString != null)
-				//	_statusArea.Text = string.Join("     ",paramsString) ?? "Command not found";
-			}
-			else if (_useCmdAssist)
-				_statusArea.Text = _cmdAssist.GetPredictions( input );
+			_statusArea.Text = _assistant.GetPredictions( input ).ToString();
+
+			//if (input.Count() > 0 && input.Contains( ':' ) && input.Last() != ':') {
+			//	var autocompleteString = _assistant.GetPredictions( input );
+			//	_statusArea.Text = autocompleteString.ToString();
+			//}
+			//else if (_useCmdAssist)
+			//	_statusArea.Text = _assistant.GetPredictions( input ).ToString();
 
 			//if (InputBuffer.Contains( ':' )) {
 			//	var inputParts = InputBuffer.Split( ':' );

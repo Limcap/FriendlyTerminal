@@ -17,12 +17,12 @@ namespace Limcap.UTerminal {
 		public unsafe InputSolver( string input ) {
 			var splitIndex = input.IndexOf( ':' );
 
-			cmdText = new PString() {
-				ptr = ((PString)input).ptr,
-				len = splitIndex == -1 ? input.Length : splitIndex
-			};
-			//_cmdText = (PString)input;
-			//_cmdText.len = splitIndex == -1 ? input.Length : splitIndex;
+			//cmdText = new PString() {
+			//	ptr = ((PString)input).ptr,
+			//	len = splitIndex == -1 ? input.Length : splitIndex
+			//};
+			cmdText = (PString)input;
+			cmdText.len = splitIndex == -1 ? input.Length : splitIndex;
 
 			argsText = new PString() {
 				ptr = splitIndex == -1 ? null : cmdText.ptr + splitIndex + 1,
@@ -33,22 +33,15 @@ namespace Limcap.UTerminal {
 
 			cmd = null;
 		}
-		public unsafe InputSolver( ReadOnlySpan<char> fullInput ) {
-			var splitIndex = fullInput.IndexOf( ':' );
 
-			cmdText = new PString() {
-				ptr = Util.GetPointer( fullInput ),
-				len = splitIndex == -1 ? fullInput.Length : splitIndex
-			};
 
-			argsText = new PString() {
-				ptr = splitIndex == -1 ? null : cmdText.ptr + splitIndex + 1,
-				len = Math.Max( 0, fullInput.Length - splitIndex - 1 )
-			};
 
+
+		public unsafe InputSolver( ACommand cmd, PString inpArgs ) {
+			this.cmd = cmd;
+			cmdText = PString.Null;
+			argsText = inpArgs;
 			args = new Arg.Array();
-
-			cmd = null;
 		}
 
 

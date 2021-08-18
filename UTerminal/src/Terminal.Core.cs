@@ -28,9 +28,9 @@ namespace Limcap.UTerminal {
 		private readonly TextBox _traceArea;
 		private readonly HistoryNavigator _cmdHistory = new HistoryNavigator();
 		//private CommandPredictor _cmdAssist;
-		private Assistant _cmdAssist;
+		private Assistant _assistant;
 		private bool _useCmdAssist;
-		private ParameterTypeAssistant _paramAssist;
+		//private ParameterTypeAssistant _paramAssist;
 		private int _bufferStartIndex;
 
 		public Action onExit;
@@ -89,12 +89,12 @@ namespace Limcap.UTerminal {
 
 
 		public void Start() {
+			//_paramAssist = new ParameterTypeAssistant( _cmdList, Locale );
+			_assistant = new Assistant( _cmdList, Locale );
 			_mainArea.IsEnabled = true;
 			AppendText( _introText );
 			StartNewInputBuffer();
-			_cmdAssist = new Assistant( _cmdList.Keys );
-			_paramAssist = new ParameterTypeAssistant( _cmdList, Locale );
-			_statusArea.Text = _cmdAssist.GetPredictions( string.Empty );
+			_statusArea.Text = _assistant.GetPredictions( string.Empty ).ToString();
 		}
 
 

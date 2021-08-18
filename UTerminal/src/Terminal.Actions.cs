@@ -76,8 +76,8 @@ namespace Limcap.UTerminal {
 				//Text += (newLineNeeded ? NewLine : string.Empty) + PromptString;
 				AppendText( (newLineNeeded ? NEW_LINE : string.Empty) + PROMPT_STRING );
 			}
-			_bufferStartIndex = Text.Length;
 			CaretToEnd();
+			_bufferStartIndex = _mainArea.CaretIndex;
 		}
 
 

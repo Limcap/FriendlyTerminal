@@ -22,14 +22,13 @@
 
 
 
-			public bool HasNextSlice() {
-				return lastIndex < text.len;
-			}
+			public bool HasNextSlice => lastIndex < text.len;
+			
 
 
 
 
-			public PString NextSlice() {
+			public PString NextSlice( Mode option = Mode.ExcludeSeparator ) {
 				lastIndex++;
 				if (lastIndex < text.len) {
 					var index = text.IndexOf( sliceAt, lastIndex );
@@ -39,6 +38,10 @@
 					else
 						slice = text.Slice( lastIndex, index - lastIndex );
 					lastIndex = index == -1 ? text.len : index;
+
+					if (option == Mode.IncludeSeparatorAtEnd && slice[slice.len] == sliceAt) slice.len++;
+					else if (option == Mode.IncludeSeparatorAtStart && *(slice.ptr - 1) == sliceAt) slice.ptr--;
+
 					return slice;
 				}
 				return Null;
@@ -47,8 +50,26 @@
 
 
 
+			public PString Remaining( Mode option = Mode.ExcludeSeparator ) {
+				lastIndex++;
+				if (lastIndex == 0) return text;
+				if (lastIndex > text.len) return Null;
+				var slice = text.Slice( lastIndex, text.len - lastIndex );
+				if (option == Mode.IncludeSeparatorAtStart && *(slice.ptr - 1) == sliceAt) slice.ptr--;
+				return slice;
+			}
+
+
+
+
 			public void Reset() {
 				lastIndex = -1;
+			}
+
+
+
+			public enum Mode {
+				ExcludeSeparator, IncludeSeparatorAtStart, IncludeSeparatorAtEnd
 			}
 		}
 	}
