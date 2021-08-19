@@ -81,7 +81,7 @@ namespace Limcap.UTerminal {
 			if (args.Length < 1) return;
 			var slicer = argsText.GetSlicer( ',' );
 			for (int i = 0; i < args.Length; i++) {
-				var slice = slicer.NextSlice();
+				var slice = slicer.Next();
 				args[i] = new Arg( ref slice );
 			}
 		}

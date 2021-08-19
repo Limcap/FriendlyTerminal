@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 
 namespace Limcap.UTerminal {
-	internal partial class Assistant {
+	public partial class Assistant {
 		//[DebuggerDisplay( "node: {value}  |  next: {next?.value}  |  edges: {edges.Count}" )]
 		[DebuggerDisplay( "{Preview(),nq}" )]
 		public class Node {
@@ -20,13 +20,13 @@ namespace Limcap.UTerminal {
 
 
 			public bool FindNext( PString word ) {
-				return GetNext(word) != null;
+				return (next = GetNext( word )) != null;
 			}
 
 
 			public Node GetNext( PString word ) {
 				if (next != null && next.word == word) return next;
-				return next = edges.FirstOrDefault( n => n.word == word );
+				return edges.FirstOrDefault( n => n.word == word );
 			}
 
 

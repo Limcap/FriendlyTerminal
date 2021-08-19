@@ -8,6 +8,6 @@ using Chan = System.Span<char>;
 using Stan = System.ReadOnlySpan<char>;
 
 namespace Limcap.UTerminal {
-	internal partial class Assistant {
+	public partial class Assistant {
 	}
 }

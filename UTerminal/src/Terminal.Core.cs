@@ -28,8 +28,8 @@ namespace Limcap.UTerminal {
 		private readonly TextBox _traceArea;
 		private readonly HistoryNavigator _cmdHistory = new HistoryNavigator();
 		//private CommandPredictor _cmdAssist;
-		private Assistant _assistant;
-		private bool _useCmdAssist;
+		public Assistant _assistant;
+		private bool _allowAssistant;
 		//private ParameterTypeAssistant _paramAssist;
 		private int _bufferStartIndex;
 

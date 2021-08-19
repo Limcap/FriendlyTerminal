@@ -161,7 +161,7 @@ namespace Limcap.UTerminal {
 
 
 		private void HandleTextChanged( object sender, TextChangedEventArgs args ) {
-			if (!_useCmdAssist) return;
+			if (!_allowAssistant) return;
 			var input = GetInputBuffer();
 			_statusArea.Text = _assistant.GetPredictions( input ).ToString();
 
