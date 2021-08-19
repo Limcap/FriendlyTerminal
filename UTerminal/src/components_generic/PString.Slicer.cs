@@ -1,7 +1,9 @@
-﻿namespace Limcap.UTerminal {
+﻿using System;
+
+namespace Limcap.UTerminal {
 	public unsafe partial struct PString {
 		public ref struct Slicer {
-			public int lastIndex;
+			public int curSeparatorIndex;
 			public PString text;
 			public char sliceAt;
 
@@ -10,7 +12,7 @@
 
 			public Slicer( char sliceAt, PString text ) {
 				this.text = text;
-				this.lastIndex = -1;
+				this.curSeparatorIndex = -1;
 				this.sliceAt = sliceAt;
 			}
 
@@ -22,39 +24,52 @@
 
 
 
-			public bool HasNextSlice => lastIndex < text.len;
-			
+			public bool HasNextSlice => curSeparatorIndex < text.len;
+
 
 
 
 
 			public PString NextSlice( Mode option = Mode.ExcludeSeparator ) {
-				lastIndex++;
-				if (lastIndex < text.len) {
-					var index = text.IndexOf( sliceAt, lastIndex );
-					PString slice;
-					if (index == -1)
-						slice = text.Slice( lastIndex, text.len - lastIndex );
-					else
-						slice = text.Slice( lastIndex, index - lastIndex );
-					lastIndex = index == -1 ? text.len : index;
+				unchecked {
+					int lastIndex = text.len - 1;
+					int newSeparatorIndex = text.len;
+					PString result;
 
-					if (option == Mode.IncludeSeparatorAtEnd && slice[slice.len] == sliceAt) slice.len++;
-					else if (option == Mode.IncludeSeparatorAtStart && *(slice.ptr - 1) == sliceAt) slice.ptr--;
-
-					return slice;
+					if (curSeparatorIndex > lastIndex) {
+						result = PString.Null;
+					}
+					else if (curSeparatorIndex == lastIndex) {
+						result = option == Mode.IncludeSeparatorAtStart ? sliceAt : PString.Empty;
+					}
+					else {
+						//int startIndex = curSeparatorIndex + 1 - (option == Mode.IncludeSeparatorAtStart ? 1 : 0);
+						int startIndex = curSeparatorIndex + 1;
+						newSeparatorIndex = text.IndexOf( sliceAt, curSeparatorIndex + 1 ).Swap(-1, text.len);
+						//var endIndex = newSeparatorIndex - 1 + (option == Mode.IncludeSeparatorAtEnd ? 1 : 0);
+						var endIndex = newSeparatorIndex - 1;
+						var length = endIndex - startIndex + 1;
+						if (startIndex <= 0 && endIndex <= 0 )
+							result = Empty;
+						else 
+							result = text.Slice( startIndex, length );
+						if (option == Mode.IncludeSeparatorAtEnd && result[result.len] == sliceAt) result.len++;
+						else if (option == Mode.IncludeSeparatorAtStart && *(result.ptr - 1) == sliceAt) result.ptr--;
+					}
+					
+					curSeparatorIndex = newSeparatorIndex;
+					return result;
 				}
-				return Null;
 			}
 
 
 
 
 			public PString Remaining( Mode option = Mode.ExcludeSeparator ) {
-				lastIndex++;
-				if (lastIndex == 0) return text;
-				if (lastIndex > text.len) return Null;
-				var slice = text.Slice( lastIndex, text.len - lastIndex );
+				curSeparatorIndex++;
+				if (curSeparatorIndex == 0) return text;
+				if (curSeparatorIndex > text.len) return Null;
+				var slice = text.Slice( curSeparatorIndex, text.len - curSeparatorIndex );
 				if (option == Mode.IncludeSeparatorAtStart && *(slice.ptr - 1) == sliceAt) slice.ptr--;
 				return slice;
 			}
@@ -63,7 +78,7 @@
 
 
 			public void Reset() {
-				lastIndex = -1;
+				curSeparatorIndex = -1;
 			}
 
 

@@ -44,6 +44,7 @@ namespace Limcap.UTerminal {
 		#endregion
 		public bool IsNull => len < 0;
 		public bool IsNullOrEmpty => len < 1;
+		public bool IsEmpty => len == 0;
 
 
 
@@ -213,9 +214,10 @@ namespace Limcap.UTerminal {
 
 		#region CONVERSION
 		#endregion
-		public static implicit operator PString( string txt ) => new PString( txt.AsSpan() );
-		public static implicit operator PString( Span<char> txt ) => new PString() { ptr = Util.GetPointer( txt ), len = txt.Length };
-		public static implicit operator PString( ReadOnlySpan<char> txt ) => new PString() { ptr = Util.GetPointer( txt ), len = txt.Length };
+		public static implicit operator PString( char c ) => new PString( c.ToString() );
+		public static implicit operator PString( string txt ) => new PString( txt );
+		public static implicit operator PString( Span<char> txt ) => new PString( txt );
+		public static implicit operator PString( ReadOnlySpan<char> txt ) => new PString( txt );// { ptr = Util.GetPointer( txt ), len = txt.Length };
 		//public static implicit operator PString( Memory<char> txt ) => new PString() { ptr = Util.GetPointer( txt ), len = txt.Length };
 		//public static implicit operator PString( ReadOnlyMemory<char> txt ) => new PString() { ptr = Util.GetPointer( txt ), len = txt.Length };
 

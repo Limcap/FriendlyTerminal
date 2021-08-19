@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UTerminal", "UTerminal\UTer
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UTerminal.Mantest", "UTerminal.Mantest\UTerminal.Mantest.csproj", "{C02717E6-2EC2-4505-B227-FA87D3419CAB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UTerminal.UnitTests", "UTerminal.UnitTests\UTerminal.UnitTests.csproj", "{BAA0E776-C45D-4B22-A1CE-0CB4303FB3C0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{C02717E6-2EC2-4505-B227-FA87D3419CAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C02717E6-2EC2-4505-B227-FA87D3419CAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C02717E6-2EC2-4505-B227-FA87D3419CAB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BAA0E776-C45D-4B22-A1CE-0CB4303FB3C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BAA0E776-C45D-4B22-A1CE-0CB4303FB3C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BAA0E776-C45D-4B22-A1CE-0CB4303FB3C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BAA0E776-C45D-4B22-A1CE-0CB4303FB3C0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
