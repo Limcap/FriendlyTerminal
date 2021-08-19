@@ -99,6 +99,10 @@ namespace Limcap.UTerminal {
 
 		public static O NullIf<O>( this O obj, Func<O, bool> check ) => check( obj ) ? obj : default( O );
 
+		public static int Swap( this int num, int thisNumber, int forThis ) {
+			return num == thisNumber ? forThis : num;
+		}
+
 		public static int? MinMax( this int? num, int min, int max ) {
 			if (num is null) return null;
 			return num.Value < min ? min : num.Value > max ? max : num.Value;
