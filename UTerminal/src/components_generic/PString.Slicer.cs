@@ -20,17 +20,14 @@ namespace Limcap.UTerminal {
 
 
 			public int Count => text.Count( sliceAt );
-
-
-
-
-			public bool HasNextSlice => curSeparatorIndex < text.len;
+			public bool HasNext => curSeparatorIndex < text.len;
+			public bool IsFirst => curSeparatorIndex == -1;
 
 
 
 
 
-			public PString NextSlice( Mode option = Mode.ExcludeSeparator ) {
+			public PString Next( Mode option = Mode.ExcludeSeparator ) {
 				unchecked {
 					int lastIndex = text.len - 1;
 					int newSeparatorIndex = text.len;
@@ -43,18 +40,21 @@ namespace Limcap.UTerminal {
 						result = option == Mode.IncludeSeparatorAtStart ? sliceAt : PString.Empty;
 					}
 					else {
-						//int startIndex = curSeparatorIndex + 1 - (option == Mode.IncludeSeparatorAtStart ? 1 : 0);
-						int startIndex = curSeparatorIndex + 1;
+						int startIndex = curSeparatorIndex + 1 - (option == Mode.IncludeSeparatorAtStart ? 1 : 0);
+						//int startIndex = curSeparatorIndex + 1;
 						newSeparatorIndex = text.IndexOf( sliceAt, curSeparatorIndex + 1 ).Swap(-1, text.len);
-						//var endIndex = newSeparatorIndex - 1 + (option == Mode.IncludeSeparatorAtEnd ? 1 : 0);
-						var endIndex = newSeparatorIndex - 1;
+						var endIndex = newSeparatorIndex - 1 + (option == Mode.IncludeSeparatorAtEnd ? 1 : 0);
+						//var endIndex = newSeparatorIndex - 1;
 						var length = endIndex - startIndex + 1;
-						if (startIndex <= 0 && endIndex <= 0 )
+						if (startIndex <= 0 && endIndex < 0 )
 							result = Empty;
 						else 
 							result = text.Slice( startIndex, length );
-						if (option == Mode.IncludeSeparatorAtEnd && result[result.len] == sliceAt) result.len++;
-						else if (option == Mode.IncludeSeparatorAtStart && *(result.ptr - 1) == sliceAt) result.ptr--;
+
+						//if (option == Mode.IncludeSeparatorAtEnd && result[result.len] == sliceAt)
+						//	result.len++;
+						//else if (option == Mode.IncludeSeparatorAtStart && result.ptr != (void*)0 && *(result.ptr - 1) == sliceAt)
+						//	result.ptr--;
 					}
 					
 					curSeparatorIndex = newSeparatorIndex;

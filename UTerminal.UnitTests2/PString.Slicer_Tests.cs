@@ -10,9 +10,9 @@ namespace Limcap.UTerminal.UnitTests {
 		public void NextSlice_SeparatorAtMiddle() {
 			PString input = "string1,string2";
 			var slicer = input.GetSlicer( ',' );
-			var a = slicer.NextSlice();
-			var b = slicer.NextSlice();
-			var c = slicer.NextSlice();
+			var a = slicer.Next();
+			var b = slicer.Next();
+			var c = slicer.Next();
 
 			Assert.IsTrue( !a.IsNull );
 			Assert.IsTrue( !a.IsNullOrEmpty );
@@ -35,9 +35,9 @@ namespace Limcap.UTerminal.UnitTests {
 			PString input = "string1,";
 			var slicer = input.GetSlicer( ',' );
 			
-			var a = slicer.NextSlice();
-			var b = slicer.NextSlice();
-			var c = slicer.NextSlice();
+			var a = slicer.Next();
+			var b = slicer.Next();
+			var c = slicer.Next();
 
 			Assert.IsTrue( !a.IsNull );
 			Assert.IsTrue( !a.IsNullOrEmpty );
@@ -61,9 +61,9 @@ namespace Limcap.UTerminal.UnitTests {
 			PString input = ",string1";
 			var slicer = input.GetSlicer( ',' );
 
-			var a = slicer.NextSlice();
-			var b = slicer.NextSlice();
-			var c = slicer.NextSlice();
+			var a = slicer.Next();
+			var b = slicer.Next();
+			var c = slicer.Next();
 			
 			Assert.IsTrue( !a.IsNull );
 			Assert.IsTrue( a.IsNullOrEmpty );
@@ -87,9 +87,9 @@ namespace Limcap.UTerminal.UnitTests {
 			PString input = "string1,";
 			var slicer = input.GetSlicer( ',' );
 
-			var a = slicer.NextSlice( PString.Slicer.Mode.IncludeSeparatorAtEnd );
-			var b = slicer.NextSlice( PString.Slicer.Mode.IncludeSeparatorAtEnd );
-			var c = slicer.NextSlice( PString.Slicer.Mode.IncludeSeparatorAtEnd );
+			var a = slicer.Next( PString.Slicer.Mode.IncludeSeparatorAtEnd );
+			var b = slicer.Next( PString.Slicer.Mode.IncludeSeparatorAtEnd );
+			var c = slicer.Next( PString.Slicer.Mode.IncludeSeparatorAtEnd );
 
 			Assert.IsTrue( !a.IsNull );
 			Assert.IsTrue( !a.IsNullOrEmpty );
@@ -114,9 +114,9 @@ namespace Limcap.UTerminal.UnitTests {
 			PString input = ",string1";
 			var slicer = input.GetSlicer( ',' );
 
-			var a = slicer.NextSlice( PString.Slicer.Mode.IncludeSeparatorAtStart );
-			var b = slicer.NextSlice( PString.Slicer.Mode.IncludeSeparatorAtStart );
-			var c = slicer.NextSlice( PString.Slicer.Mode.IncludeSeparatorAtStart );
+			var a = slicer.Next( PString.Slicer.Mode.IncludeSeparatorAtStart );
+			var b = slicer.Next( PString.Slicer.Mode.IncludeSeparatorAtStart );
+			var c = slicer.Next( PString.Slicer.Mode.IncludeSeparatorAtStart );
 
 			Assert.IsTrue( !a.IsNull );
 			Assert.IsTrue( a.IsNullOrEmpty );
