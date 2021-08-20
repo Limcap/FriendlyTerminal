@@ -367,7 +367,7 @@ namespace Limcap.UTerminal {
 
 
 		protected static unsafe void ProcessArgsInput( ACommand cmd, PString inpArgs, List<ACommand.Parameter> result ) {
-			if (cmd.Parameters.Length == 0 || inpArgs.IsNull) return;
+			if (cmd.Parameters.IsNullOrEmpty() || inpArgs.IsNull) return;
 
 			var argsCount = inpArgs.Count( ARGS_SEPARATOR );
 			var argsArrPtr = stackalloc Arg[argsCount];
