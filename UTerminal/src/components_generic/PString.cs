@@ -148,8 +148,8 @@ namespace Limcap.UTerminal {
 
 
 
-		public Slicer GetSlicer( char slicerChar ) {
-			return new Slicer( slicerChar, this );
+		public Slicer GetSlicer( char slicerChar, Slicer.Mode mode = Slicer.Mode.ExcludeSeparator ) {
+			return new Slicer( slicerChar, this, mode );
 		}
 
 
@@ -261,7 +261,7 @@ namespace Limcap.UTerminal {
 
 	public static partial class Extensions {
 		public static bool StartsWith( this string str, PString txt ) {
-			if (txt.len > str.Length) return false;
+			if (txt.len > str.Length || txt.IsNull ) return false;
 			for (int i = 0; i < txt.len; i++) if (str[i] != txt[i]) return false;
 			return true;
 		}
