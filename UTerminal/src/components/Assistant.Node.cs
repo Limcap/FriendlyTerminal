@@ -6,6 +6,7 @@ using System.Linq;
 namespace Limcap.UTerminal {
 	public partial class Assistant {
 		//[DebuggerDisplay( "node: {value}  |  next: {next?.value}  |  edges: {edges.Count}" )]
+		[Serializable]
 		[DebuggerDisplay( "{Preview(),nq}" )]
 		public class Node {
 			[DebuggerDisplay( "{edges.Count} edges" )]

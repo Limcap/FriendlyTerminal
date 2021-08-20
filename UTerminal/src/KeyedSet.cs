@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Limcap.DataStructures {
-	
+	[Serializable]
 	[DebuggerDisplay( "{Preview(), nq}" )]
 	public class KeyedSet<K,V> : IEnumerable<V> {
 

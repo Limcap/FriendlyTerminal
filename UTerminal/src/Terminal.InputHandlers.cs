@@ -87,26 +87,10 @@ namespace Limcap.UTerminal {
 			}
 
 			else if (e.Key == Key.Tab) {
-				//if (!e.IsRepeat) {
-				//	SetInputBuffer( _cmdAssist.GetNextPredictionEntry(), predict: false );
-				//	CaretToEnd();
-				//}
-				//e.Handled = true;
 				if (!e.IsRepeat) {
 					var input = GetInputBuffer();
 					var autocomplete = _assistant.GetNextAutocompleteEntry( input );
 					if (autocomplete != null) SetInputBuffer( autocomplete.ToString(), predict: false );
-
-					//var confirmedNodes = _cmdAssist.GetConfirmedNodes(input);
-					//if ( confirmedNodes.Contains(':') ) {
-					//	assistant = _paramAssist.NextPossibility();
-					//	if (assistant != null) SetInputBuffer( assistant, predict: false );
-					//}
-					//else {
-
-					//	if (assistant != null) SetInputBuffer( assistant, predict: false );
-					//}
-
 					CaretToEnd();
 				}
 				e.Handled = true;

@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
+using System.Threading;
 using static Limcap.UTerminal.InputSolver;
 
 namespace Limcap.UTerminal {
@@ -11,13 +15,14 @@ namespace Limcap.UTerminal {
 		// CONSTANTS
 		protected const char CMD_WORD_SEPARATOR = ' ';
 		protected const char CMD_TERMINATOR = ':';
+		protected const string CMD_TERMINATOR_AS_STRING = ":";
 		protected const char ARGS_SEPARATOR = ',';
 		protected const char ARG_VALUE_SEPARATOR = '=';
 		protected const string PREDICTIONS_SEPARATOR = "     ";
 
 		// USED BY COMMAND PROCESSING
 		protected static readonly Node _invalidCmdNode = new Node() { word = "Invalid command" };
-		protected static readonly Node _terminatorNode = new Node() { word = ":" };
+		//protected static readonly Node _terminatorNode = new Node() { word = ":" };
 		protected readonly Node _startNode = new Node() { word = "@" };
 		protected readonly List<string> _invokeStrings;
 		protected Node _confirmedNode;
@@ -28,6 +33,7 @@ namespace Limcap.UTerminal {
 		protected readonly Dictionary<string, Type> _commandsSet;
 		protected readonly string _locale;
 		protected ACommand _currentCmd;
+		private PString _lastInput;
 		protected readonly List<ACommand.Parameter> _predictedParams = new List<ACommand.Parameter>( 8 );
 		// Auxiliary objects, (used temporarily inside methods to avoid allocating new discardable objects)
 
@@ -45,6 +51,13 @@ namespace Limcap.UTerminal {
 		public int Index { get; protected set; }
 		public bool CurrentPredictedPart { get; protected set; } //false is command prediction, true is parameter prediction
 
+
+
+
+
+
+
+
 		#region SETUP
 		#endregion
 
@@ -59,8 +72,13 @@ namespace Limcap.UTerminal {
 			_locale = locale;
 			_commandsSet = commandsSet;
 			_invokeStrings = commandsSet?.Keys?.OrderBy( c => c ).ToList() ?? new List<string>();
+
+			var memoryBefore = GC.GetTotalMemory( true );
 			foreach (var term in _invokeStrings)
 				AddCommand( term );
+			var memoryAfter = GC.GetTotalMemory( true );
+			var memoryOccupied = memoryAfter - memoryBefore;
+			Trace.WriteLine( "memory occupied: " + memoryOccupied );
 		}
 
 
@@ -71,20 +89,60 @@ namespace Limcap.UTerminal {
 
 
 		protected void AddCommand( string invokeTerm ) {
-			//string cmdTerminator = CMD_TERMINATOR.ToString();
+
+			//var before = GC.GetTotalMemory( true );
+			//object a = new int();
+			//var after = GC.GetTotalMemory( true );
+			//var g = new Node() { word = "Hello" };
+			//var res = after - before;
+			//File.WriteAllText( $"size-of-node-{res}.txt", "" );
+			//unsafe {
+			//	var gch = GCHandle.Alloc( g, GCHandleType.Pinned );
+			//	var ptr = gch.AddrOfPinnedObject();
+			//	Trace.WriteLine( $"Node: {g.word} => " + GetSizeInMem( g ) );
+			//}
+
+			//var words = ((PString)invokeTerm).GetSlicer( CMD_WORD_SEPARATOR );
+			//var node = _startNode;
+			//Node n;
+			//while (words.HasNext) {
+			//	var word = words.Next( PString.Slicer.Mode.IncludeSeparatorAtEnd );
+			//	// skips words that have length 0, cause when there are multiple spaces between the words.
+			//	if (word.len == 0) continue;
+
+			//	if (words.HasNext) {
+			//		node = node.AddIfNotPresent( word.AsString );
+			//	}
+			//	else {
+			//		node = node.AddIfNotPresent( word.AsString + CMD_WORD_SEPARATOR );
+			//		node.AddIfNotPresent( CMD_TERMINATOR_AS_STRING, _commandsSet[invokeTerm] );
+			//	}
+			//}
+
+
 			var words = invokeTerm.Split( CMD_WORD_SEPARATOR );
 			var node = _startNode;
 			for (int i = 0; i < words.Length; i++) {
 				// skips words that have length 0, cause when there are multiple spaces between the words.
 				if (words[i].Length == 0) continue;
 
-				if (i < words.Length-1)
+				if (i < words.Length - 1) {
 					node = node.AddIfNotPresent( words[i] + CMD_WORD_SEPARATOR );
+				}
 				else {
 					node = node.AddIfNotPresent( words[i] + CMD_WORD_SEPARATOR );
-					node.AddIfNotPresent( _terminatorNode.word, _commandsSet[invokeTerm] );
-					node.next = _terminatorNode;
+					node.AddIfNotPresent( CMD_TERMINATOR_AS_STRING, _commandsSet[invokeTerm] );
 				}
+			}
+		}
+
+		public long GetSizeInMem( object o ) {
+			long size = 0;
+			using (Stream s = new MemoryStream()) {
+				BinaryFormatter formatter = new BinaryFormatter();
+				formatter.Serialize( s, o );
+				size = s.Length;
+				return size;
 			}
 		}
 
@@ -100,64 +158,21 @@ namespace Limcap.UTerminal {
 
 
 
-		//public StringBuilder GetPredictions( string input ) {
-		//	var (inpCmd, inpArgs) = SplitInput( input );
-		//	FixInput( ref inpCmd, ref inpArgs );
-
-		//	// We start by processing the command part of the input. This will update the nextWord variable and
-		//	// the confirmedNode variable:
-		//	// nextWord = the first encountered word in the input that doesn't match with any command.
-		//	// confirmedNode = the furthest in node in the node tree that could be matched against the input.
-		//	var (unconfirmedWord, confirmedNode) = ProcessCommandInput( inpCmd, _startNode, ref _predictedNodes );
-
-		//	// After processing the command input, if the nextWord is not null, it means it could not be matched,
-		//	// thus we must provide prediction assistance for it. This might be a partially typed word.
-		//	// Yet, if nextWord is indeed null but the confirmed node is not a leaf node, it means every words in the
-		//	// input has been matched but they do not configure a full invoke string yet, so we must provide assistance
-		//	// showing the possible next words for this half-entered command.
-		//	bool InputHasUnmatchedWord = !unconfirmedWord.IsNullOrEmpty;
-		//	bool LastConfirmedNodeIsNotLeaf = !confirmedNode.IsLeafNode;
-		//	bool inputIsInvokeCommand = confirmedNode.IsLeafNode;
-		//	//if (!unconfirmedWord.IsNullOrEmpty || !confirmedNode.IsLeafNode) {
-		//	if (!inputIsInvokeCommand) {
-		//		AssembleCommandPrediction( _predictedNodes, result: _autocompleteResult );
-		//		//AssembleCommandPrediction( unconfirmedWord, confirmedNode, result: _assistantResult );
-		//		// remove any current confirmed command. This is important when invoking the autocomplete method.
-		//		_currentCmd = null;
-		//		CurrentPredictedPart = false;
-		//	}
-
-
-		//	// If the command part has the terminator char, then automatically (via Pstring.Slicer) the argsPart must
-		//	// not be null, so the checks "argsPart.isNull" and "!confirmedNode.IsLeaf" must always have the same output.
-		//	else if (inpArgs.IsNull) {
-		//		_autocompleteResult.Reset( "now it's time for parameter assistance" );
-		//	}
-
-
-		//	else {
-		//		// Construct the command object in case the command has been confirmed
-		//		if (confirmedNode.IsLeafNode)
-		//			ConstructCommandObject( confirmedNode, _locale, result: ref _currentCmd );
-
-		//		ProcessArgsInput( _currentCmd, inpArgs, result: _predictedParams );
-		//		AssembleParametersPrediction( _predictedParams, result: _autocompleteResult );
-		//		CurrentPredictedPart = true;
-		//	}
-		//	Index = -1;
-		//	return _autocompleteResult;
-		//}
 		public StringBuilder GetPredictions( string input ) {
 			var (inpCmd, inpArgs) = SplitInput( input );
 			FixInput( ref inpCmd, ref inpArgs );
 
 			ProcessCommandInput( inpCmd, _startNode, result1: ref _confirmedNode, result2: ref _predictedNodes );
 			bool inputIsValid = _confirmedNode.IsLeafNode;
+
+			// Saves the input for the autocomplete functionality.
+			_lastInput = input;
+			
 			if (!inputIsValid) {
 				// Resets the 'current command' field, since the 'current input' doesn't match any known invoke string.
 				// This is important becuase the autocomplete method (invoked by pressing TAB, will use this field).
 				_currentCmd = null;
-				AssembleCommandPrediction( _predictedNodes, result: _autocompleteResult );
+				AssembleCommandPrediction( _predictedNodes, inpCmd, result: _autocompleteResult );
 				CurrentPredictedPart = false;
 			}
 
@@ -215,7 +230,7 @@ namespace Limcap.UTerminal {
 
 
 
-		protected void AssembleCommandPrediction( List<Node> predictedNodes, StringBuilder result ) {
+		protected void AssembleCommandPrediction( List<Node> predictedNodes, PString inpCmd, StringBuilder result ) {
 			if (predictedNodes.IsNullOrEmpty()) result.Reset( "Command not found" );
 			Index = -1;
 			result.Reset();
@@ -253,55 +268,6 @@ namespace Limcap.UTerminal {
 
 
 
-		//protected static (PString, Node) ProcessCommandInput( PString inpCmd, Node initialNode, ref List<Node> result ) {
-		//	var inputWordPicker = inpCmd.GetSlicer( CMD_WORD_SEPARATOR );
-
-		//	Node confirmed = initialNode;
-		//	PString curWord = PString.Empty;
-		//	bool inputIsWrong = false;
-		//	bool wordHasNoMatch;
-		//	//bool wordIsLastAndHasNoTerminator;
-		//	bool inputHasNoTerminator = !inpCmd.EndsWith( CMD_TERMINATOR );
-		//	result.Clear();
-
-		//	// A confirmed word/node means it has been matched against an invoke string and we can move on.
-		//	// However for a word to be confirmed, there are two requirements:
-		//	// 1. The word must be found in one of the next nodes of the current confirmed node;
-		//	// 2. It can't be the last word of the command part OR it must end with a colon.
-		//	// we must check for 2 because if the word is the last word of the input and there's no space after it,
-		//	// the user might type another letter and change that word, so it can't be considered complete until there's
-		//	// a space after it.
-		//	while (inputWordPicker.HasNext && !inputIsWrong) {
-		//		curWord = inputWordPicker.Next();
-		//		// Skips words with legth 0, caused by inputs with multiple spaces between solid characters.
-		//		if (curWord.len == 0) continue;
-		//		// if a next node with the word was not found OR there's no space after the word...
-		//		// break, because this is the word that needs assistance.
-		//		//if (!confirmed.FindNext( nextWord ) || !(slicer.HasNextSlice || inpCmd.EndsWith( ' ' ) || inpCmd.EndsWith( ':' ))) break;
-		//		wordHasNoMatch = !confirmed.FindNext( curWord );
-		//		//wordIsLastAndHasNoTerminator = !inputWordPicker.HasNext && !inpCmd.EndsWith( CMD_TERMINATOR );
-		//		//bool IsLastWord_and_IsIncomplete = !(slicer.HasNextSlice || inpCmd.EndsWith( ':' ));
-		//		//bool IsLastWord_and_IsIncomplete = __wordHasNoMatch__ || (__isLastWordOfInput__ && __noColonOnLastWord__);
-		//		if (inputIsWrong = wordHasNoMatch || !inputWordPicker.HasNext && inputHasNoTerminator) {
-		//			result = confirmed.edges.Where( n => n.word.StartsWith( curWord ) ).OrderBy( n => n.word ).ToList();
-		//			break;
-		//		}
-		//		else {
-		//			confirmed = confirmed.next;
-		//			curWord = PString.Empty;
-		//		}
-		//	}
-
-		//	//if (!curWord.IsNullOrEmpty || !confirmed.IsLeafNode)
-		//	//bool InputHasUnmatchedWord = !curWord.IsNullOrEmpty;
-		//	//bool LastConfirmedNodeIsNotFinal = !confirmed.IsLeafNode;
-		//	//if (InputHasUnmatchedWord || LastConfirmedNodeIsNotFinal)
-		//	//if(inputDoesntMatchInvokeString)
-		//	//	result = confirmed.edges.Where( n => n.word.StartsWith( curWord ) ).OrderBy( n => n.word ).ToList();
-		//	//else result.Clear();
-
-		//	return (curWord, confirmed);
-		//}
 		protected static void ProcessCommandInput( PString inpCmd, Node initialNode, ref Node result1, ref List<Node> result2 ) {
 			result2.Clear();
 			result1 = initialNode;
@@ -315,39 +281,27 @@ namespace Limcap.UTerminal {
 			PString curWord = PString.Empty;
 			bool inputIsValid = true;
 			bool wordHasMatch;
-			bool wordIsLastButHasNoTerminator;
+			
+			// Used to recall if the input has a terminator, because in the next line the terminator will be removed.
 			bool inputHasTerminator = inpCmd.EndsWith( CMD_TERMINATOR );
+			
 			// Swaps the terminator for word separator, so the last word can be matched if there's no separator between
-			// the last word and the terminator in the input, since in the node tree, every word has a separator at the end, except for
-			// the leaf node that is always ":".
+			// it and the terminator. This is necessary because for every node the word ends with a separator character
+			// except for the terminator node whose word is only the terminator character itself.
 			if (inputHasTerminator) inpCmd[inpCmd.len - 1] = CMD_WORD_SEPARATOR;
 
 			// Checks word for word of the input, and tries to match them against an edge of the last confirmed node.
 			// While each word is matched, the confirmed node is updated. if all words are matched, the input is
 			// considered a valid invoke string. There are 2 ways the input will not be considered as such:
 			// 1. An unmatched word is identified;
-			// 2. All words are matched but the last word does not have the terminator character.
-
+			// 2. All words are matched but the input does not end with the terminator character.
 			for(;;) {
-			//while (inputWordPicker.HasNext && inputIsValid) {
-			//while (inputWordPicker.Index < inputWordPicker.Count + (inputHasNoTerminator ? 0 : 1) && !inputIsIvalid) {
-				// Skips words with legth 0, derived from inputs with multiple spaces between solid characters.
-				// Will not skip if it is the first word, because then we must 
 				curWord = inputWordPicker.Next( PString.Slicer.Mode.IncludeSeparatorAtEnd );
-				
 				wordHasMatch = result1.FindNext( curWord );
-				wordIsLastButHasNoTerminator = !inputWordPicker.HasNext && !inputHasTerminator;
 
-				//if (inputIsIvalid = wordHasNoMatch || wordIsLastButHasNoTerminator) {
-				//	if (curWord.EndsWith( CMD_WORD_SEPARATOR )) result2.Add( _invalidCmdNode );
-				//	else result2.AddRange( result1.edges.Where( n => n.word.StartsWith( curWord ) ).OrderBy( n => n.word ) );
-				//}
-				//else {
-				//	result1 = result1.next;
-				//	curWord = PString.Empty;
-				//}
 				if(!inputWordPicker.HasNext && inputHasTerminator) {
 					result1.FindNext( CMD_TERMINATOR );
+					result1 = result1.next;
 					break;
 				}
 				else if (inputIsValid = wordHasMatch) {
@@ -355,7 +309,7 @@ namespace Limcap.UTerminal {
 					curWord = PString.Empty;
 				}
 				else {
-					if (curWord.EndsWith( CMD_WORD_SEPARATOR )) result2.Add( _invalidCmdNode );
+					if (curWord.EndsWith( CMD_WORD_SEPARATOR ) && inputHasTerminator) result2.Add( _invalidCmdNode );
 					else result2.AddRange( result1.edges.Where( n => n.word.StartsWith( curWord ) ).OrderBy( n => n.word ) );
 					break;
 				}
@@ -461,7 +415,7 @@ namespace Limcap.UTerminal {
 		public StringBuilder GetNextAutocompleteEntry( string input ) {
 			Index++;
 			if (Index >= _predictedNodes.Count) Index = -1;
-			var a = _autocompleteResult.Reset( input );
+			var a = _autocompleteResult.Reset( _lastInput.ToString() );
 			for (int i = a.Length; i > 0; i--) {
 				if (a[i - 1] != CMD_WORD_SEPARATOR) a.Length--;
 				else break;
@@ -471,7 +425,7 @@ namespace Limcap.UTerminal {
 
 			//_autocompleteResult.Append( ' ' );
 			if (CurrentPredictedPart == false)
-				_autocompleteResult.Append( _predictedNodes[Index].word );
+				_autocompleteResult.Append( ((PString)_predictedNodes[Index].word).Trim() );
 			else
 				_autocompleteResult.Append( _predictedParams[Index].name ).Append( ARG_VALUE_SEPARATOR );
 
