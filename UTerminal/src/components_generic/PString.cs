@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Buffers;
 using System.Diagnostics;
+using System.Text;
 
 namespace Limcap.UTerminal {
 
@@ -278,6 +279,13 @@ namespace Limcap.UTerminal {
 
 		public static PString ToPString( this string str ) {
 			return str;
+		}
+
+
+
+
+		public unsafe static StringBuilder Append( this StringBuilder sb, PString pstr ) {
+			return sb.Append( pstr.ptr, pstr.len );
 		}
 	}
 
