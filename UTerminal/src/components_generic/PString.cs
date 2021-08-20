@@ -57,29 +57,32 @@ namespace Limcap.UTerminal {
 		#region ACTIONS
 		#endregion
 
-		public void Trim( char c = ' ' ) {
+		public PString Trim( char c = ' ' ) {
 			TrimStart( c );
 			TrimEnd( c );
+			return this;
 		}
 
 
 
 
-		public void TrimStart( char c = ' ' ) {
-			if (ptr == null || len < 1) return;
+		public PString TrimStart( char c = ' ' ) {
+			if (ptr == null || len < 1) return this;
 			while (ptr[0] == c) {
 				ptr++;
 				len--;
 			}
+			return this;
 		}
 
 
 
 
-		public void TrimEnd( char c = ' ' ) {
-			if (ptr == null || len < 1) return;
+		public PString TrimEnd( char c = ' ' ) {
+			if (ptr == null || len < 1) return this;
 			while (len > 0 && ptr[len - 1] == c)
 				len--;
+			return this;
 		}
 
 
