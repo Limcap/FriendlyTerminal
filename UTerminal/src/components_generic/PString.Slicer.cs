@@ -37,26 +37,19 @@ namespace Limcap.UTerminal {
 						result = PString.Null;
 					}
 					else if (curSeparatorIndex == lastIndex) {
-						result = option == Mode.IncludeSeparatorAtStart ? sliceAt : PString.Empty;
+						result = (option == Mode.IncludeSeparatorAtStart && lastIndex > -1) ? sliceAt : PString.Empty;
 					}
 					else {
-						int startIndex = curSeparatorIndex + 1 - (option == Mode.IncludeSeparatorAtStart ? 1 : 0);
-						//int startIndex = curSeparatorIndex + 1;
-						newSeparatorIndex = text.IndexOf( sliceAt, curSeparatorIndex + 1 ).Swap(-1, text.len);
-						var endIndex = newSeparatorIndex - 1 + (option == Mode.IncludeSeparatorAtEnd ? 1 : 0);
-						//var endIndex = newSeparatorIndex - 1;
+						int startIndex = curSeparatorIndex + 1 - ((option == Mode.IncludeSeparatorAtStart && curSeparatorIndex >= 0) ? 1 : 0);
+						newSeparatorIndex = text.IndexOf( sliceAt, curSeparatorIndex + 1 ).Swap( -1, text.len );
+						var endIndex = newSeparatorIndex - 1 + ((option == Mode.IncludeSeparatorAtEnd && newSeparatorIndex <= lastIndex) ? 1 : 0);
 						var length = endIndex - startIndex + 1;
-						if (startIndex <= 0 && endIndex < 0 )
+						if (startIndex <= 0 && endIndex < 0)
 							result = Empty;
-						else 
+						else
 							result = text.Slice( startIndex, length );
-
-						//if (option == Mode.IncludeSeparatorAtEnd && result[result.len] == sliceAt)
-						//	result.len++;
-						//else if (option == Mode.IncludeSeparatorAtStart && result.ptr != (void*)0 && *(result.ptr - 1) == sliceAt)
-						//	result.ptr--;
 					}
-					
+
 					curSeparatorIndex = newSeparatorIndex;
 					return result;
 				}

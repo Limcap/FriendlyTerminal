@@ -1,10 +1,10 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Limcap.UTerminal;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Limcap.UTerminal.UnitTests {
 	[TestClass]
 	public class PString_Slicer_Tests {
-		
+
 
 		[TestMethod]
 		public void NextSlice_SeparatorAtMiddle() {
@@ -23,7 +23,7 @@ namespace Limcap.UTerminal.UnitTests {
 			Assert.IsTrue( !b.IsNullOrEmpty );
 			Assert.IsTrue( !b.IsEmpty );
 			Assert.IsTrue( b == "string2" );
-			
+
 			Assert.IsTrue( c.IsNull );
 			Assert.IsTrue( c.IsNullOrEmpty );
 			Assert.IsTrue( !c.IsEmpty );
@@ -34,7 +34,7 @@ namespace Limcap.UTerminal.UnitTests {
 		public void NextSlice_SeparatorAtEnd() {
 			PString input = "string1,";
 			var slicer = input.GetSlicer( ',' );
-			
+
 			var a = slicer.Next();
 			var b = slicer.Next();
 			var c = slicer.Next();
@@ -43,7 +43,7 @@ namespace Limcap.UTerminal.UnitTests {
 			Assert.IsTrue( !a.IsNullOrEmpty );
 			Assert.IsTrue( !a.IsEmpty );
 			Assert.IsTrue( a == "string1" );
-			
+
 			Assert.IsTrue( !b.IsNull );
 			Assert.IsTrue( b.IsNullOrEmpty );
 			Assert.IsTrue( b.IsEmpty );
@@ -64,7 +64,7 @@ namespace Limcap.UTerminal.UnitTests {
 			var a = slicer.Next();
 			var b = slicer.Next();
 			var c = slicer.Next();
-			
+
 			Assert.IsTrue( !a.IsNull );
 			Assert.IsTrue( a.IsNullOrEmpty );
 			Assert.IsTrue( a.IsEmpty );
@@ -75,7 +75,7 @@ namespace Limcap.UTerminal.UnitTests {
 			Assert.IsTrue( !b.IsNullOrEmpty );
 			Assert.IsTrue( !b.IsEmpty );
 			Assert.IsTrue( b == "string1" );
-			
+
 			Assert.IsTrue( c.IsNull );
 			Assert.IsTrue( c.IsNullOrEmpty );
 			Assert.IsTrue( !c.IsEmpty );
