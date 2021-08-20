@@ -56,7 +56,6 @@
     <Compile Include="src\Args.cs" />
     <Compile Include="src\components\Assistant.cs" />
     <Compile Include="src\components\Assistant.Node.cs" />
-    <Compile Include="src\components\Assistant.cs-Publinator.cs" />
     <Compile Include="src\components\InputSolver.Arg.Array.cs" />
     <Compile Include="src\components\InputSolver.Arg.cs" />
     <Compile Include="src\ChanHoloArray1.cs" />

@@ -4,16 +4,18 @@ using System.Text;
 using static Limcap.UTerminal.InputSolver;
 
 namespace Limcap.UTerminal {
-	public class Assistant_Publinator : Assistant {
+
+	[System.Diagnostics.DebuggerNonUserCode()]
+	public class Assistant_TestInterface : Assistant {
 
 		#region CONSTANTS
 		#endregion
 
-		public char CMD_WORD_SEPARATOR => CMD_WORD_SEPARATOR;
-		public char CMD_TERMINATOR => CMD_TERMINATOR;
-		public char ARGS_SEPARATOR => ARGS_SEPARATOR;
-		public char ARG_VALUE_SEPARATOR => ARG_VALUE_SEPARATOR;
-		public string PREDICTIONS_SEPARATOR => PREDICTIONS_SEPARATOR;
+		public char CMD_WORD_SEPARATOR => Assistant.CMD_WORD_SEPARATOR;
+		public char CMD_TERMINATOR => Assistant.CMD_TERMINATOR;
+		public char ARGS_SEPARATOR => Assistant.ARGS_SEPARATOR;
+		public char ARG_VALUE_SEPARATOR => Assistant.ARG_VALUE_SEPARATOR;
+		public string PREDICTIONS_SEPARATOR => Assistant.PREDICTIONS_SEPARATOR;
 
 		#region FIELDS
 		#endregion
@@ -34,20 +36,20 @@ namespace Limcap.UTerminal {
 		#region SETUP
 		#endregion
 
-		public Assistant_Publinator( Dictionary<string, Type> commandsSet, string locale ) : base( commandsSet, locale ) {}
+		public Assistant_TestInterface( Dictionary<string, Type> commandsSet, string locale ) : base( commandsSet, locale ) {}
 
-		public unsafe Arg.Array ConstructArgsArray( PString inpArgs, ref Arg.Array result ) => Assistant.ConstructArgsArray( inpArgs, ref result );
+		public Arg.Array ConstructArgsArray( PString inpArgs, ref Arg.Array result ) => Assistant.ConstructArgsArray( inpArgs, ref result );
 		
 		public void ConstructCommandObject( Node confirmedNode, string locale, ref ACommand result ) => Assistant.ConstructCommandObject( confirmedNode, locale, ref result );
 		
-		public unsafe void FindPossibleParams( ACommand cmd, ref Arg.Array args, List<ACommand.Parameter> result ) => Assistant.FindPossibleParams( cmd, ref args, result );
+		public void FindPossibleParams( ACommand cmd, ref Arg.Array args, List<ACommand.Parameter> result ) => Assistant.FindPossibleParams( cmd, ref args, result );
 
 		public void FixInput( ref PString inpCmd, ref PString inpArgs ) => Assistant.FixInput( ref inpCmd, ref inpArgs );
 
 		#region PROCESSING OF ARGUMENT INPUT
 		#endregion
 
-		public unsafe void ProcessArgsInput( ACommand cmd, PString inpArgs, List<ACommand.Parameter> result ) => Assistant.ProcessArgsInput( cmd, inpArgs, result );
+		public void ProcessArgsInput( ACommand cmd, PString inpArgs, List<ACommand.Parameter> result ) => Assistant.ProcessArgsInput( cmd, inpArgs, result );
 
 		#region PROCESSING OF COMMAND INPUT
 		#endregion
@@ -71,5 +73,17 @@ namespace Limcap.UTerminal {
 		public void AssembleParametersPrediction( IEnumerable<ACommand.Parameter> parameters, StringBuilder result ) => base.AssembleParametersPrediction( parameters, result );
 
 		public (PString inpCmd, PString inpArgs) SplitInput( string input ) => base.SplitInput( input );
+
+
+
+
+		public void Reset() {
+			base._confirmedNode = base._startNode;
+			base._predictedNodes.Clear();
+			base._predictedParams.Clear();
+			base._predictionResult.Clear();
+			base._autocompleteResult.Clear();
+			base.Index = 0;
+		}
 	}
 }

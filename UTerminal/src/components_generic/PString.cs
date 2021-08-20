@@ -30,7 +30,7 @@ namespace Limcap.UTerminal {
 
 		public PString( string text ) {
 			ptr = Util.GetPointer( text.AsSpan() );
-			len = text.Length;
+			len = text?.Length??-1;
 		}
 
 
@@ -42,6 +42,7 @@ namespace Limcap.UTerminal {
 
 		#region PROPERTIES
 		#endregion
+
 		public bool IsNull => len < 0;
 		public bool IsNullOrEmpty => len < 1;
 		public bool IsEmpty => len == 0;
@@ -55,6 +56,7 @@ namespace Limcap.UTerminal {
 
 		#region ACTIONS
 		#endregion
+
 		public void Trim( char c = ' ' ) {
 			TrimStart( c );
 			TrimEnd( c );
@@ -155,6 +157,7 @@ namespace Limcap.UTerminal {
 
 		#region STATIC
 		#endregion
+
 		public static PString Null => new PString() { len = -1 };
 		public static PString Empty => new PString();
 
@@ -167,6 +170,7 @@ namespace Limcap.UTerminal {
 
 		#region OPERATORS
 		#endregion
+
 		public char this[int i] {
 			get => ptr[i];
 			set => ptr[i] = value;
@@ -214,6 +218,7 @@ namespace Limcap.UTerminal {
 
 		#region CONVERSION
 		#endregion
+
 		public static implicit operator PString( char c ) => new PString( c.ToString() );
 		public static implicit operator PString( string txt ) => new PString( txt );
 		public static implicit operator PString( Span<char> txt ) => new PString( txt );
@@ -221,20 +226,24 @@ namespace Limcap.UTerminal {
 		//public static implicit operator PString( Memory<char> txt ) => new PString() { ptr = Util.GetPointer( txt ), len = txt.Length };
 		//public static implicit operator PString( ReadOnlyMemory<char> txt ) => new PString() { ptr = Util.GetPointer( txt ), len = txt.Length };
 
-
-
-
 		public Span<char> AsSpan => IsNull ? null : new Span<char>( ptr, len );
-
-
-
-
 		public string AsString => IsNull ? null : new string( ptr, 0, len );
-
-
-
-
 		public override string ToString() => AsString;
+
+
+
+
+
+		#region EQUALITY
+		#endregion
+
+		public override bool Equals( object obj ) {
+			if (obj is null && this.IsNull) return true;
+			if (obj is string other) return this == other;
+			if (obj is PString other1 ) return this == other1;
+			return obj.ToString() == this;
+			//return base.Equals( obj );
+		}
 	}
 
 
@@ -245,6 +254,7 @@ namespace Limcap.UTerminal {
 
 	#region EXTENSIONS
 	#endregion
+
 	public static partial class Extensions {
 		public static bool StartsWith( this string str, PString txt ) {
 			if (txt.len > str.Length) return false;

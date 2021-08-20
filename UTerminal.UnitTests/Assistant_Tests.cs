@@ -8,66 +8,74 @@ namespace Limcap.UTerminal.UnitTests {
 	[TestClass]
 	public class Assistant_Tests {
 
-		public Assistant_Publinator a;
+		static Assistant_TestInterface a;
+		static Dictionary<string, Type> source;
+
+
+
+		static Assistant_Tests() {
+			source = new Dictionary<string, Type>() {
+				["help"] = null,
+				["hello world"] = null,
+			};
+			a = new Assistant_TestInterface( source, "ptbr" );
+			a._startNode.word = "@";
+		}
+
+
+
 
 		#region TESTS
 		#endregion
 		[TestInitialize]
 		public void Initialize() {
-			var source = new Dictionary<string, Type>() {
-				["ajuda"] = null,
-				["hello world"] = null,
-			};
-			a = new Assistant_Publinator( source, "ptbr" );
+			a.Reset();
 		}
 
 
 
 
 		[TestMethod]
-		[DataRow( "", 1, "@" )]
-		[DataRow( "a", 2, "@" )]
-		[DataRow( "aju", 3, "@" )]
-		[DataRow( "aju ", 4, "@" )]
-		[DataRow( "ajuda", 5, "@" )]
-		[DataRow( "ajuda ", 6, "ajuda" )]
-		[DataRow( "ajuda :", 7, "ajuda" )]
-		[DataRow( "ajuda:  ", 8, "ajuda" )]
-		public void ProcessCommandInput_CorrectPredictedNodes( string input, int index, string result1 ) {
+		[DataRow( 1, "",          "",       null )]
+		[DataRow( 2, "h",         "h",      null )]
+		[DataRow( 3, "he",        "he",     null )]
+		[DataRow( 4, "he ",       "he ",    null )]
+		[DataRow( 5, "help",      "help",   null )]
+		[DataRow( 6, "help:",     "help:",  ""   )]
+		[DataRow( 7, "help  ",    "help  ", null )]
+		[DataRow( 8, "help  :",   "help:",  ""   )]
+		[DataRow( 9, "help:   ",  "help:",  ""   )]
+		[DataRow( 10, "help :  ", "help:",  ""   )]
+		public void SplitInput_FixInput( int index, string input, string x_cmd, string x_args ) {
+			var (cmd,args) = a.SplitInput( input );
+			a.FixInput( ref cmd, ref args );
+			Assert.AreEqual( x_cmd, cmd );
+			Assert.AreEqual( x_args, args );
+		}
+
+
+
+
+		[TestMethod]
+		[DataRow( 1, "",          "@"     )]
+		[DataRow( 2, "h",         "@"     )]
+		[DataRow( 3, "he",        "@"     )]
+		[DataRow( 4, "he ",       "@"     )]
+		[DataRow( 5, "help",      "@"     )]
+		[DataRow( 6, "help:",     "help:" )]
+		[DataRow( 7, "help  ",    "@"     )]
+		[DataRow( 8, "help  :",   "help:" )]
+		[DataRow( 9, "help:   ",  "help:" )]
+		[DataRow( 10, "help :  ", "help:" )]
+		// Cases 9 and 10 would not pass the test if input did not get pre-processed by
+		// the methods SpliInput and FixInpup.
+		public void ProcessCommandInput_CorrectPredictedNodes( int index, string input, string expected ) {
 			var _confirmedNode = a._confirmedNode;
 			var _predictedNodes = a._predictedNodes;
-			a.ProcessCommandInput( input, a._startNode, ref _confirmedNode, ref _predictedNodes );
-			Assert.AreEqual( _confirmedNode.word, result1 );
-		}
-	}
-
-
-
-
-
-#nullable enable
-	public static class ExtensionsForTest {
-		public static MethodInfo? NonPublicMethod<T>( this T me, string name, params Type[] args ) {
-			return me.GetType().GetMethod( name, BindingFlags.Instance | BindingFlags.NonPublic, null, args, null );
-		}
-		public static MethodInfo? NonPublicStaticMethod<T>( this T me, string name, params Type[] args ) {
-			return me.GetType().GetMethod( name, BindingFlags.Static | BindingFlags.NonPublic, null, args, null );
-		}
-		public static object NonPublicField<T>( this T me, string name ) {
-			var field = me.GetType().GetField( name, BindingFlags.Instance | BindingFlags.NonPublic );
-			var value0 = field?.GetValue( me );
-			dynamic value1;
-			if (value0 is null)
-				value1 = default( dynamic );
-			else
-				value1 = value0;
-			//var value1 = value0 is null ? default( R ) : ((R)value0);
-			return value1;
-		}
-		public static R NonPublicStaticField<T,R>( this T me, string name ) {
-			var field = me.GetType().GetField( name, BindingFlags.Static | BindingFlags.NonPublic );
-			var value = (R) field?.GetValue(me) ?? default(R);
-			return value;
+			var (cmd, args) = a.SplitInput( input );
+			a.FixInput( ref cmd, ref args );
+			a.ProcessCommandInput( cmd, a._startNode, ref _confirmedNode, ref _predictedNodes );
+			Assert.AreEqual( expected, _confirmedNode.word );
 		}
 	}
 }
