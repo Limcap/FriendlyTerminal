@@ -14,6 +14,7 @@ namespace Limcap.UTerminal {
 				this.text = text;
 				this.curSeparatorIndex = -1;
 				this.sliceAt = sliceAt;
+				this.Index = -1;
 			}
 
 
@@ -22,6 +23,7 @@ namespace Limcap.UTerminal {
 			public int Count => text.Count( sliceAt );
 			public bool HasNext => curSeparatorIndex < text.len;
 			public bool IsFirst => curSeparatorIndex == -1;
+			public int Index { get; private set; }
 
 
 
@@ -50,6 +52,7 @@ namespace Limcap.UTerminal {
 							result = text.Slice( startIndex, length );
 					}
 
+					Index++;
 					curSeparatorIndex = newSeparatorIndex;
 					return result;
 				}
@@ -72,6 +75,7 @@ namespace Limcap.UTerminal {
 
 			public void Reset() {
 				curSeparatorIndex = -1;
+				Index = -1;
 			}
 
 
