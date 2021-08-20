@@ -197,8 +197,8 @@ namespace Limcap.UTerminal {
 
 
 		protected (PString inpCmd, PString inpArgs) SplitInput( string input ) {
-			var slicer = ((PString)input).GetSlicer( CMD_TERMINATOR );
-			var inpCmd = slicer.Next( PString.Slicer.Mode.IncludeSeparatorAtEnd );
+			var slicer = ((PString)input).GetSlicer( CMD_TERMINATOR, PString.Slicer.Mode.IncludeSeparatorAtEnd );
+			var inpCmd = slicer.Next();
 			var inpArgs = slicer.Remaining();
 			return (inpCmd, inpArgs);
 		}
@@ -214,13 +214,13 @@ namespace Limcap.UTerminal {
 			// remove trailing space in the arguments string
 			inpArgs.Trim();
 			// fix space before colon in the invoke string
-			if (inpCmd.len > 1 && inpCmd[inpCmd.len - 1] == CMD_TERMINATOR) {
-				while (inpCmd[inpCmd.len - 2] == CMD_WORD_SEPARATOR) {
-					inpCmd[inpCmd.len - 2] = CMD_TERMINATOR;
-					inpCmd[inpCmd.len - 1] = CMD_WORD_SEPARATOR;
-					inpCmd.len--;
-				}
-			}
+			//if (inpCmd.len > 1 && inpCmd[inpCmd.len - 1] == CMD_TERMINATOR) {
+			//	while (inpCmd[inpCmd.len - 2] == CMD_WORD_SEPARATOR) {
+			//		inpCmd[inpCmd.len - 2] = CMD_TERMINATOR;
+			//		inpCmd[inpCmd.len - 1] = CMD_WORD_SEPARATOR;
+			//		inpCmd.len--;
+			//	}
+			//}
 		}
 
 
@@ -277,43 +277,61 @@ namespace Limcap.UTerminal {
 				return;
 			}
 
-			var inputWordPicker = inpCmd.GetSlicer( CMD_WORD_SEPARATOR );
 			PString curWord = PString.Empty;
-			bool inputIsValid = true;
-			bool wordHasMatch;
-			
+			bool wordHasMatch = true;
+
 			// Used to recall if the input has a terminator, because in the next line the terminator will be removed.
-			bool inputHasTerminator = inpCmd.EndsWith( CMD_TERMINATOR );
-			
 			// Swaps the terminator for word separator, so the last word can be matched if there's no separator between
 			// it and the terminator. This is necessary because for every node the word ends with a separator character
 			// except for the terminator node whose word is only the terminator character itself.
-			if (inputHasTerminator) inpCmd[inpCmd.len - 1] = CMD_WORD_SEPARATOR;
+			bool endsInTerminator = inpCmd.EndsWith( CMD_TERMINATOR );
+			bool endsInSeparator = inpCmd[inpCmd.len-2] == CMD_WORD_SEPARATOR;
+			if (endsInTerminator && !endsInSeparator) inpCmd[inpCmd.len - 1] = CMD_WORD_SEPARATOR;
+			else if (endsInTerminator) inpCmd.len--;
+			//if (endsInTerminator) inpCmd[inpCmd.len - 1] = CMD_WORD_SEPARATOR;
+
+			var wordPicker = inpCmd.GetSlicer( CMD_WORD_SEPARATOR, PString.Slicer.Mode.IncludeSeparatorAtEnd );
 
 			// Checks word for word of the input, and tries to match them against an edge of the last confirmed node.
 			// While each word is matched, the confirmed node is updated. if all words are matched, the input is
 			// considered a valid invoke string. There are 2 ways the input will not be considered as such:
 			// 1. An unmatched word is identified;
 			// 2. All words are matched but the input does not end with the terminator character.
-			for(;;) {
-				curWord = inputWordPicker.Next( PString.Slicer.Mode.IncludeSeparatorAtEnd );
+			while (wordPicker.HasNext) {
+				curWord = wordPicker.Next();
+
+				//if (!inputWordPicker.HasNext && endsInTerminator && curWord.len > 1 )
+				//	curWord.Trim( CMD_TERMINATOR );
+				//if (curWord.IsEmpty && !wordPicker.HasNext) break;
 				wordHasMatch = result1.FindNext( curWord );
 
-				if(!inputWordPicker.HasNext && inputHasTerminator) {
-					result1.FindNext( CMD_TERMINATOR );
-					result1 = result1.next;
-					break;
-				}
-				else if (inputIsValid = wordHasMatch) {
+				if (wordHasMatch) {
 					result1 = result1.next;
 					curWord = PString.Empty;
+					if ((!wordPicker.HasNext|| wordPicker.PeekNext().IsEmpty) && endsInTerminator) {
+						wordHasMatch = result1.FindNext( CMD_TERMINATOR_AS_STRING );
+						if (wordHasMatch) result1 = result1.next;
+						else curWord = PString.Null;
+						break;
+					}
 				}
 				else {
-					if (curWord.EndsWith( CMD_WORD_SEPARATOR ) && inputHasTerminator) result2.Add( _invalidCmdNode );
-					else result2.AddRange( result1.edges.Where( n => n.word.StartsWith( curWord ) ).OrderBy( n => n.word ) );
 					break;
+					//if (curWord.EndsWith( CMD_WORD_SEPARATOR ) && inputHasTerminator) result2.Add( _invalidCmdNode );
+					//if (endsInSeparator || endsInTerminator) result2.Add( _invalidCmdNode );
+					//else result2.AddRange( result1.edges.Where( n => n.word.StartsWith( curWord ) ).OrderBy( n => n.word ) );
+					//break;
 				}
 			}
+			if (!wordHasMatch) {
+				result2.AddRange( result1.edges.Where( n => n.word.StartsWith( curWord ) ).OrderBy( n => n.word ) );
+				if(result2.Count == 0) result2.Add( _invalidCmdNode );
+				//result1 = result1.FindNext( CMD_TERMINATOR ) ? result1.next : result1;
+				//if (endsInSeparator || endsInTerminator) result2.Add( _invalidCmdNode );
+				//result1 = result1.FindNext( CMD_TERMINATOR ) ? result1.next : result1;
+				//break;
+			}
+			if (endsInTerminator && !endsInSeparator) inpCmd[inpCmd.len - 1] = CMD_TERMINATOR;
 		}
 
 
