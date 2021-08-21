@@ -16,7 +16,7 @@ namespace Limcap.UTerminal.UnitTests {
 		#region SIMULATE ASSISTANT CLASS MEMBERS
 		#endregion
 		//Node _invalidCmdNode => type.GetField( "_invalidCmdNode", BindingFlags.Static | BindingFlags.NonPublic ).As( f => f.GetValue( null ) as Node );
-		dynamic _invalidCmdNode => assistant.NonPublicStaticField<Assistant,Node>("_invalidCmdNode");
+		dynamic _invalidCmdNode => assistant.NonPublicStaticField<Assistant,NodeOld>("_invalidCmdNode");
 		
 		
 		//Node _startNode => type.GetField( "_startNode", BindingFlags.Static | BindingFlags.NonPublic ).GetValue( assistant ) as Node;
@@ -24,11 +24,11 @@ namespace Limcap.UTerminal.UnitTests {
 		
 		
 		//Node _confirmedNode => type.GetField( "_confirmedNode", BindingFlags.Static | BindingFlags.NonPublic ).GetValue( assistant ) as Node;
-		public Node _confirmedNode = new Node();
+		public NodeOld _confirmedNode = new NodeOld();
 	
 		
 		//List<Node> _predictedNodes => type.GetField( "_predictedNodes", BindingFlags.Static | BindingFlags.NonPublic ).GetValue( assistant ) as List<Node>;
-		public List<Node> _predictedNodes = new List<Node>();
+		public List<NodeOld> _predictedNodes = new List<NodeOld>();
 	
 		
 		public void AddCommand( string invokeTerm ) =>
@@ -37,7 +37,7 @@ namespace Limcap.UTerminal.UnitTests {
 		
 		
 		public void ProcessCommandInput( dynamic inpCmd, dynamic initialNode, dynamic result1, dynamic result2 ) {
-			var method = assistant.NonPublicStaticMethod( "ProcessCommandInput", typeof( PString ), typeof( Node ), typeof( Node ).MakeByRefType(), typeof( List<Node> ).MakeByRefType() );
+			var method = assistant.NonPublicStaticMethod( "ProcessCommandInput", typeof( PString ), typeof( NodeOld ), typeof( NodeOld ).MakeByRefType(), typeof( List<NodeOld> ).MakeByRefType() );
 			method.Invoke( assistant, new object[] { inpCmd, initialNode, result1, result2 } );
 		}
 		//void ProcessCommandInput( PString inpCmd, Node initialNode, ref Node result1, ref List<Node> result2 ) =>

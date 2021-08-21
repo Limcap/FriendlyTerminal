@@ -44,7 +44,7 @@ namespace Limcap.UTerminal {
 		
 		public void FindPossibleParams( ACommand cmd, ref Arg.Array args, List<ACommand.Parameter> result ) => Assistant.FindPossibleParams( cmd, ref args, result );
 
-		public void FixInput( ref PString inpCmd, ref PString inpArgs ) => Assistant.FixInput( ref inpCmd, ref inpArgs );
+		public static void FixCommandPartTermination( ref PString inpCmd ) => Assistant.FixCommandPartTermination( ref inpCmd );
 
 		#region PROCESSING OF ARGUMENT INPUT
 		#endregion
@@ -65,8 +65,6 @@ namespace Limcap.UTerminal {
 		#endregion
 
 		//public StringBuilder GetPredictions( string input ) => GetPredictions( input );
-
-		public void AddCommand( string invokeTerm ) => base.AddCommand( invokeTerm );
 
 		public void AssembleCommandPrediction( List<Node> predictedNodes, StringBuilder result ) => base.AssembleCommandPrediction( predictedNodes, result );
 

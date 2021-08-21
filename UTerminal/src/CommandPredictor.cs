@@ -6,9 +6,9 @@ using System.Linq;
 namespace Limcap.UTerminal {
 	public class CommandPredictor {
 		public CommandPredictor( IEnumerable<string> commands = null ) {
-			_startNode = new Node();
-			_confirmedNodes = new List<Node>();
-			_currentPrediction = new List<Node>();
+			_startNode = new NodeOld();
+			_confirmedNodes = new List<NodeOld>();
+			_currentPrediction = new List<NodeOld>();
 			_commands = new List<string>();
 			SetAvailableCommands( commands );
 		}
@@ -24,10 +24,10 @@ namespace Limcap.UTerminal {
 
 
 
-		private readonly Node _startNode;
+		private readonly NodeOld _startNode;
 		private List<string> _commands;
-		private List<Node> _confirmedNodes;
-		private List<Node> _currentPrediction;
+		private List<NodeOld> _confirmedNodes;
+		private List<NodeOld> _currentPrediction;
 		//private Dictionary<string, Type> _commands2;
 
 
@@ -63,7 +63,7 @@ namespace Limcap.UTerminal {
 			if(inputBuffer.Contains( ':' )) { }
 			var words = inputBuffer.Split( ' ' );
 			int length = words.Length;
-			Node lastConfirmedNode = _startNode;
+			NodeOld lastConfirmedNode = _startNode;
 			int unpredictedWordIndex = -1;
 			if (_confirmedNodes.Count > words.Length - 1) _confirmedNodes = _confirmedNodes.Take( words.Length - 1 ).ToList();
 
@@ -121,7 +121,7 @@ namespace Limcap.UTerminal {
 			input.len++;
 			var words = input.AsString.Split( ' ' );
 			int length = words.Length;
-			Node lastConfirmedNode = _startNode;
+			NodeOld lastConfirmedNode = _startNode;
 			int unpredictedWordIndex = -1;
 			for (int i = 0; i < words.Length-(hasColon?0:1); i++) {
 				if (_confirmedNodes.Count > i) {
@@ -174,18 +174,18 @@ namespace Limcap.UTerminal {
 
 
 
-	public class Node {
+	public class NodeOld {
 		//[DebuggerBrowsable( DebuggerBrowsableState.RootHidden )]
-		public KeyedSet<string, Node> nextNodes = new KeyedSet<string, Node>( ( n ) => n.word );
-		public Node prev;
+		public KeyedSet<string, NodeOld> nextNodes = new KeyedSet<string, NodeOld>( ( n ) => n.word );
+		public NodeOld prev;
 		public string word;
-		public Node GetNext( string value ) => nextNodes.FirstOrDefault( n => n.word == value );
+		public NodeOld GetNext( string value ) => nextNodes.FirstOrDefault( n => n.word == value );
 		
 
-		internal Node AddIfNotPresent( string word ) {
+		public NodeOld AddIfNotPresent( string word ) {
 			var node = nextNodes.FirstOrDefault( n => n.word == word );
 			if (node is null) {
-				node = new Node() { prev = this, word = word };
+				node = new NodeOld() { prev = this, word = word };
 				nextNodes.Add( node );
 			}
 			return node;

@@ -67,6 +67,12 @@ namespace Limcap.UTerminal {
 		public static unsafe char* GetPointer( ReadOnlySpan<char> span ) {
 			fixed (char* ptr = &span.GetPinnableReference()) { return ptr; }
 		}
+		public static unsafe char* GetPointer( string span ) {
+			var alloc = GCHandle.Alloc( span, GCHandleType.Pinned );
+			char* ptr = (char*)alloc.AddrOfPinnedObject();
+			alloc.Free();
+			return ptr;
+		}
 	}
 
 

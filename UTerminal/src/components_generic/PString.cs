@@ -29,8 +29,16 @@ namespace Limcap.UTerminal {
 
 
 
+		public PString( char* ptr, int len ) {
+			this.ptr = ptr;
+			this.len = len;
+		}
+
+
+
+
 		public PString( string text ) {
-			ptr = Util.GetPointer( text.AsSpan() );
+			ptr = Util.GetPointer( text );
 			len = text?.Length??-1;
 		}
 
@@ -143,6 +151,15 @@ namespace Limcap.UTerminal {
 		}
 		public bool EndsWith( char suffix ) {
 			return len < 1 ? false : this[len - 1] == suffix;
+		}
+
+
+
+
+		public void ShiftStart( int amount ) {
+			if (amount > len) throw new IndexOutOfRangeException();
+			ptr += amount;
+			len -= amount;
 		}
 
 

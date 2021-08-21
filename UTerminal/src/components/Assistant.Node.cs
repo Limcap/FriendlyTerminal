@@ -1,5 +1,6 @@
 ﻿using Limcap.DataStructures;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
@@ -17,12 +18,18 @@ namespace Limcap.UTerminal {
 			public Type cmdType;
 
 
+
+
 			public bool IsLeafNode => edges.Count == 0;
+
+
 
 
 			public bool FindNext( PString word ) {
 				return (next = GetNext( word )) != null;
 			}
+
+
 
 
 			public Node GetNext( PString word ) {
@@ -31,7 +38,9 @@ namespace Limcap.UTerminal {
 			}
 
 
-			internal Node AddIfNotPresent( string word, Type cmd = null ) {
+
+
+			public Node AddIfNotPresent( string word, Type cmd = null ) {
 				var node = edges.FirstOrDefault( n => n.word == word );
 				if (node is null) {
 					node = new Node() { prev = this, word = word, cmdType = cmd };
@@ -41,9 +50,39 @@ namespace Limcap.UTerminal {
 			}
 
 
+
+
+			public unsafe Node Traverse( ref PString str ) {
+				Node best = this;
+				Node candidate = this;
+				while (!str.IsEmpty && best.next != null && str.StartsWith( best.next.word )) {
+					str.ShiftStart( best.next.word.Length );
+					best = best.next;
+				}
+				while (!(str.IsEmpty || candidate is null)) {
+					candidate = null;
+					foreach (var node in best.edges) {
+						if (str.len < node.word.Length) continue;
+						if (str.StartsWith( node.word )) {
+							candidate = node;
+							str.ShiftStart( node.word.Length );
+							break;
+						}
+					}
+					best.next = candidate;
+					best = candidate ?? best;
+				}
+				return best;
+			}
+
+
+
+
 			public override string ToString() {
 				return word;
 			}
+
+
 
 
 			public string Preview() {
@@ -54,6 +93,45 @@ namespace Limcap.UTerminal {
 					return r;
 				}
 				else return $"\"{word}\"";
+			}
+
+
+
+
+			public unsafe static void BuildTree( List<string> sentences, char separator, string terminator, Node start ) {
+				foreach (var term in sentences) {
+					var words = ((PString)term).GetSlicer( separator, PString.Slicer.Mode.IncludeSeparatorAtEnd );
+					var node = start;
+
+					while (words.HasNext) {
+						var word = words.Next();
+						if (word.len == 0) continue;
+						node = node.AddIfNotPresent( new string( word.ptr, 0, word.len ) );
+						if (!words.HasNext) node.AddIfNotPresent( terminator );
+					}
+				}
+			}
+
+
+
+
+			public static void BuildTree2( List<string> sentences, char separator, string terminator, Node start ) {
+				foreach (var term in sentences) {
+					var words = term.Split( separator );
+					var node = start;
+					for (int i = 0; i < words.Length; i++) {
+						// skips words that have length 0, cause when there are multiple spaces between the words.
+						if (words[i].Length == 0) continue;
+
+						if (i < words.Length - 1) {
+							node = node.AddIfNotPresent( words[i] + separator );
+						}
+						else {
+							node = node.AddIfNotPresent( words[i] );
+							node.AddIfNotPresent( terminator );
+						}
+					}
+				}
 			}
 		}
 
@@ -83,7 +161,7 @@ namespace Limcap.UTerminal {
 			}
 
 
-			internal Node<T> AddIfNotPresent( string word, T value2 = default(T) ) {
+			internal Node<T> AddIfNotPresent( string word, T value2 = default( T ) ) {
 				var node = edges.FirstOrDefault( n => n.value == word );
 				if (node is null) {
 					node = new Node<T>() { prev = this, value = word, value2 = value2 };

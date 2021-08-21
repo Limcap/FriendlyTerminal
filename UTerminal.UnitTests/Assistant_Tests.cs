@@ -48,7 +48,7 @@ namespace Limcap.UTerminal.UnitTests {
 		[DataRow( 10, "help :  ", "help:",  ""   )]
 		public void SplitInput_FixInput( int index, string input, string x_cmd, string x_args ) {
 			var (cmd,args) = a.SplitInput( input );
-			a.FixInput( ref cmd, ref args );
+			Assistant_TestInterface.FixCommandPartTermination( ref cmd );
 			Assert.AreEqual( x_cmd, cmd );
 			Assert.AreEqual( x_args, args );
 		}
@@ -57,23 +57,23 @@ namespace Limcap.UTerminal.UnitTests {
 
 
 		[TestMethod]
-		[DataRow( 1, "",          "@"     )]
-		[DataRow( 2, "h",         "@"     )]
-		[DataRow( 3, "he",        "@"     )]
-		[DataRow( 4, "he ",       "@"     )]
-		[DataRow( 5, "help",      "@"     )]
-		[DataRow( 6, "help:",     "help:" )]
-		[DataRow( 7, "help  ",    "@"     )]
-		[DataRow( 8, "help  :",   "help:" )]
-		[DataRow( 9, "help:   ",  "help:" )]
-		[DataRow( 10, "help :  ", "help:" )]
+		[DataRow( 1, "",          "@"    )]
+		[DataRow( 2, "h",         "@"    )]
+		[DataRow( 3, "he",        "@"    )]
+		[DataRow( 4, "he ",       "@"    )]
+		[DataRow( 5, "help",      "help" )]
+		[DataRow( 6, "help:",     ":"    )]
+		[DataRow( 7, "help  ",    "help" )]
+		[DataRow( 8, "help  :",   ":"    )]
+		[DataRow( 9, "help:   ",  ":"    )]
+		[DataRow( 10, "help :  ", ":"    )]
 		// Cases 9 and 10 would not pass the test if input did not get pre-processed by
 		// the methods SpliInput and FixInpup.
 		public void ProcessCommandInput_CorrectPredictedNodes( int index, string input, string expected ) {
 			var _confirmedNode = a._confirmedNode;
 			var _predictedNodes = a._predictedNodes;
 			var (cmd, args) = a.SplitInput( input );
-			a.FixInput( ref cmd, ref args );
+			Assistant_TestInterface.FixCommandPartTermination( ref cmd );
 			a.ProcessCommandInput( cmd, a._startNode, ref _confirmedNode, ref _predictedNodes );
 			Assert.AreEqual( expected, _confirmedNode.word );
 		}
