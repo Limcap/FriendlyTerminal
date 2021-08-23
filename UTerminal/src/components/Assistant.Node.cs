@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Limcap.UTerminal {
 	public partial class Assistant {
-		//[DebuggerDisplay( "node: {value}  |  next: {next?.value}  |  edges: {edges.Count}" )]
+		
 		[Serializable]
 		[DebuggerDisplay( "{Preview(),nq}" )]
 		public class Node {
@@ -98,16 +98,17 @@ namespace Limcap.UTerminal {
 
 
 
-			public unsafe static void BuildTree( List<string> sentences, char separator, string terminator, Node start ) {
+			public unsafe static void BuildTree( Dictionary<string,Type> sentences, char separator, string terminator, Node start ) {
+				var _invokeStrings = sentences?.ToList().OrderBy( c => c.Key ).ToList() ?? new List<KeyValuePair<string, Type>>();
 				foreach (var term in sentences) {
-					var words = ((PString)term).GetSlicer( separator, PString.Slicer.Mode.IncludeSeparatorAtEnd );
+					var words = ((PString)term.Key).GetSlicer( separator, PString.Slicer.Mode.IncludeSeparatorAtEnd );
 					var node = start;
 
 					while (words.HasNext) {
 						var word = words.Next();
 						if (word.len == 0) continue;
 						node = node.AddIfNotPresent( new string( word.ptr, 0, word.len ) );
-						if (!words.HasNext) node.AddIfNotPresent( terminator );
+						if (!words.HasNext) node.AddIfNotPresent( terminator, term.Value );
 					}
 				}
 			}

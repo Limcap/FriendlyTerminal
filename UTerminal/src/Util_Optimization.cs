@@ -83,25 +83,21 @@ namespace Limcap.UTerminal {
 			foreach (char c in stran) if (c == searchedChar) count++;
 			return count;
 		}
+
+
 		public static bool EqualsString( ref this Stan stan, string other ) {
 			if (stan.Length != other.Length) return false;
 			for (int i = 0; i < stan.Length; i++) if (stan[i] != other[i]) return false;
 			return true;
 		}
 
-		public static bool Contains( ref this ChanHoloArray3 charr, string element ) {
-			for (int i = 0; i < charr.Length; i++) {
-				var c = charr[i];
-				if (c.EqualsString( element )) return true;
-			}
-			return false;
-		}
 
 		public static bool Contains( this Stan stan, char element ) {
 			for (int i = 0; i < stan.Length; i++)
 				if (stan[i] == element) return true;
 			return false;
 		}
+
 
 		public static StringBuilder Reset( this StringBuilder sb, string newString = null ) {
 			sb.Length = 0;

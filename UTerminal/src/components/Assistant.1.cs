@@ -71,12 +71,11 @@ namespace Limcap.UTerminal {
 			_predictedNodes = new List<Node>();
 			_locale = locale;
 			_commandsSet = commandsSet;
-			_invokeStrings = commandsSet?.Keys?.OrderBy( c => c ).ToList() ?? new List<string>();
 
 			Stopwatch sw = new Stopwatch();
 			sw.Start();
 			var memoryBefore = GC.GetTotalMemory( true );
-			Node.BuildTree( _invokeStrings, CMD_WORD_SEPARATOR, CMD_TERMINATOR_AS_STRING, _startNode );
+			Node.BuildTree( _commandsSet, CMD_WORD_SEPARATOR, CMD_TERMINATOR_AS_STRING, _startNode );
 			var memoryAfter = GC.GetTotalMemory( true );
 			var memoryOccupied = memoryAfter - memoryBefore;
 			sw.Stop();
@@ -166,8 +165,10 @@ namespace Limcap.UTerminal {
 
 		protected void AssembleParametersPrediction( IEnumerable<ACommand.Parameter> parameters, StringBuilder result ) {
 			result.Reset();
-			if (parameters.IsNullOrEmpty()) {
-				result.Append( "'Enter' to execute the command" );
+
+			if (parameters.Count() == 0) {
+				result.Append( string.Empty );
+				//result.Append( "'Enter' to execute the command" );
 			}
 			else {
 				foreach (var p in parameters)
@@ -204,11 +205,15 @@ namespace Limcap.UTerminal {
 			FixCommandPartTermination( ref inputP1temp );
 			// Traverse the nodes.
 			result1 = initialNode.Traverse( ref inputP1temp );
-			// Ignores the one whitespace at the end of the input. Since the last word of the invoke command does not end in separator,
-			// this would make the command be invalid, so we ignore it if it existe. this way, when autocompleting something and then
-			// pressing space to get the next prediction wont cause an invalid command.
+			// Ignores one whitespace at the end of the input. Since the last word of the invoke command does not end
+			// in separator, this space would render the input invalid. This is important because when we press tab
+			// to autocompete a word, the predictions wont change until we type space (or a solid char). So when use
+			// autocomplete on the last word and then press space, the status bar would show invalid command.
+			// Doing this, we allow the input to have this extra space between the end of the string and the terminator
+			// and the status bar will show, instead of 'invalid command', the prediction for the terminator char,
+			// even though the actual invoke string does not end in space.
 			if (inputP1temp == ' ') inputP1temp.len--;
-			// Calculates the predications.
+			// Select the possible next nodes.
 			result2.AddRange( result1.edges.Where( n => n.word.StartsWith( inputP1temp ) ).OrderBy( n => n.word ) );
 			if (result2.Count == 0) result2.Add( _invalidCmdNode );
 		}
@@ -302,11 +307,11 @@ namespace Limcap.UTerminal {
 			//Initially we add the parameters to the result, based on the name of the last argument.
 			if (args.IsNull || args.Last.name.IsNullOrEmpty)
 				result.AddRange( cmd.Parameters );
-			else if (!args.Last.NameIsComplete || args.Last.ValueIsEmpty)
+			if (!args.Last.NameIsComplete || args.Last.ValueIsEmpty)
 				cmd.Parameters.GetByNamePrefix( args.Last.name, result );
 
 			// Then we remove from the result every parameter that has already been confirmed.
-			for (int i = 0; i < args.Length - 1; i++) {
+			for (int i = 0; i < args.Length ; i++) {
 				if (args[i].NameIsComplete) {
 					var paramIndex = result.GetIndexByName( args[i].name );
 					if (paramIndex > -1) result.RemoveAt( paramIndex );
@@ -328,6 +333,27 @@ namespace Limcap.UTerminal {
 
 
 		public StringBuilder GetNextAutocompleteEntry( string input ) {
+			Index++;
+			if (Index >= _predictedNodes.Count) Index = -1;
+			var a = _autocompleteResult.Clear();
+
+			var node = _startNode;
+			while(node.next != null) {
+				_autocompleteResult.Append( node.next.word );
+				node = node.next;
+				if (node.IsLeafNode) _autocompleteResult.Append( ' ' );// .word == CMD_TERMINATOR_AS_STRING )
+			}
+
+			if (Index == -1) return _autocompleteResult;
+
+			if (CurrentPredictedPart == false)
+				_autocompleteResult.Append( ((PString)_predictedNodes[Index].word).Trim() );
+			else
+				_autocompleteResult.Append( _predictedParams?[Index].name ).Append( ARG_VALUE_SEPARATOR );
+
+			return _autocompleteResult;
+		}
+		public StringBuilder GetNextAutocompleteEntry_old( string input ) {
 			Index++;
 			if (Index >= _predictedNodes.Count) Index = -1;
 			var a = _autocompleteResult.Reset( _lastInput.ToString() );

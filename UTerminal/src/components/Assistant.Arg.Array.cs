@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 
 namespace Limcap.UTerminal {
-	public unsafe ref partial struct InputSolver {
+	public partial class Assistant {
 		public unsafe partial struct Arg {
 
 			[DebuggerDisplay( "{Length, nq} Arguments" )]

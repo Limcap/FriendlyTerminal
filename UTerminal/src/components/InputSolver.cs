@@ -2,6 +2,7 @@
 using System.Buffers;
 using System.Collections.Generic;
 using System.Diagnostics;
+using static Limcap.UTerminal.Assistant;
 
 namespace Limcap.UTerminal {
 	public unsafe partial struct InputSolver {

@@ -2,7 +2,7 @@
 using System.Diagnostics;
 
 namespace Limcap.UTerminal {
-	public unsafe ref partial struct InputSolver {
+	public partial class Assistant {
 
 		[DebuggerDisplay( "{Preview(), nq}" )]
 		//[DebuggerDisplay( "name: {(name.IsNull ? \"{null}\" : name)}    value: {(value.IsNull ? \"{" +  "null}\" : value), nq}" )]
