@@ -19,9 +19,9 @@ namespace Limcap.UTerminal {
 
 
 
-				public Arg this[int i] {
-					get => ((Arg*)ptrArr.ptr)[i];
-					set => ((Arg*)ptrArr.ptr)[i] = value;
+				public ref Arg this[int i] {
+					get => ref ((Arg*)ptrArr.ptr)[i];
+					//set => ((Arg*)ptrArr.ptr)[i] = value;
 				}
 
 
@@ -32,11 +32,25 @@ namespace Limcap.UTerminal {
 				public int Length => ptrArr.len;
 				public bool IsNull => ptrArr.ptr == null || ptrArr.len < 1;
 				public Arg Last => IsNull ? new Arg( null ) : this[ptrArr.len - 1];
-
+				public ref Arg Last1 => ref this[ptrArr.len - 1];
 
 
 
 				public static Arg Null => new Arg( null );
+
+
+
+
+				public void ConfirmParams( ACommand cmd ) {
+					for (int i = 0; i < Length; i++) {
+						var arg = this[i];
+						if (arg.NameIsComplete) {
+							var paramIndex = cmd.Parameters.GetIndexByName( this[i].name );
+							arg.confirmed = paramIndex > -1;
+							this[i].confirmed = true;
+						}
+					}
+				}
 			}
 		}
 	}

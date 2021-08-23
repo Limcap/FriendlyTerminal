@@ -82,6 +82,22 @@ namespace Limcap.UTerminal {
 
 
 
+		public static int GetIndexByNamePrefix2(
+			this IEnumerable<ACommand.Parameter> paramArray,
+			PString name
+		) {
+			for (int i=0; i<paramArray.Count(); i++) {
+				if (paramArray.ElementAt(i).name.StartsWith( name )) {
+					return i;
+				}
+			}
+			return -1;
+		}
+
+
+
+
+
 		public static ACommand.Parameter? GetByName(
 			this ACommand.Parameter[] paramArray,
 			ReadOnlySpan<char> name
@@ -95,11 +111,11 @@ namespace Limcap.UTerminal {
 		}
 
 		public static int GetIndexByName(
-			this List<ACommand.Parameter> array,
+			this IEnumerable<ACommand.Parameter> array,
 			PString pString
 			) {
-			for (int i=0; i<array.Count; i++) {
-				if (array[i].name == pString ) {
+			for (int i=0; i<array.Count(); i++) {
+				if (array.ElementAt(i).name == pString ) {
 					return i;
 				}
 			}

@@ -9,13 +9,14 @@ namespace Limcap.UTerminal {
 		public unsafe partial struct Arg {
 			public PString name;
 			public PString value;
-
+			public bool confirmed;
 
 
 
 			public Arg( void* nullPointer ) {
 				name = PString.Null;
 				value = PString.Null;
+				confirmed = false;
 			}
 
 
@@ -40,6 +41,7 @@ namespace Limcap.UTerminal {
 							length: ptxt.len - firstIndex - 1 );
 					value.Trim();
 				}
+				confirmed = false;
 			}
 
 
