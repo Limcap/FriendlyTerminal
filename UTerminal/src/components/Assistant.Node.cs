@@ -72,6 +72,9 @@ namespace Limcap.UTerminal {
 					best.next = candidate;
 					best = candidate ?? best;
 				}
+				// This is necessary because the last selected node for the 'best' spot will have next when
+				// backspacing from the terrminator
+				best.next = null;
 				return best;
 			}
 

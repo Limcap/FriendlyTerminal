@@ -25,7 +25,7 @@ namespace Limcap.UTerminal {
 		public Dictionary<string, Type> _commandsSet => base._commandsSet;
 		public string _locale => base._locale;
 		public List<ACommand.Parameter> _predictedParams => base._predictedParams;
-		public StringBuilder _predictionResult => base._predictionResult;
+		public StringBuilder _predictionResult => base._predictionString;
 		public Node _confirmedNode => base._confirmedNode;
 		public Node _invalidCmdNode => Assistant._invalidCmdNode;
 		public Node _startNode => base._startNode;
@@ -79,7 +79,7 @@ namespace Limcap.UTerminal {
 			base._confirmedNode = base._startNode;
 			base._predictedNodes.Clear();
 			base._predictedParams.Clear();
-			base._predictionResult.Clear();
+			base._predictionString.Clear();
 			base._autocompleteResult.Clear();
 			base.Index = 0;
 		}

@@ -82,15 +82,10 @@ namespace Limcap.UTerminal {
 
 
 
-		public static int GetIndexByNamePrefix2(
-			this IEnumerable<ACommand.Parameter> paramArray,
-			PString name
-		) {
-			for (int i=0; i<paramArray.Count(); i++) {
-				if (paramArray.ElementAt(i).name.StartsWith( name )) {
+		public static int GetIndexByNamePrefix( this IEnumerable<ACommand.Parameter> paramArray, PString name, int startIndex = 0) {
+			for (int i=startIndex; i<paramArray.Count(); i++)
+				if (paramArray.ElementAt(i).name.StartsWith( name ))
 					return i;
-				}
-			}
 			return -1;
 		}
 

@@ -39,9 +39,9 @@ namespace Limcap.UTerminal {
 		// Auxiliary objects, (used temporarily inside methods to avoid allocating new discardable objects)
 
 
-		protected readonly StringBuilder _predictionResult = new StringBuilder( 60 );
+		protected readonly StringBuilder _predictionString = new StringBuilder( 60 );
 		protected readonly StringBuilder _autocompleteResult = new StringBuilder( 30 );
-		protected readonly Arg[] _processedArgs = new Arg[8];
+		protected readonly List<Arg> _processedArgs = new List<Arg>( 8 );
 
 		//protected readonly List<ACommand.Parameter> _aux_predictedParams { get; set; } = new List<ACommand.Parameter>( 8 );
 
@@ -51,7 +51,7 @@ namespace Limcap.UTerminal {
 
 
 		public int Index { get; protected set; }
-		public bool CurrentPredictedPart { get; protected set; } //false is command prediction, true is parameter prediction
+		public bool AutocompleteParams { get; protected set; } //false is command prediction, true is parameter prediction
 
 
 
@@ -113,7 +113,7 @@ namespace Limcap.UTerminal {
 				// This is important becuase the autocomplete method (invoked by pressing TAB, will use this field).
 				_currentCmd = null;
 				AssembleCommandPrediction( _predictedNodes, result: _autocompleteResult );
-				CurrentPredictedPart = false;
+				AutocompleteParams = false;
 			}
 
 			// If the command part has the terminator char, then automatically (via Pstring.Slicer) the argsPart must
@@ -122,9 +122,9 @@ namespace Limcap.UTerminal {
 				// Construct the command object in case the command has been confirmed
 				ConstructCommandObject( _confirmedNode, _locale, result: ref _currentCmd );
 				//ProcessArgsInput( _currentCmd, inpArgs, result: _predictedParams );
-				ProcessArgsInput( _currentCmd, inpArgs, args: _processedArgs, result: _predictedParams );
-				AssembleParametersPrediction( _predictedParams, result: _autocompleteResult );
-				CurrentPredictedPart = true;
+				ProcessArgsInput( _currentCmd, inpArgs, outArgs: _processedArgs, _predictedParams, _autocompleteResult );
+				//AssembleParametersPrediction( _predictedParams, result: _autocompleteResult );
+				AutocompleteParams = true;
 			}
 			Index = -1;
 			return _autocompleteResult;
@@ -270,15 +270,16 @@ namespace Limcap.UTerminal {
 
 
 
-		protected static unsafe void ProcessArgsInput( ACommand cmd, PString inpArgs, Arg[] args, List<ACommand.Parameter> result ) {
+		protected static unsafe void ProcessArgsInput( ACommand cmd, PString inpArgs, List<Arg> outArgs, List<ACommand.Parameter> outPredictionList, StringBuilder outPredictionString ) {
 			if (cmd?.Parameters.IsNullOrEmpty() ?? true || inpArgs.IsNull) return;
 
 			var argsCount = inpArgs.Count( ARGS_SEPARATOR );
 			var argsArrPtr = stackalloc Arg[argsCount];
 			var argsArr = new Arg.Array( argsArrPtr, argsCount );
-			ConstructArgsArray( inpArgs, cmd, ref argsArr );
+			ConstructArgsArray( inpArgs, cmd, ref outArgs );
 
-			FindPossibleParams( cmd, ref argsArr, result );
+			//FindPossibleParams( cmd, ref argsArr, outPredictionList );
+			PredictParams( cmd, outArgs, outPredictionList, outPredictionString );
 		}
 
 
@@ -299,68 +300,103 @@ namespace Limcap.UTerminal {
 			result.ConfirmParams( cmd );
 			return result;
 		}
-
-
-
-
-
-
-
-
-		protected static unsafe void FindPossibleParams( ACommand cmd, ref Arg.Array args, List<ACommand.Parameter> result ) {
-			result.Clear();
-
-			//Initially we add the parameters to the result, based on the name of the last argument.
-			if (args.IsNull || args.Last.name.IsNullOrEmpty)
-				result.AddRange( cmd.Parameters );
-			if (!args.Last.NameIsComplete || args.Last.ValueIsEmpty)
-				cmd.Parameters.GetByNamePrefix( args.Last.name, result );
-
-
-
-			// Then we remove from the result every parameter that has already been confirmed.
-			for (int i = 0; i < args.Length ; i++) {
-				if (args[i].NameIsComplete) {
-					var paramIndex = result.GetIndexByName( args[i].name );
-					if (paramIndex > -1) result.RemoveAt( paramIndex );
-				}
+		protected static unsafe void ConstructArgsArray( PString argsTxt, ACommand cmd, ref List<Arg> outArgs ) {
+			outArgs.Clear();
+			var slicer = argsTxt.GetSlicer( ARGS_SEPARATOR );
+			int i = 0;
+			while (slicer.HasNext) {
+				var slice = slicer.Next();
+				outArgs.Add( new Arg( ref slice ) );
 			}
 		}
-		protected static unsafe void PredictParams( ACommand cmd, ref Arg.Array args, StringBuilder result, List<ACommand.Parameter> result2 ) {
-			result.Clear();
 
-			// if there is no args or the name of the last arg beeing type is completed (has an = sign)
-			// then will return nothing because the user is currently typing the value of the parameter.
-			if (!args.IsNull && args.Last1.NameIsComplete) { }
 
-			// if user has not typed in any args, show all of them
-			else if( args.IsNull || args.Length == 0 ) {
-				result2.AddRange( cmd.Parameters );
-				return;
+
+
+
+
+
+
+		//protected static unsafe void FindPossibleParams( ACommand cmd, ref Arg.Array args, List<ACommand.Parameter> result ) {
+		//	result.Clear();
+
+		//	//Initially we add the parameters to the result, based on the name of the last argument.
+		//	if (args.IsNull || args.Last.name.IsNullOrEmpty)
+		//		result.AddRange( cmd.Parameters );
+		//	if (!args.Last.NameIsComplete || args.Last.ValueIsEmpty)
+		//		cmd.Parameters.GetByNamePrefix( args.Last.name, result );
+
+
+
+		//	// Then we remove from the result every parameter that has already been confirmed.
+		//	for (int i = 0; i < args.Length ; i++) {
+		//		if (args[i].NameIsComplete) {
+		//			var paramIndex = result.GetIndexByName( args[i].name );
+		//			if (paramIndex > -1) result.RemoveAt( paramIndex );
+		//		}
+		//	}
+		//}
+		protected static unsafe void PredictParams( ACommand cmd, List<Arg> args, List<ACommand.Parameter> outPredictionList, StringBuilder outPredictionString ) {
+			outPredictionList.Clear();
+			outPredictionString.Clear();
+
+			// aux array to mark wich parameters are going to be used in the prediction.
+			//var aux2 = stackalloc int[cmd.Parameters.Length];
+
+			// If user has not typed in any args, mark all of them.
+			if ( args.Count == 0) {
+				//for (int i = 0; i < cmd.Parameters.Length; i++) aux2[i] = 1;
+				outPredictionList.AddRange( cmd.Parameters );
 			}
 
-			// Identify confirmed parameters.
-			var confirmed = stackalloc int[cmd.Parameters.Length];
-			for (int i = 0; i <args.Length; i++) {
-				ref var arg = ref args[i];
-				if (arg.NameIsComplete) {
-					var paramIndex = cmd.Parameters.GetIndexByName( arg.name );
-					if (paramIndex > -1) confirmed[paramIndex] = 1; result2.RemoveAt( paramIndex );
+			// Else check each parameters already typed in
+			else {
+
+				// If the last parameter has an incomplete name:
+				var arg = args.Last();//[args.Count-1];
+				if (!arg.NameIsComplete) {
+
+					// Add the possible parameters to the aux list
+					int index = 0;
+					while ((index = cmd.Parameters.GetIndexByNamePrefix( arg.name, index )) > -1) {
+						outPredictionList.Add( cmd.Parameters[index] );
+						//aux2[index] = 1;
+						index++;
+					}
+
+					// If there's no possible parameters, say 'invalid parameters'
+					if(outPredictionList.Count == 0) {
+						outPredictionString.Append( "Invalid parameter" );
+					}
+
+					// Else if there are:
+					else {
+
+						// Verify previous parametes with complete and if they exist within the aux list, remove them.
+						for (int i = 0; i < args.Count - 1; i++) {
+							arg = args[i];
+							if (arg.NameIsComplete) {
+								index = outPredictionList.GetIndexByName( arg.name );
+								if (index > -1) outPredictionList.RemoveAt( index );
+								//if (index > -1) aux2[index] = 0;
+							}
+						}
+					}
+
+
+				}
+
+				// If the name of the last parameter is complete, check if it is valid or not.
+				else {
+					if (cmd.Parameters.GetIndexByName( arg.name ) == -1)
+						outPredictionString.Append( "Invalid parameter" );
+					else outPredictionString.Append( "," );
 				}
 			}
 
-			// 
-			if (!args.Last1.name.IsEmpty) {
-				result2.GetByNamePrefix( args.Last.name, result2 );
-			}
-
-			for (int i = 0; i < cmd.Parameters.Length; i++) {
-				if (confirmed[i] == 0) continue;
-				if (!cmd.Parameters[i].name.StartsWith( args.Last1.name )) continue;
-				result2.Add( cmd.Parameters[i] );
-			}
-			if (paramIndex == -1) result.Append( "Invalid parameter" );
-
+			// Last, build the string
+			foreach (var p in outPredictionList)
+				outPredictionString.Append( p.optional ? $"[{p.name}=]" : $"{p.name}=" ).Append( PREDICTIONS_SEPARATOR );
 		}
 
 
@@ -377,10 +413,14 @@ namespace Limcap.UTerminal {
 
 
 		public StringBuilder GetNextAutocompleteEntry( string input ) {
-			Index++;
-			if (Index >= _predictedNodes.Count) Index = -1;
-			var a = _autocompleteResult.Clear();
+			// Adjust Index
+			 Index++;
+			if (AutocompleteParams == false && Index >= _predictedNodes.Count ||
+				 AutocompleteParams == true && Index >= _predictedParams.Count )
+				Index = -1;
+			_autocompleteResult.Clear();
 
+			// Append the confirmed command words
 			var node = _startNode;
 			while(node.next != null) {
 				_autocompleteResult.Append( node.next.word );
@@ -388,12 +428,31 @@ namespace Limcap.UTerminal {
 				if (node.IsLeafNode) _autocompleteResult.Append( ' ' );// .word == CMD_TERMINATOR_AS_STRING )
 			}
 
-			if (Index == -1) return _autocompleteResult;
-
-			if (CurrentPredictedPart == false)
+			// Append the prediction
+			if (AutocompleteParams == false && Index > -1) {
 				_autocompleteResult.Append( ((PString)_predictedNodes[Index].word).Trim() );
-			else
-				_autocompleteResult.Append( _predictedParams?[Index].name ).Append( ARG_VALUE_SEPARATOR );
+			}
+
+			// Append the confirmed arguments
+			else {
+				for( int i=0; i<_processedArgs.Count; i++ ) {
+					var a = _processedArgs[i];
+					if (_processedArgs.Count > 1 && i < _processedArgs.Count - 1) {
+						_autocompleteResult.Append( a.name ).Append( ARG_VALUE_SEPARATOR ).Append( a.value )
+							.Append( ARGS_SEPARATOR ).Append( CMD_WORD_SEPARATOR );
+					}
+					else {
+						if (a.NameIsComplete) {
+							_autocompleteResult.Append( a.name ).Append( ARG_VALUE_SEPARATOR ).Append( a.value );
+							if (_predictedParams.Count == 0) _autocompleteResult.Append( ARGS_SEPARATOR );
+						}
+						// Append the predicted parameter
+						else if (Index != -1)
+							_autocompleteResult.Append( _predictedParams?[Index].name ).Append( ARG_VALUE_SEPARATOR );
+					}
+				}
+			}
+			
 
 			return _autocompleteResult;
 		}
@@ -409,7 +468,7 @@ namespace Limcap.UTerminal {
 			if (Index == -1) return _autocompleteResult;
 
 			//_autocompleteResult.Append( ' ' );
-			if (CurrentPredictedPart == false)
+			if (AutocompleteParams == false)
 				_autocompleteResult.Append( ((PString)_predictedNodes[Index].word).Trim() );
 			else
 				_autocompleteResult.Append( _predictedParams[Index].name ).Append( ARG_VALUE_SEPARATOR );
