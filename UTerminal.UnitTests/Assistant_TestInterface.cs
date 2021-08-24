@@ -25,7 +25,7 @@ namespace Limcap.UTerminal {
 		public Dictionary<string, Type> _commandsSet => base._commandsSet;
 		public string _locale => base._locale;
 		public List<ACommand.Parameter> _predictedParams => base._predictedParams;
-		public StringBuilder _predictionResult => base._predictionString;
+		public StringBuilder _predictionResult => base._predictionResult;
 		public Node _confirmedNode => base._confirmedNode;
 		public Node _invalidCmdNode => Assistant._invalidCmdNode;
 		public Node _startNode => base._startNode;
@@ -38,11 +38,11 @@ namespace Limcap.UTerminal {
 
 		public Assistant_TestInterface( Dictionary<string, Type> commandsSet, string locale ) : base( commandsSet, locale ) {}
 
-		public Arg.Array ConstructArgsArray( PString inpArgs, ref Arg.Array result ) => Assistant.ConstructArgsArray( inpArgs, ref result );
+		public Arg.Analyzer ConstructArgsArray( PString inpArgs, ref Arg.Analyzer result ) => Assistant.ConstructArgsArray( inpArgs, ref result );
 		
 		public void ConstructCommandObject( Node confirmedNode, string locale, ref ACommand result ) => Assistant.ConstructCommandObject( confirmedNode, locale, ref result );
 		
-		public void FindPossibleParams( ACommand cmd, ref Arg.Array args, List<ACommand.Parameter> result ) => Assistant.FindPossibleParams( cmd, ref args, result );
+		public void FindPossibleParams( ACommand cmd, ref Arg.Analyzer args, List<ACommand.Parameter> result ) => Assistant.FindPossibleParams( cmd, ref args, result );
 
 		public static void FixCommandPartTermination( ref PString inpCmd ) => Assistant.FixCommandPartTermination( ref inpCmd );
 
@@ -79,7 +79,7 @@ namespace Limcap.UTerminal {
 			base._confirmedNode = base._startNode;
 			base._predictedNodes.Clear();
 			base._predictedParams.Clear();
-			base._predictionString.Clear();
+			base._predictionResult.Clear();
 			base._autocompleteResult.Clear();
 			base.Index = 0;
 		}

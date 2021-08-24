@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Limcap.UTerminal {
 	public abstract partial class ACommand {
-		public struct Parameter {
+		public class Parameter {
 			public Parameter( string name, Type type, bool optional, string description ) {
 				this.name = name;
 				this.type = type;
@@ -93,7 +93,7 @@ namespace Limcap.UTerminal {
 
 
 
-		public static ACommand.Parameter? GetByName(
+		public static ACommand.Parameter GetByName(
 			this ACommand.Parameter[] paramArray,
 			ReadOnlySpan<char> name
 		) {

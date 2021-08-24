@@ -6,23 +6,24 @@ namespace Limcap.UTerminal {
 
 		[DebuggerDisplay( "{Preview(), nq}" )]
 		//[DebuggerDisplay( "name: {(name.IsNull ? \"{null}\" : name)}    value: {(value.IsNull ? \"{" +  "null}\" : value), nq}" )]
-		public unsafe partial struct Arg {
+		public partial struct Arg {
 			public PString name;
 			public PString value;
-			public bool confirmed;
+			public ACommand.Parameter parameter;
 
 
 
-			public Arg( void* nullPointer ) {
+			public unsafe Arg( void* nullPointer ) {
 				name = PString.Null;
 				value = PString.Null;
-				confirmed = false;
+				parameter = null;
 			}
 
 
 
 
 			public Arg( ref PString ptxt ) {
+				parameter = null;
 				if( ptxt.IsNull) {
 					name = PString.Null;
 					value = PString.Null;
@@ -41,7 +42,6 @@ namespace Limcap.UTerminal {
 							length: ptxt.len - firstIndex - 1 );
 					value.Trim();
 				}
-				confirmed = false;
 			}
 
 
@@ -51,6 +51,11 @@ namespace Limcap.UTerminal {
 			public bool ValueIsEmpty => value.IsNullOrEmpty;
 
 
+
+
+			public void SetParameter( ACommand.Parameter p ) {
+				this.parameter = p;
+			}
 
 
 			public string Preview() {

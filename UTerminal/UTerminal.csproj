@@ -74,7 +74,6 @@
     <Compile Include="src\ICommand.cs" />
     <Compile Include="src\components_generic\KeyedSet.cs" />
     <Compile Include="src\components_generic\Range.cs" />
-    <Compile Include="src\components\InputSolver.cs" />
     <Compile Include="src\Terminal.Actions.cs" />
     <Compile Include="src\Terminal.Core.cs" />
     <Compile Include="src\ACommand.cs" />

@@ -6,10 +6,9 @@ using System.Diagnostics;
 namespace Limcap.UTerminal {
 
 	[DebuggerDisplay( "{len} elements <{typeof(T).Name,nq}>" )]
-	public unsafe struct PArray<T> where T : struct {
+	public unsafe struct PArray<T> { // where T : struct 
 		public void* ptr;
 		public int len;
-		
 
 
 
