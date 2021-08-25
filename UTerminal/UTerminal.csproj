@@ -56,10 +56,11 @@
     <Compile Include="src\ACommand.Parameter.cs" />
     <Compile Include="src\components\Args.cs" />
     <Compile Include="src\components\Assistant.cs" />
-    <Compile Include="src\components\Assistant.CmdParser.Node.cs" />
-    <Compile Include="src\components\Assistant.ArgParser.cs" />
-    <Compile Include="src\components\Assistant.ArgParser.Arg.cs" />
-    <Compile Include="src\components\Assistant.CmdParser.cs" />
+    <Compile Include="src\components\CmdParser.Node.cs" />
+    <Compile Include="src\components\ArgParser.cs" />
+    <Compile Include="src\components\ArgParser.Arg.cs" />
+    <Compile Include="src\components\CmdParser.cs" />
+    <Compile Include="src\components_generic\WordNode.cs" />
     <Compile Include="src\components_generic\PString.Slicer.cs" />
     <Compile Include="src\components_generic\PString.cs" />
     <Compile Include="src\components_generic\PArray.cs" />

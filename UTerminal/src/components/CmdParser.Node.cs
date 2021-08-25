@@ -5,17 +5,24 @@ using System.Diagnostics;
 using System.Linq;
 
 namespace Limcap.UTerminal {
-	public partial class Assistant {
-		
+	public partial class CmdParser {
+
 		[Serializable]
 		[DebuggerDisplay( "{Preview(),nq}" )]
+
 		public class Node {
+
 			[DebuggerDisplay( "{edges.Count} edges" )]
 			public readonly KeyedSet<string, Node> edges = new KeyedSet<string, Node>( ( n ) => n.word );
+
 			public Node prev;
 			public Node next;
 			public string word;
-			public Type cmdType;
+			public Type value;
+
+
+
+
 
 
 
@@ -25,9 +32,17 @@ namespace Limcap.UTerminal {
 
 
 
+
+
+
+
 			public bool FindNext( PString word ) {
 				return (next = GetNext( word )) != null;
 			}
+
+
+
+
 
 
 
@@ -40,14 +55,22 @@ namespace Limcap.UTerminal {
 
 
 
+
+
+
+
 			public Node AddIfNotPresent( string word, Type cmd = null ) {
 				var node = edges.FirstOrDefault( n => n.word == word );
 				if (node is null) {
-					node = new Node() { prev = this, word = word, cmdType = cmd };
+					node = new Node() { prev = this, word = word, value = cmd };
 					edges.Add( node );
 				}
 				return node;
 			}
+
+
+
+
 
 
 
@@ -81,9 +104,17 @@ namespace Limcap.UTerminal {
 
 
 
+
+
+
+
 			public override string ToString() {
 				return word;
 			}
+
+
+
+
 
 
 
@@ -101,7 +132,11 @@ namespace Limcap.UTerminal {
 
 
 
-			public unsafe static void BuildTree( Dictionary<string,Type> sentences, char separator, string terminator, Node start ) {
+
+
+
+
+			public unsafe static void BuildGraph( Dictionary<string, Type> sentences, char separator, string terminator, Node start ) {
 				var _invokeStrings = sentences?.ToList().OrderBy( c => c.Key ).ToList() ?? new List<KeyValuePair<string, Type>>();
 				foreach (var term in sentences) {
 					var words = ((PString)term.Key).GetSlicer( separator, PString.Slicer.Mode.IncludeSeparatorAtEnd );
@@ -119,7 +154,11 @@ namespace Limcap.UTerminal {
 
 
 
-			public static void BuildTree2( List<string> sentences, char separator, string terminator, Node start ) {
+
+
+
+
+			public static void BuildGraph2( List<string> sentences, char separator, string terminator, Node start ) {
 				foreach (var term in sentences) {
 					var words = term.Split( separator );
 					var node = start;
@@ -136,56 +175,6 @@ namespace Limcap.UTerminal {
 						}
 					}
 				}
-			}
-		}
-
-
-
-
-
-
-
-
-		public class Node<T> {
-			[DebuggerDisplay( "{edges.Count} edges" )]
-			public KeyedSet<string, Node<T>> edges = new KeyedSet<string, Node<T>>( ( n ) => n.value );
-			public Node<T> prev;
-			public Node<T> next;
-			public string value;
-			public T value2;
-			public bool FindNext( PString value ) {
-				if (next != null && next.value == value) return true;
-				next = edges.FirstOrDefault( n => n.value == value );
-				return next != null;
-			}
-
-			public Node<T> GetNext( PString value ) {
-				if (next != null && next.value == value) return next;
-				return next = edges.FirstOrDefault( n => n.value == value );
-			}
-
-
-			internal Node<T> AddIfNotPresent( string word, T value2 = default( T ) ) {
-				var node = edges.FirstOrDefault( n => n.value == word );
-				if (node is null) {
-					node = new Node<T>() { prev = this, value = word, value2 = value2 };
-					edges.Add( node );
-				}
-				return node;
-			}
-
-			public override string ToString() {
-				return value;
-			}
-
-			public string Preview() {
-				if (value == "@") {
-					Node<T> n = this;
-					string r = value;
-					while ((n = n.next) != null) r += "  →  " + n;
-					return r;
-				}
-				else return $"\"{value}\"";
 			}
 		}
 	}

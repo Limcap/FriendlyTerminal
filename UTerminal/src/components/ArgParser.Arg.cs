@@ -2,14 +2,20 @@
 using System.Diagnostics;
 
 namespace Limcap.UTerminal {
-	public partial class Assistant {
+	public partial class ArgParser {
 
 		[DebuggerDisplay( "{Preview(), nq}" )]
 		//[DebuggerDisplay( "name: {(name.IsNull ? \"{null}\" : name)}    value: {(value.IsNull ? \"{" +  "null}\" : value), nq}" )]
 		public partial struct Arg {
+
 			public PString name;
 			public PString value;
 			public ACommand.Parameter parameter;
+
+
+
+
+
 
 
 
@@ -18,6 +24,10 @@ namespace Limcap.UTerminal {
 				value = PString.Null;
 				parameter = null;
 			}
+
+
+
+
 
 
 
@@ -47,8 +57,16 @@ namespace Limcap.UTerminal {
 
 
 
+
+
+
+
 			public bool NameIsComplete => !value.IsNull;
 			public bool ValueIsEmpty => value.IsNullOrEmpty;
+
+
+
+
 
 
 
@@ -56,6 +74,12 @@ namespace Limcap.UTerminal {
 			public void SetParameter( ACommand.Parameter p ) {
 				this.parameter = p;
 			}
+
+
+
+
+
+
 
 
 			public string Preview() {
