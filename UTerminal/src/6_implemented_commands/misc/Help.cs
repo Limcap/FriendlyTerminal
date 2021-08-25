@@ -46,7 +46,7 @@ namespace Limcap.UTerminal.Cmds.Misc {
 		}
 
 
-		public override string MainFunction( Terminal t, Args args ) {
+		public override string MainFunction( Terminal t, Arg[] args ) {
 			string output = NEW_LINE + Txt("intro");
 			var cmds = string.Join( NEW_LINE + " • ", t.AvailableCommands );
 			output += cmds.Length == 0 ? Txt("no-cmds") : (" • " + cmds);

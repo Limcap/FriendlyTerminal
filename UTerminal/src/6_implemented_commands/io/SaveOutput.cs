@@ -39,9 +39,9 @@ namespace Limcap.UTerminal.Cmds.IO {
 		}
 
 
-		public override string MainFunction( Terminal t, Args args ) {
-			string filename = args;
-			if (args.value.Length == 0)
+		public override string MainFunction( Terminal t, Arg[] args ) {
+			var filename = args.Get(Parameters[0]);
+			if (args.Length == 0)
 				return Info;
 			else if (!filename.All( c => char.IsLetterOrDigit( c ) || c == '_' || c == '.' )) {
 				return Txt("invalid");

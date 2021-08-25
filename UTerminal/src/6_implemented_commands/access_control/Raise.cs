@@ -22,7 +22,7 @@ namespace Limcap.UTerminal.Cmds.AccessControl {
 		}
 
 
-		public override string MainFunction( Terminal t, Args args ) {
+		public override string MainFunction( Terminal t, Arg[] args ) {
 			t.TypeText( Txt("0","Password") + ": " );
 			t.ReadPassword( input => {
 				var level = _levels.IndexOf( input ) + 1;

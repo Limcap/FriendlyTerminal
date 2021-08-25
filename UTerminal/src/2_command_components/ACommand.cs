@@ -87,7 +87,7 @@ namespace Limcap.UTerminal {
 
 		#region EXECUTION
 		#endregion
-		public abstract string MainFunction( Terminal t, Args args );
+		public abstract string MainFunction( Terminal t, Arg[] args );
 
 
 

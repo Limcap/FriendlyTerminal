@@ -26,6 +26,6 @@ namespace Limcap.UTerminal {
 		// If HELP_INFO is not defined, the command will not have help information for when the command is called with the '?' argument.
 		//public const string HELP_INFO;
 
-		string MainFunction( Terminal t, Args args );
+		string MainFunction( Terminal t, Arg[] args );
 	}
 }

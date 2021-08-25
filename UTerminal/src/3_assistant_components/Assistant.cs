@@ -16,7 +16,6 @@ namespace Limcap.UTerminal {
 		// USED BYT ARGUMENT PROCESSING
 		protected readonly Dictionary<string, Type> _commandsSet;
 		protected readonly string _locale;
-		protected ACommand _currentCmd;
 
 		protected readonly StringBuilder _predictionResult = new StringBuilder( 60 );
 		protected readonly StringBuilder _autocompleteResult = new StringBuilder( 30 );
@@ -24,6 +23,9 @@ namespace Limcap.UTerminal {
 		protected readonly ArgParser _argsParser;
 		protected readonly CmdParser _cmdParser;
 
+		public ACommand ParsedCommand { get => _cmdParser?.parsedCmd; }
+		public PString RawArgs { get; protected set; }
+		public Arg[] ParsedArgs { get => _argsParser.Elements; }
 
 
 
@@ -67,6 +69,7 @@ namespace Limcap.UTerminal {
 
 		public StringBuilder GetPredictions( string input ) {
 			var (inpCmd, inpArgs) = SplitInput( input );
+			RawArgs = inpArgs;
 			
 			_cmdParser.Parse( inpCmd, _locale );
 	

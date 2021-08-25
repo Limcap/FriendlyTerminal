@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 using static Limcap.UTerminal.ACommand;
 
 namespace Limcap.UTerminal {
-	public class Args {
+	public class Args_Old {
 		public readonly string value;
 
-		public Args(string value) {
+		public Args_Old(string value) {
 			this.value = value;
 		}
 
@@ -30,11 +30,11 @@ namespace Limcap.UTerminal {
 			return temp.IndexOf( ' ' ) == -1 ? temp : temp.Remove( temp.IndexOf( ' ' ) );
 		}
 
-		public static implicit operator Args(string value) {
-			return new Args( value );
+		public static implicit operator Args_Old(string value) {
+			return new Args_Old( value );
 		}
 
-		public static implicit operator string(Args args) {
+		public static implicit operator string(Args_Old args) {
 			return args.value;
 		}
 	}

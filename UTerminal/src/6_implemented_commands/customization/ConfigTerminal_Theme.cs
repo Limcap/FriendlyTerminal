@@ -44,10 +44,10 @@ namespace Limcap.UTerminal.Cmds.Customization {
 		}
 		
 
-		public override string MainFunction( Terminal t, Args args ) {
-			var arg_fontsize = args.GetArg( Parameters[0] );
-			var arg_fontcolor = args.GetArg( Parameters[1] );
-			var arg_backcolor = args.GetArg( Parameters[2] );
+		public override string MainFunction( Terminal t, Arg[] args ) {
+			var arg_fontsize = args.Get( Parameters[0] );
+			var arg_fontcolor = args.Get( Parameters[1] );
+			var arg_backcolor = args.Get( Parameters[2] );
 
 			if (arg_fontsize == "") t.FontSize = 14;
 			if (arg_fontcolor == "") t.FontColor = Brushes.GreenYellow;

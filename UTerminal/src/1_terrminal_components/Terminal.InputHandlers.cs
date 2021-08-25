@@ -112,7 +112,7 @@ namespace Limcap.UTerminal {
 					var processor = _inputHandler is null ? ProcessInput : _inputHandler;
 					_inputHandler = null;
 					var caretIndexBefore = CaretIndex;
-					TypeText( NEW_LINE );
+					AppendText( NEW_LINE );
 					var output = processor( input );
 					if (output != null) {
 						if (!Text.EndsWith( NEW_LINE )) AppendText( NEW_LINE );

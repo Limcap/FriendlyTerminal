@@ -34,10 +34,11 @@ namespace Limcap.UTerminal.Cmds.Config {
 		protected private override Parameter[] ParametersBuilder() { return null; }
 
 
-		public override string MainFunction( Terminal t, Args args ) {
-			if (args == Txt("on") ) t.ShowStatusBar = true;
-			else if (args == Txt("off") ) t.ShowStatusBar = false;
-			else if (args?.value.Length == 0) t.ShowStatusBar = !t.ShowStatusBar;
+		public override string MainFunction( Terminal t, Arg[] args ) {
+			var arg = args.Get( Parameters[0] );
+			if (arg == Txt("on") ) t.ShowStatusBar = true;
+			else if (arg == Txt("off") ) t.ShowStatusBar = false;
+			else if (args?.Length == 0) t.ShowStatusBar = !t.ShowStatusBar;
 			else return Info;
 			return null;
 		}

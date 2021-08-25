@@ -31,10 +31,11 @@ namespace Limcap.UTerminal.Cmds.Dev {
 		}
 
 
-		public override string MainFunction( Terminal t, Args args ) {
-			if (args == "on") t.ShowTraceBar = true;
-			else if (args == "off") t.ShowTraceBar = false;
-			else if (args?.value.Length == 0) t.ShowTraceBar = !t.ShowTraceBar;
+		public override string MainFunction( Terminal t, Arg[] args ) {
+			var arg = args.Get( Parameters[0] );
+			if (arg == "on") t.ShowTraceBar = true;
+			else if (arg == "off") t.ShowTraceBar = false;
+			else if (args?.Length == 0) t.ShowTraceBar = !t.ShowTraceBar;
 			else return Info;
 			return null;
 		}

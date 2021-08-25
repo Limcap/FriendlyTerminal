@@ -25,7 +25,7 @@ namespace Limcap.UTerminal.Cmds.Dev {
 			"\tVery long repetitive text.";
 
 
-		public string MainFunction( Terminal t, Args args ) {
+		public string MainFunction( Terminal t, Arg[] args ) {
 			var sb = new StringBuilder();
 			for (int i = 0; i < 2000; i++)
 				sb.Append( "this is a hundred characters long string, with the solo purpose of testing long strings. the end...\n" );
