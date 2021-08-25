@@ -26,11 +26,11 @@ namespace Limcap.UTerminal {
 		public string _locale => base._locale;
 		public List<ACommand.Parameter> _predictedParams => base._predictedParams;
 		public StringBuilder _predictionResult => base._predictionResult;
-		public Node _confirmedNode => base._confirmedNode;
-		public Node _invalidCmdNode => Assistant._invalidCmdNode;
-		public Node _startNode => base._startNode;
+		public WordNode _confirmedNode => base._confirmedNode;
+		public WordNode _invalidCmdNode => Assistant._invalidCmdNode;
+		public WordNode _startNode => base._startNode;
 		public List<string> _invokeStrings => base._invokeStrings;
-		public List<Node> _predictedNodes => base._predictedNodes;
+		public List<WordNode> _predictedNodes => base._predictedNodes;
 		public ACommand _currentCmd => base._currentCmd;
 
 		#region SETUP
@@ -38,11 +38,11 @@ namespace Limcap.UTerminal {
 
 		public Assistant_TestInterface( Dictionary<string, Type> commandsSet, string locale ) : base( commandsSet, locale ) {}
 
-		public Arg.Analyzer ConstructArgsArray( PString inpArgs, ref Arg.Analyzer result ) => Assistant.ConstructArgsArray( inpArgs, ref result );
+		public Arg.ArgParser ConstructArgsArray( PString inpArgs, ref Arg.ArgParser result ) => Assistant.ConstructArgsArray( inpArgs, ref result );
 		
-		public void ConstructCommandObject( Node confirmedNode, string locale, ref ACommand result ) => Assistant.ConstructCommandObject( confirmedNode, locale, ref result );
+		public void ConstructCommandObject( WordNode confirmedNode, string locale, ref ACommand result ) => Assistant.ConstructCommandObject( confirmedNode, locale, ref result );
 		
-		public void FindPossibleParams( ACommand cmd, ref Arg.Analyzer args, List<ACommand.Parameter> result ) => Assistant.FindPossibleParams( cmd, ref args, result );
+		public void FindPossibleParams( ACommand cmd, ref Arg.ArgParser args, List<ACommand.Parameter> result ) => Assistant.FindPossibleParams( cmd, ref args, result );
 
 		public static void FixCommandPartTermination( ref PString inpCmd ) => Assistant.FixCommandPartTermination( ref inpCmd );
 
@@ -54,7 +54,7 @@ namespace Limcap.UTerminal {
 		#region PROCESSING OF COMMAND INPUT
 		#endregion
 
-		public void ProcessCommandInput( PString inpCmd, Node initialNode, ref Node result1, ref List<Node> result2 ) => Assistant.ProcessCommandInput( inpCmd, initialNode, ref result1, ref result2 );
+		public void ProcessCommandInput( PString inpCmd, WordNode initialNode, ref WordNode result1, ref List<WordNode> result2 ) => Assistant.ProcessCommandInput( inpCmd, initialNode, ref result1, ref result2 );
 
 		#region OTHER
 		#endregion
@@ -66,7 +66,7 @@ namespace Limcap.UTerminal {
 
 		//public StringBuilder GetPredictions( string input ) => GetPredictions( input );
 
-		public void AssembleCommandPrediction( List<Node> predictedNodes, StringBuilder result ) => base.AssembleCommandPrediction( predictedNodes, result );
+		public void AssembleCommandPrediction( List<WordNode> predictedNodes, StringBuilder result ) => base.AssembleCommandPrediction( predictedNodes, result );
 
 		public void AssembleParametersPrediction( IEnumerable<ACommand.Parameter> parameters, StringBuilder result ) => base.AssembleParametersPrediction( parameters, result );
 
