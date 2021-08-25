@@ -10,7 +10,7 @@ namespace Limcap.UTerminal {
 
 			public PString name;
 			public PString value;
-			public ACommand.Parameter parameter;
+			public Parameter parameter;
 
 
 
@@ -71,7 +71,7 @@ namespace Limcap.UTerminal {
 
 
 
-			public void SetParameter( ACommand.Parameter p ) {
+			public void SetParameter( Parameter p ) {
 				this.parameter = p;
 			}
 

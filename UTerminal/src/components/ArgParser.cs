@@ -18,7 +18,7 @@ namespace Limcap.UTerminal {
 
 
 		public readonly List<Arg> list;
-		public readonly List<ACommand.Parameter> possible;
+		public readonly List<Parameter> possible;
 		public bool IsLastParamInvalid { get; private set; }
 
 
@@ -30,7 +30,7 @@ namespace Limcap.UTerminal {
 
 		public ArgParser( int len ) {
 			list = new List<Arg>( len );
-			possible = new List<ACommand.Parameter>( len );
+			possible = new List<Parameter>( len );
 		}
 
 
@@ -67,7 +67,7 @@ namespace Limcap.UTerminal {
 
 
 
-		public void Parse( PString input, ACommand.Parameter[] parameters ) {
+		public void Parse( PString input, Parameter[] parameters ) {
 			if (parameters?.IsNullOrEmpty() ?? true || input.IsNull) return;
 			Expand( input );
 			MatchParameters( parameters );
@@ -97,7 +97,7 @@ namespace Limcap.UTerminal {
 
 
 
-		public void MatchParameters( ACommand.Parameter[] parameters ) {
+		public void MatchParameters( Parameter[] parameters ) {
 			for (int i = 0; i < Length; i++) {
 				var arg = list[i];
 				if (arg.NameIsComplete) {
@@ -118,7 +118,7 @@ namespace Limcap.UTerminal {
 
 
 
-		public void CollectPossibilities( ACommand.Parameter[] parameters ) {
+		public void CollectPossibilities( Parameter[] parameters ) {
 			possible.Clear();
 
 			if (list.Count == 0) return;
@@ -142,7 +142,7 @@ namespace Limcap.UTerminal {
 
 
 
-		public bool IsAlreadyMatched( ACommand.Parameter p ) {
+		public bool IsAlreadyMatched( Parameter p ) {
 			for (int i = 0; i < list.Count - 1; i++)
 				if (list[i].NameIsComplete && list[i].parameter == p) return true;
 			return false;
