@@ -91,13 +91,15 @@ namespace Limcap.UTerminal {
 				return INSUFICIENT_PRIVILEGE_MESSAGE;
 
 			try {
-				return cmd.MainFunction( this, _assistant.ParsedArgs );
+				var result = cmd.MainFunction( this, _assistant.ParsedArgs );
+				GC.Collect();
+				GC.WaitForPendingFinalizers();
+				GC.Collect();
+				return result;
 			}
 			catch (Exception ex) {
 				return ex.ToString();
 			}
-
-
 		}
 
 
