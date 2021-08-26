@@ -76,13 +76,13 @@ namespace Limcap.UTerminal {
 			Panel.Children.Add( _scrollArea );
 			DockPanel.SetDock( _mainArea, Dock.Top );
 
-			Binding myBinding = new Binding {
-				Source = this,
-				Path = new PropertyPath( "Text" ),
-				Mode = BindingMode.TwoWay,
-				UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-			};
-			_ = BindingOperations.SetBinding( _mainArea, TextBox.TextProperty, myBinding );
+			//Binding myBinding = new Binding {
+			//	Source = this,
+			//	Path = new PropertyPath( "Text" ),
+			//	Mode = BindingMode.TwoWay,
+			//	UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+			//};
+			//_ = BindingOperations.SetBinding( _mainArea, TextBox.TextProperty, myBinding );
 		}
 
 
@@ -107,14 +107,15 @@ namespace Limcap.UTerminal {
 
 
 
-		private string _text;
-		public string Text {
-			get => _text;
-			set {
-				_text = value;
-				OnPropertyChanged( "Text" );
-			}
-		}
+		//private string _text;
+		//public string Text {
+		//	get => _text;
+		//	set {
+		//		_text = value;
+		//		OnPropertyChanged( "Text" );
+		//	}
+		//}
+		public string Text => _mainArea.Text;
 
 
 
@@ -127,13 +128,15 @@ namespace Limcap.UTerminal {
 
 
 
-		public string LastLine {
-			get {
-				if (_mainArea.Text.Length == 0) return string.Empty;
-				var lastLineStartIndex = _mainArea.Text.LastIndexOf( NEW_LINE ) + NEW_LINE.Length;
-				return _mainArea.Text.Substring( lastLineStartIndex );
-			}
-		}
+		//public string LastLine {
+		//	get {
+		//		if (_mainArea.Text.Length == 0) return string.Empty;
+		//		var lastLineStartIndex = _mainArea.Text.LastIndexOf( NEW_LINE ) + NEW_LINE.Length;
+		//		return _mainArea.Text.Substring( lastLineStartIndex );
+		//	}
+		//}
+		public string LastLine => _mainArea.GetLineText( _mainArea.LineCount - 1 ) ?? string.Empty;
+
 
 
 
@@ -176,7 +179,8 @@ namespace Limcap.UTerminal {
 
 
 		private char CurrentChar {
-			get => CaretIndex == Text.Length ? ' ' : Text[CaretIndex];
+			//get => CaretIndex == Text.Length ? ' ' : Text[CaretIndex];
+			get => '-';
 		}
 
 

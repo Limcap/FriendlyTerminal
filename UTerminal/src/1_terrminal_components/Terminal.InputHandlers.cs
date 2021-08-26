@@ -30,7 +30,8 @@ namespace Limcap.UTerminal {
 				_passwordInput.Clear();
 				_usePasswordMask = false;
 				if (output != null) {
-					if (!Text.EndsWith( NEW_LINE )) AppendText( NEW_LINE );
+					if (!LastLine.EndsWith( NEW_LINE )) AppendText( NEW_LINE );
+					//if (!Text.EndsWith( NEW_LINE )) AppendText( NEW_LINE );
 					AppendText( output.TrimEnd() );
 					_statusArea.Text = $"Saída: {output.Length} caracteres";
 				}
@@ -115,7 +116,8 @@ namespace Limcap.UTerminal {
 					AppendText( NEW_LINE );
 					var output = processor( input );
 					if (output != null) {
-						if (!Text.EndsWith( NEW_LINE )) AppendText( NEW_LINE );
+						//if (!Text.EndsWith( NEW_LINE )) AppendText( NEW_LINE );
+						if (!LastLine.EndsWith( NEW_LINE )) AppendText( NEW_LINE );
 						AppendText( output.TrimEnd() );
 						_statusArea.Text = $"Saída: {output.Length} caracteres";
 					}
@@ -147,7 +149,13 @@ namespace Limcap.UTerminal {
 		private void HandleTextChanged( object sender, TextChangedEventArgs args ) {
 			if (!_allowAssistant) return;
 			var input = GetInputBuffer();
-			_statusArea.Text = _assistant.GetPredictions( input ).ToString();
+
+			var text = _assistant.GetPredictions( input ).ToString();
+			_statusArea.Clear();
+			_statusArea.AppendText(text);
+			//_statusArea.Text = text;
+
+			//System.GC.Collect();
 
 			//if (input.Count() > 0 && input.Contains( ':' ) && input.Last() != ':') {
 			//	var autocompleteString = _assistant.GetPredictions( input );
