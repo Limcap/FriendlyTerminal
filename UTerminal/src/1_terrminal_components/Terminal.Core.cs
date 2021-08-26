@@ -26,7 +26,7 @@ namespace Limcap.UTerminal {
 		private readonly TextBox _mainArea;
 		private readonly TextBox _statusArea;
 		private readonly TextBox _traceArea;
-		private readonly HistoryNavigator _cmdHistory = new HistoryNavigator();
+		private readonly HistoryNavigator _cmdHistory = new HistoryNavigator(15);
 		//private CommandPredictor _cmdAssist;
 		public Assistant _assistant;
 		private bool _allowAssistant;

@@ -10,6 +10,12 @@ namespace Limcap.UTerminal {
 
 		private int _index = -1;
 
+		public int capacity = 100;
+
+		public HistoryNavigator(int capacity) {
+			this.capacity = capacity;
+		} 
+
 		public int Index {
 			get => _index;
 			private set => _index = _history.Count == 0 ? -1 : value.MinMax( MinIndex - 1, MaxIndex );
@@ -48,6 +54,7 @@ namespace Limcap.UTerminal {
 		public void Add( string value ) {
 			if (_history.Count == 0 || value != _history[MaxIndex])
 				_history.Add( value );
+			if (_history.Count > capacity) _history.RemoveAt( 0 );
 			Deselect();
 		}
 	}
