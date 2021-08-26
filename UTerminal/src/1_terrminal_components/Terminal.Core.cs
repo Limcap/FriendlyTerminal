@@ -222,7 +222,7 @@ namespace Limcap.UTerminal {
 			};
 			//mainArea.TextChanged += ( o, a ) => AdvanceAutoComplete( a );
 			mainArea.TextChanged += HandleTextChanged;
-			mainArea.SelectionChanged += HandleSelectionChanged;
+			//mainArea.SelectionChanged += HandleSelectionChanged;
 			return mainArea;
 		}
 

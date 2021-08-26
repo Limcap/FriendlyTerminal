@@ -145,8 +145,9 @@ namespace Limcap.UTerminal {
 
 
 
-
 		private void HandleTextChanged( object sender, TextChangedEventArgs args ) {
+			CalculateTextLength();
+
 			if (!_allowAssistant) return;
 			var input = GetInputBuffer();
 
@@ -183,6 +184,14 @@ namespace Limcap.UTerminal {
 
 
 
+		public int TextLength;
+		public int CaretIndexPrevious;
+		private void CalculateTextLength() {
+			CaretIndexPrevious = _mainArea.CaretIndex;
+			_mainArea.CaretIndex = int.MaxValue;
+			TextLength = _mainArea.CaretIndex;
+			_mainArea.CaretIndex = CaretIndexPrevious;
+		}
 
 		private void HandleSelectionChanged( object sender, RoutedEventArgs args ) {
 			var isHelperSelection = !(_mainArea.SelectionStart != _bufferStartIndex || _mainArea.SelectionLength != _mainArea.Text.Length - _bufferStartIndex);
