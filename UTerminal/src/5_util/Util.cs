@@ -10,59 +10,6 @@ using System.Windows.Media;
 
 namespace Limcap.UTerminal {
 	public class Util {
-		public enum MapType : uint {
-			MAPVK_VK_TO_VSC = 0x0,
-			MAPVK_VSC_TO_VK = 0x1,
-			MAPVK_VK_TO_CHAR = 0x2,
-			MAPVK_VSC_TO_VK_EX = 0x3,
-		}
-
-		[DllImport( "user32.dll" )]
-		public static extern int ToUnicode(
-			 uint wVirtKey,
-			 uint wScanCode,
-			 byte[] lpKeyState,
-			 [Out, MarshalAs(UnmanagedType.LPWStr, SizeParamIndex = 4)]
-				StringBuilder pwszBuff,
-			 int cchBuff,
-			 uint wFlags );
-
-		[DllImport( "user32.dll" )]
-		public static extern bool GetKeyboardState( byte[] lpKeyState );
-
-		[DllImport( "user32.dll" )]
-		public static extern uint MapVirtualKey( uint uCode, MapType uMapType );
-
-		public static char GetCharFromKey( Key key ) {
-			char ch = ' ';
-
-			int virtualKey = KeyInterop.VirtualKeyFromKey( key );
-			byte[] keyboardState = new byte[256];
-			GetKeyboardState( keyboardState );
-
-			uint scanCode = MapVirtualKey( (uint)virtualKey, MapType.MAPVK_VK_TO_VSC );
-			StringBuilder stringBuilder = new StringBuilder( 2 );
-
-			int result = ToUnicode( (uint)virtualKey, scanCode, keyboardState, stringBuilder, stringBuilder.Capacity, 0 );
-			switch (result) {
-				case -1:
-					break;
-				case 0:
-					break;
-				case 1: {
-					ch = stringBuilder[0];
-					break;
-				}
-				default: {
-					ch = stringBuilder[0];
-					break;
-				}
-			}
-			return ch;
-		}
-
-
-
 
 		public static unsafe char* GetPointer( ReadOnlySpan<char> span ) {
 			fixed (char* ptr = &span.GetPinnableReference()) { return ptr; }
@@ -74,6 +21,12 @@ namespace Limcap.UTerminal {
 			return ptr;
 		}
 	}
+
+
+
+
+
+
 
 
 	public static partial class Extensions {
@@ -123,7 +76,7 @@ namespace Limcap.UTerminal {
 		}
 
 		public static char? ToPasswordAllowedChar( this Key key ) {
-			char c = Util.GetCharFromKey( key );
+			char c = KeyGrabber.GetCharFromKey( key );
 			int i = c;
 			//if (i == 32) return ' ';
 			if (i.IsInBetween( 33, 126 ) && i != 92) return c; else return null;
@@ -131,7 +84,7 @@ namespace Limcap.UTerminal {
 			//return keyCode.IsInBetween( 34, 79 ) || keyCode.IsIn(143);
 		}
 		public static bool IsPasswordAllowedChar( this Key key ) {
-			int c = (int)Util.GetCharFromKey( key );
+			int c = (int)KeyGrabber.GetCharFromKey( key );
 			return c.IsInBetween( 32, 126 ) && c != 92;
 		}
 

@@ -12,8 +12,6 @@ namespace Limcap.UTerminal {
 		private readonly Dictionary<string, Type> _cmdList;
 
 
-
-
 		public void RegisterCommand<T>( string invokeString = null ) where T : ICommand, new() {
 			RegisterCommand( typeof( T ), invokeString );
 		}
@@ -66,42 +64,6 @@ namespace Limcap.UTerminal {
 
 
 
-
-		//public string ProcessInput( string input ) {
-		//	int splitter = Math.Max( 0, input.IndexOf( ':' ) );
-		//	var cmd = splitter == 0 ? input : input.Remove( splitter ).Trim();
-		//	var arg = splitter == 0 ? string.Empty : input.Substring( splitter + 1 ).Trim();
-
-		//	if (cmd == "exit") {
-		//		Clear();
-		//		onExit?.Invoke();
-		//		return string.Empty;
-		//	}
-		//	if (cmd == "clear") {
-		//		Clear();
-		//		return null;
-		//	}
-		//	if (!_cmdList.ContainsKey( cmd )) {
-		//		return "Comando não reconhecido.";
-		//	}
-		//	else {
-		//		Type cmdType = _cmdList[cmd];
-		//		int requiredPrivilege = (int)(cmdType.GetConst( "REQUIRED_PRIVILEGE" ) ?? 0);
-		//		if (arg == "?")
-		//			return GetCommandInfo( cmdType );
-		//		if (CurrentPrivilege < requiredPrivilege)
-		//			return INSUFICIENT_PRIVILEGE_MESSAGE;
-		//		var instance = cmdType.IsSubclassOf( typeof( ACommand ) )
-		//			? (ICommand)Activator.CreateInstance( cmdType, Locale )
-		//			: (ICommand)Activator.CreateInstance( cmdType );
-		//		try {
-		//			return instance.MainFunction( this, arg );
-		//		}
-		//		catch (Exception ex) {
-		//			return ex.ToString();
-		//		}
-		//	}
-		//}
 		public string ProcessInput( string input ) {
 			//System.GC.Collect();
 			if (input == "exit") {

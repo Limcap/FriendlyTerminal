@@ -60,6 +60,7 @@
     <Compile Include="src\3_assistant_components\ArgParser.cs" />
     <Compile Include="src\3_assistant_components\Arg.cs" />
     <Compile Include="src\3_assistant_components\CmdParser.cs" />
+    <Compile Include="src\4_generic_components\KeyGrabber.cs" />
     <Compile Include="src\4_generic_components\WordNode.cs" />
     <Compile Include="src\4_generic_components\PString.Slicer.cs" />
     <Compile Include="src\4_generic_components\PString.cs" />

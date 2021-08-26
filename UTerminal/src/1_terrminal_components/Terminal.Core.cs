@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using Cmds = Limcap.UTerminal.Cmds;
@@ -16,22 +17,18 @@ namespace Limcap.UTerminal {
 
 	public partial class Terminal : INotifyPropertyChanged {
 
-		//private static readonly string NewLine = Environment.NewLine;
 		public const string NEW_LINE = "\n";
-		public const string PROMPT_STRING = "> ";
+		public const string PROMPT_STRING = "» ";//›»
 		public const string INSUFICIENT_PRIVILEGE_MESSAGE = "Este comando requer um nível de privilégio maior do que o definido no momento.";
 
 		private readonly string _introText = "Limcap Utility Terminal";
 		private readonly ScrollViewer _scrollArea;
-		private readonly TextBox _mainArea;
-		private readonly TextBox _statusArea;
-		private readonly TextBox _traceArea;
+		private readonly TextBlock _mainArea;
+		private readonly TextBlock _statusArea;
+		private readonly TextBlock _traceArea;
 		private readonly HistoryNavigator _cmdHistory = new HistoryNavigator(15);
-		//private CommandPredictor _cmdAssist;
 		public Assistant _assistant;
 		private bool _allowAssistant;
-		//private ParameterTypeAssistant _paramAssist;
-		private int _bufferStartIndex;
 
 		public Action onExit;
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -39,6 +36,16 @@ namespace Limcap.UTerminal {
 		private Func<string, string> _inputHandler;
 		private bool _usePasswordMask;
 		private readonly StringBuilder _passwordInput = new StringBuilder();
+
+		
+
+		public readonly Run CaretRun = new Run( "█" ) { IsEnabled = false, Background=Brushes.GreenYellow };//█
+		public readonly Run InputRun = new Run( String.Empty );
+		public InlineCollection Inlines => _mainArea.Inlines;
+		public Run LastRun => Inlines.LastInline.PreviousInline.PreviousInline as Run;
+		public string Text => _mainArea.Text;
+
+
 
 		public Panel Panel { get; private set; }
 		public int CurrentPrivilege { get; set; }
@@ -62,7 +69,7 @@ namespace Limcap.UTerminal {
 			_traceArea = BuildStatuArea();
 			Panel.Children.Add( _traceArea );
 			DockPanel.SetDock( _traceArea, Dock.Bottom );
-			ShowTraceBar = false;
+			ShowTraceBar = true;
 
 			_statusArea = BuildStatuArea();
 			Panel.Children.Add( _statusArea );
@@ -89,12 +96,13 @@ namespace Limcap.UTerminal {
 
 
 		public void Start() {
-			//_paramAssist = new ParameterTypeAssistant( _cmdList, Locale );
 			_assistant = new Assistant( _cmdList, Locale );
 			_mainArea.IsEnabled = true;
 			AppendText( _introText );
 			StartNewInputBuffer();
 			_statusArea.Text = _assistant.GetPredictions( string.Empty ).ToString();
+
+			_mainArea.Focus();
 		}
 
 
@@ -107,17 +115,6 @@ namespace Limcap.UTerminal {
 
 
 
-		//private string _text;
-		//public string Text {
-		//	get => _text;
-		//	set {
-		//		_text = value;
-		//		OnPropertyChanged( "Text" );
-		//	}
-		//}
-		public string Text => _mainArea.Text;
-
-
 
 
 		public string Status {
@@ -126,40 +123,6 @@ namespace Limcap.UTerminal {
 		}
 
 
-
-
-		//public string LastLine {
-		//	get {
-		//		if (_mainArea.Text.Length == 0) return string.Empty;
-		//		var lastLineStartIndex = _mainArea.Text.LastIndexOf( NEW_LINE ) + NEW_LINE.Length;
-		//		return _mainArea.Text.Substring( lastLineStartIndex );
-		//	}
-		//}
-		public string LastLine => _mainArea.GetLineText( _mainArea.LineCount - 1 ) ?? string.Empty;
-
-
-
-
-
-		public string GetInputBuffer() {
-			var lastLineStartIndex = _mainArea.GetCharacterIndexFromLineIndex( _mainArea.LineCount - 1 );
-			var lastLine = _mainArea.GetLineText( _mainArea.LineCount - 1 ) ?? string.Empty;
-			var lasLineBufferStartIndex = _bufferStartIndex - lastLineStartIndex;
-			if (lasLineBufferStartIndex < 0) return string.Empty;
-			return lastLine == string.Empty ? lastLine : lastLine.Substring( lasLineBufferStartIndex );
-			//return _mainArea.Text.Substring( _bufferStartIndex );
-		}
-		//public PString InputBuffer {
-		//	get => ((PString)_mainArea.Text).Slice( _bufferStartIndex );
-		//}
-
-
-
-
-		private int CaretIndex {
-			get => _mainArea.CaretIndex;
-			set => _mainArea.CaretIndex = value;
-		}
 
 
 
@@ -171,9 +134,13 @@ namespace Limcap.UTerminal {
 
 
 
+
+
 		public bool IsShiftDown {
 			get => Keyboard.IsKeyDown( Key.LeftShift ) || Keyboard.IsKeyDown( Key.RightShift );
 		}
+
+
 
 
 
@@ -193,54 +160,57 @@ namespace Limcap.UTerminal {
 
 
 
-		private TextBox BuildMainArea() {
-			var mainArea = new TextBox() {
+		private TextBlock BuildMainArea() {
+			var mainArea = new TextBlock() {
 				Background = new SolidColorBrush( Color.FromArgb( 200, 25, 27, 27 ) ),
 				Foreground = Brushes.GreenYellow,
 				FontFamily = new FontFamily( "Consolas" ),
 				FontSize = 14,
 				Padding = new Thickness( 5 ),
-				BorderThickness = new Thickness( 0 ),
-				AcceptsReturn = false,
-				AcceptsTab = true,
+				//BorderThickness = new Thickness( 0 ),
+				//AcceptsReturn = false,
+				//AcceptsTab = true,
 				VerticalAlignment = VerticalAlignment.Stretch,
-				SelectionBrush = Brushes.White,
-				IsUndoEnabled = false,
-				UndoLimit = 0,
+				//SelectionBrush = Brushes.White,
+				//IsUndoEnabled = false,
+				//UndoLimit = 0,
+				IsEnabled = true,
+				Focusable = true,
 			};
+			mainArea.Inlines.Add( InputRun );
+			mainArea.Inlines.Add( CaretRun );
 
+			mainArea.MouseDown += ( o, a ) => (o as TextBlock).Focus();
 			mainArea.Loaded += ( o, a ) => mainArea.Focus();
 			mainArea.PreviewKeyDown += HandleRegularInput;
 			mainArea.PreviewKeyUp += ( o, a ) => UpdateTraceArea( a.Key );
 			mainArea.PreviewKeyUp += ( o, a ) => {
 				if (a.Key.IsIn( Key.Down, Key.PageDown )) {
-					var curlineIndex = mainArea.GetLineIndexFromCharacterIndex( CaretIndex );
-					var lastLineIndex = mainArea.GetLineIndexFromCharacterIndex( _bufferStartIndex );
-					if (curlineIndex == lastLineIndex)
+					//var curlineIndex = mainArea.GetLineIndexFromCharacterIndex( CaretIndex );
+					//var lastLineIndex = mainArea.GetLineIndexFromCharacterIndex( _bufferStartIndex );
+					//if (curlineIndex == lastLineIndex)
 						_scrollArea.ScrollToBottom();
 				}
 			};
-			//mainArea.TextChanged += ( o, a ) => AdvanceAutoComplete( a );
-			mainArea.TextChanged += HandleTextChanged;
-			//mainArea.SelectionChanged += HandleSelectionChanged;
+			//mainArea.TextChanged += HandleTextChanged;
 			return mainArea;
 		}
 
 
 
 
-		private TextBox BuildStatuArea() {
-			return new TextBox() {
+		private TextBlock BuildStatuArea() {
+			return new TextBlock() {
 				Background = new SolidColorBrush( Color.FromRgb( 25, 27, 27 ) ),
 				Foreground = Brushes.Gray,
 				FontFamily = new FontFamily( "Consolas" ),
 				Padding = new Thickness( 5 ),
-				BorderThickness = new Thickness( 0 ),
-				AcceptsReturn = false,
+				//BorderThickness = new Thickness( 0 ),
+				//AcceptsReturn = false,
 				Height = 25,
-				IsReadOnly = true,
-				IsUndoEnabled = false,
-				UndoLimit = 0,
+				//IsReadOnly = true,
+				//IsUndoEnabled = false,
+				//UndoLimit = 0,
 			};
 		}
 	}

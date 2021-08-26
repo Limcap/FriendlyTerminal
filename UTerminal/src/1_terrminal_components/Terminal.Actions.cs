@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Documents;
 using System.Windows.Input;
 
 namespace Limcap.UTerminal {
@@ -16,8 +17,9 @@ namespace Limcap.UTerminal {
 
 
 		public void Clear() {
-			//Text = string.Empty;
-			_mainArea.Clear();
+			Inlines.Clear();
+			Inlines.Add( InputRun );
+			Inlines.Add( CaretRun );
 		}
 
 
@@ -33,7 +35,10 @@ namespace Limcap.UTerminal {
 
 		public void AppendText( string txt, bool noPredictions = true ) {
 			_allowAssistant = !noPredictions;
-			_mainArea.AppendText( txt );
+			Inlines.InsertBefore( InputRun, new Run(txt) );
+			//_mainArea.Inlines.Remove( CaretRun );
+			//_mainArea.Inlines.Add( txt );
+			//_mainArea.Inlines.Add( CaretRun );
 			_allowAssistant = true;
 		}
 
@@ -41,11 +46,6 @@ namespace Limcap.UTerminal {
 
 
 		public void CaretToEnd() {
-			//Avoiding access to Text property since it causes allocation of a new string containing the whole text in
-			// the textbox.
-			//CaretIndex = Text.Length;
-			CaretIndex = int.MaxValue;
-
 			// Only setting the caret to the last index will not scroll the scroll viewer completely to the bottom,
 			// a few pixels will still have to be scrolled manually. To counteract this, we manually scroll the 
 			// scroll viewer to the bottom.
@@ -73,22 +73,20 @@ namespace Limcap.UTerminal {
 
 		public void StartNewInputBuffer( bool usePrompt = true ) {
 			if (usePrompt) {
-				bool newLineNeeded = !(_mainArea.LineCount <= 1 && LastLine.Length == 0 || LastLine.EndsWith( NEW_LINE ));
-				//Text += (newLineNeeded ? NewLine : string.Empty) + PromptString;
+				var inl = _mainArea.Inlines;
+				if (inl.Count == 0) inl.Add( CaretRun );
+				bool newLineNeeded = !inl.Last().ContentStart.GetTextInRun(LogicalDirection.Forward).EndsWith( NEW_LINE );
 				AppendText( (newLineNeeded ? NEW_LINE : string.Empty) + PROMPT_STRING );
 			}
-			CaretToEnd();
-			_bufferStartIndex = _mainArea.CaretIndex;
 		}
 
 
 
 
 		private void ClearInputBuffer() {
-			_mainArea.SelectionOpacity = 0;
-			_mainArea.Select( _bufferStartIndex, _mainArea.Text.Length - _bufferStartIndex );
-			_mainArea.SelectedText = string.Empty;
-			_mainArea.SelectionOpacity = 0.5;
+			InputRun.Text = string.Empty;
+			//var len = InputRun.ContentEnd.GetTextRunLength( LogicalDirection.Forward );
+			//InputRun.ContentStart.DeleteTextInRun( len );
 		}
 
 
@@ -96,11 +94,11 @@ namespace Limcap.UTerminal {
 
 		private void SetInputBuffer( string text, bool predict = true ) {
 			_allowAssistant = predict;
-			//_mainArea.Select( _bufferStartIndex, _mainArea.Text.Length - _bufferStartIndex );
-			CaretToEnd();
-			_mainArea.Select( _bufferStartIndex, _mainArea.CaretIndex - _bufferStartIndex );
-			_mainArea.SelectedText = text;
+			InputRun.Text = text;
 			_allowAssistant = true;
+		}
+		public string GetInputBuffer() {
+			return InputRun.Text;
 		}
 
 
@@ -113,8 +111,9 @@ namespace Limcap.UTerminal {
 			//_lastLineCaretIndex = mainArea.CaretIndex - (mainArea.Text.Length - _lastLine.Length);
 			//var curChar = _lastLineCaretIndex == _lastLine.Length ? ' ' : _lastLine[_lastLineCaretIndex];
 			//statusArea.Text = $"{pressedKey} - {curChar} - ({_lastLineCaretIndex})";
-			var c = Util.GetCharFromKey( pressedKey );
-			_traceArea.Text = $"pressed:{pressedKey}   typed:{c}   current:{CurrentChar}   caret:{CaretIndex}";
+			var c = KeyGrabber.GetCharFromKey( pressedKey );
+			//_traceArea.Text = $"pressed:{pressedKey}   typed:{c}   current:{CurrentChar}   caret:{CaretIndex}";
+			_traceArea.Text = $"pressed:{pressedKey}   typed:{c}   current:{CurrentChar}";
 		}
 
 

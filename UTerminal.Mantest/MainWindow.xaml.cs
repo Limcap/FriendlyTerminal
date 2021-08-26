@@ -20,8 +20,8 @@ namespace Limcap.UTerminal.Mantest {
 	public partial class MainWindow : Window {
 		public MainWindow() {
 			InitializeComponent();
-			
-			var t = new Terminal( null, Close ) { Locale="ptbr"};
+
+			var t = new Terminal( null, Close ) { Locale = "ptbr" };
 			t.RegisterCommandsInNamespaces(
 				"Limcap.UTerminal.Cmds.Misc",
 				"Limcap.UTerminal.Cmds.AccessControl",
@@ -33,6 +33,7 @@ namespace Limcap.UTerminal.Mantest {
 			t.Start();
 
 			MainPanel.Children.Add( t.Panel );
+			//MainPanel.Children.Add( new TextBox() );
 		}
 	}
 }

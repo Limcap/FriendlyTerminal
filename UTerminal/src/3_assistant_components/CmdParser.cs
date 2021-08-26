@@ -34,7 +34,7 @@ namespace Limcap.UTerminal {
 			// Results
 			confirmedNode = _startNode;
 			predictedNodes = new List<Node>();
-
+			
 			Stopwatch sw = new Stopwatch();
 			sw.Start();
 			var memoryBefore = GC.GetTotalMemory( true );
