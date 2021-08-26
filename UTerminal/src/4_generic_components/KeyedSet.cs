@@ -37,8 +37,13 @@ namespace Limcap.DataStructures {
 				Add( value );
 		}
 
+		public V this[int i] {
+			get => _dict.Values.ElementAt( i );
+		}
+
 		public IEnumerator<V> GetEnumerator() {
 			return _dict.Values.GetEnumerator();
+			
 		}
 
 		IEnumerator IEnumerable.GetEnumerator() {

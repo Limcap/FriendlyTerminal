@@ -82,7 +82,9 @@ namespace Limcap.UTerminal {
 			}
 			while (!(str.IsEmpty || candidate is null)) {
 				candidate = null;
-				foreach (var node in best.edges) {
+				//foreach (var node in best.edges) {
+				for( int i=0; i<best.edges.Count; i++ ) {
+					var node = best.edges[i];
 					if (str.len < node.word.len) continue;
 					if (str.StartsWith( node.word )) {
 						candidate = node;
