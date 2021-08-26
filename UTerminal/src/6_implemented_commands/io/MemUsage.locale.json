@@ -1,0 +1,29 @@
+{
+	"INVOKE_TEXT": {
+		"enus": "mem usage"
+	},
+	"desc": {
+		"enus": "Shows the mount of memory used by the process.",
+		"ptbr": "Exibe a quantidade de memoria utilizada pelo processo."
+	},
+
+
+	"param1": {
+		"enus": "",
+		"ptbr": ""
+	},
+	"param1desc": {
+		"enus": "",
+		"ptbr": ""
+	},
+
+
+	"invalid": {
+		"enus": "",
+		"ptbr": ""
+	},
+	"success": {
+		"enus": "",
+		"ptbr": ""
+	}
+}

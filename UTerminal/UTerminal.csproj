@@ -67,6 +67,7 @@
     <Compile Include="src\4_generic_components\SlicedChan.cs" />
     <Compile Include="src\3_assistant_components\HistoryNavigator.cs" />
     <Compile Include="src\6_implemented_commands\customization\ConfigTerminal_Theme.cs" />
+    <Compile Include="src\6_implemented_commands\io\MemUsage.cs" />
     <Compile Include="src\6_implemented_commands\misc\Help.cs" />
     <Compile Include="src\6_implemented_commands\access_control\Raise.cs" />
     <Compile Include="src\6_implemented_commands\io\SaveOutput.cs" />
@@ -116,6 +117,8 @@
       <Version>4.5.0</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="src\6_implemented_commands\io\MemUsage.locale.json" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
