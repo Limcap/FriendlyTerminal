@@ -53,7 +53,7 @@ namespace Limcap.UTerminal {
 				var word_optional = t.Translate( "OPTIONAL" );
 				var word_type = t.Translate( "TYPE" );
 				string output = $"\n{word_description}\n{Description}\n\n";
-				if (Parameters.Length > 0) {
+				if (Parameters != null && Parameters.Length > 0) {
 					output += word_parameters + "\n";
 					foreach (var param in Parameters)
 						output += $"{param.name}{(param.optional ? $" ({word_optional}) " : " ")}: {param.description} - {word_type}: {param.type};\n";
