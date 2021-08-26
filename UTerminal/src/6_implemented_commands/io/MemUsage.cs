@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -26,9 +28,18 @@ namespace Limcap.UTerminal.Cmds.IO {
 
 
 		public override string MainFunction( Terminal t, Arg[] args ) {
-			System.GC.Collect();
+			GC.Collect();
+			GC.WaitForPendingFinalizers();
+			GC.Collect();
+			Process currentProcess = Process.GetCurrentProcess();
+			long usedMemory = currentProcess.PrivateMemorySize64;
 			var mem = GC.GetTotalMemory( true );
-			return "\nUsed memory: " + mem;
+			NumberFormatInfo nfi = new CultureInfo( "en-US", false ).NumberFormat;
+			nfi.NumberDecimalSeparator = ",";
+			nfi.NumberGroupSeparator = ".";
+			nfi.CurrencySymbol = "";
+			nfi.NumberDecimalDigits = 0;
+			return "\nUsed memory: - heap: " + mem.ToString( "N", nfi ) + ", private bytes: " + usedMemory.ToString( "N", nfi );
 		}
 	}
 }
