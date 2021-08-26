@@ -111,6 +111,7 @@ namespace Limcap.UTerminal {
 			}
 			if (input == "clear") {
 				Clear();
+				GC.Collect();
 				return null;
 			}
 
