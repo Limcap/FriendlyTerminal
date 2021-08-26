@@ -45,8 +45,10 @@ namespace Limcap.UTerminal {
 			if (customInvokeText != null) invokeText = customInvokeText;
 			else {
 				invokeText = type.GetConst( "INVOKE_TEXT" ) as string;
-				if (type.IsSubclassOf( typeof( ACommand ) ) && defaultLocale != Locale)
-					invokeText = GetTranslatedInvokeText( type, Locale );
+				if (type.IsSubclassOf( typeof( ACommand ) ) && defaultLocale != Locale) {
+					var translated = GetTranslatedInvokeText( type, Locale );
+					if (translated != "INVOKE_TEXT") invokeText = translated;
+				}
 			}
 			if (invokeText is null) throw new UninvokableCommandException( type );
 			_cmdList.Add( invokeText, type );
@@ -101,6 +103,17 @@ namespace Limcap.UTerminal {
 		//	}
 		//}
 		public string ProcessInput( string input ) {
+			//System.GC.Collect();
+			if (input == "exit") {
+				Clear();
+				onExit?.Invoke();
+				return string.Empty;
+			}
+			if (input == "clear") {
+				Clear();
+				return null;
+			}
+
 			var cmd = _assistant.ParsedCommand;
 			if(cmd == null)
 				return "Comando não reconhecido.";
@@ -121,15 +134,7 @@ namespace Limcap.UTerminal {
 				return ex.ToString();
 			}
 
-			//if (cmd == "exit") {
-			//	Clear();
-			//	onExit?.Invoke();
-			//	return string.Empty;
-			//}
-			//if (cmd == "clear") {
-			//	Clear();
-			//	return null;
-			//}
+
 		}
 
 
