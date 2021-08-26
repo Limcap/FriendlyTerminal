@@ -205,6 +205,8 @@ namespace Limcap.UTerminal {
 				AcceptsTab = true,
 				VerticalAlignment = VerticalAlignment.Stretch,
 				SelectionBrush = Brushes.White,
+				IsUndoEnabled = false,
+				UndoLimit = 0,
 			};
 
 			mainArea.Loaded += ( o, a ) => mainArea.Focus();
@@ -237,6 +239,8 @@ namespace Limcap.UTerminal {
 				AcceptsReturn = false,
 				Height = 25,
 				IsReadOnly = true,
+				IsUndoEnabled = false,
+				UndoLimit = 0,
 			};
 		}
 	}
