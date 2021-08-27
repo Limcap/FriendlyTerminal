@@ -134,19 +134,17 @@ namespace Limcap.UTerminal {
 				// definir ainda um outro, não haja problema de sobrescrever.
 				var interpreter = _customInterpreter is null ? CommandInterpreter : _customInterpreter;
 				_customInterpreter = null;
-				AppendText( InputBufferRun.Text );
-				AppendText( NEW_LINE );
-				InputBufferRun.Text = string.Empty;
+				ConsolidateBuffer();
 				var output = interpreter( input );
 				if (output != null) {
 					AppendWithSpace( output, ColorF2 );
 					ScrollToEnd();
 					_statusArea.Text = $"Saída: {output.Length} caracteres";
-					Handle3_TextChanged();
 				}
 				// pede um novo prompt somente se não existir um input handler.
 				StartNewInputBuffer( usePrompt: _customInterpreter is null );
 				if (output?.Length > 500) ScrollToEnd();
+				Handle3_TextChanged();
 			}
 		}
 
@@ -160,35 +158,48 @@ namespace Limcap.UTerminal {
 		private void Handle_PasswordInput( KeyEventArgs e ) {
 			ScrollToEnd();
 			if (e.Key == Key.Back) {
-				if (_passwordInput.Length > 0)
+				if (_passwordInput.Length > 0) {
 					_passwordInput.Remove( _passwordInput.Length - 1, 1 );
+					InputBufferRun.ContentEnd.DeleteTextInRun( -1 );
+				}
 			}
 			else if (e.Key == Key.Return) {
 				var interpreter = _customInterpreter is null ? CommandInterpreter : _customInterpreter;
 				_customInterpreter = null;
 				var input = _passwordInput.ToString();
-				//var caretIndexBefore = CaretIndex;
+				ConsolidateBuffer();
 				TypeText( NEW_LINE );
 				var output = interpreter( input );
 				_passwordInput.Clear();
 				_usePasswordMask = false;
 				if (output != null) {
-					if (!LastRun.Text.EndsWith( NEW_LINE )) AppendText( NEW_LINE );
-					AppendText( output.TrimEnd() );
+					//if (!LastRun.Text.EndsWith( NEW_LINE )) AppendText( NEW_LINE );
+					//AppendText( output, ColorF2 );
+					AppendWithSpace( output, ColorF2 );
 					_statusArea.Text = $"Saída: {output.Length} caracteres";
 				}
 				// pede um novo prompt somente se não existir um input handler.
 				StartNewInputBuffer( usePrompt: _customInterpreter is null );
-				//if (output.Length > 500) CaretIndex = caretIndexBefore;
+				if (output.Length > 500) ScrollToEnd();
+				Handle3_TextChanged();
 			}
 			else {
 				var c = e.Key.ToPasswordAllowedChar();
 				if (c.HasValue) {
-					TypeText( "*" );
+					InputBufferRun.ContentEnd.InsertTextInRun( "*" );
+					//TypeText( "*" );
 					_passwordInput.Append( c );
 				}
 				e.Handled = true;
 			}
+		}
+
+
+
+		private void ConsolidateBuffer() {
+			AppendText( InputBufferRun.Text );
+			AppendText( NEW_LINE );
+			InputBufferRun.Text = string.Empty;
 		}
 	}
 }

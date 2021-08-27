@@ -27,7 +27,7 @@ namespace Limcap.UTerminal {
 
 
 		public void TypeText( string text ) {
-			AppendText( text, false );
+			AppendText( text, ColorF2 );
 			ScrollToEnd();
 		}
 

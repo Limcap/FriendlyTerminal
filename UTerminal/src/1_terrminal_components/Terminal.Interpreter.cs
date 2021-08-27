@@ -97,12 +97,13 @@ namespace Limcap.UTerminal {
 			if (input == "reset") {
 				_mainArea = BuildMainArea();
 				_scrollArea.Content = _mainArea;
-				StartNewInputBuffer();
+				//StartNewInputBuffer();
 				_mainArea.Focus();
 				GC.Collect();
 				GC.WaitForPendingFinalizers();
 				GC.Collect();
 				DockPanel.SetDock( _mainArea, Dock.Top );
+				return null;
 			}
 
 			var cmd = _assistant.ParsedCommand;
