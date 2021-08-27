@@ -105,13 +105,13 @@
     <Folder Include="cmds\" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="UTerminal.ico" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\FTerminal\FTerminal.csproj">
       <Project>{b094e712-a262-431a-9b4c-79861284df63}</Project>
       <Name>FTerminal</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="UTerminal.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
