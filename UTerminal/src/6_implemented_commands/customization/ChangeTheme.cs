@@ -8,11 +8,11 @@ using System.Windows.Media;
 
 namespace Limcap.UTerminal.Cmds.Customization {
 
-	public class ConfigTerminal_Theme : ACommand {
-		public ConfigTerminal_Theme( string locale ) : base( locale ) { }
+	public class ChangeTheme : ACommand {
+		public ChangeTheme( string locale ) : base( locale ) { }
 
 		public const string DEFAULT_LOCALE = "enus";
-		public const string INVOKE_TEXT = "config terminal, theme";
+		public const string INVOKE_TEXT = "terminal, change-theme";
 
 
 		//public override Information GetInfo() => new Information(

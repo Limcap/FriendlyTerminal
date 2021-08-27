@@ -1,6 +1,7 @@
 {
 	"INVOKE_TEXT": {
-		"enus": "mem usage"
+		"enus": "dev, mem-usage",
+		"ptbr": "dev, uso-de-memória"
 	},
 	"desc": {
 		"enus": "Shows the mount of memory used by the process.",

@@ -1,7 +1,7 @@
 {
 	"INVOKE_TEXT": {
-		"enus": "config termianl, theme",
-		"ptbr": "configurar terminal, tema"
+		"enus": "terminal, config theme",
+		"ptbr": "terminal, config tema"
 	},
 	"desc": {
 		"enus": "Change the appearance of this terminal.",

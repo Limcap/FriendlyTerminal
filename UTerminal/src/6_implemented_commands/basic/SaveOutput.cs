@@ -4,14 +4,14 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace Limcap.UTerminal.Cmds.IO {
+namespace Limcap.UTerminal.Cmds.Basic {
 	public class SaveOutput : ACommand {
 
 		public SaveOutput( string locale ) : base( locale ) { }
 
 
 		public const string DEFAULT_LOCALE = "enus";
-		public const string INVOKE_TEXT = "save output";
+		public const string INVOKE_TEXT = "terminal, save-output";
 
 
 		//public const string HELP_INFO =

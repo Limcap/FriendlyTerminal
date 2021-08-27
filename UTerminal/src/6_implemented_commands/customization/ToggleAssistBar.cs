@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace Limcap.UTerminal.Cmds.Config {
+namespace Limcap.UTerminal.Cmds.Customization {
 	public class ToggleAssistBar : ACommand {
 
 		//public static void Register( TerminalClient term ) {
@@ -15,7 +15,7 @@ namespace Limcap.UTerminal.Cmds.Config {
 
 
 		public const string DEFAULT_LOCALE = "enus";
-		public const string INVOKE_TEXT = "toggle assist bar";
+		public const string INVOKE_TEXT = "terminal, config assist-bar";
 		//public const string HELP_INFO =
 		//	"DESCRIPTION:\n" +
 		//	"\tMakes the status bar visible or invisible.\n" +

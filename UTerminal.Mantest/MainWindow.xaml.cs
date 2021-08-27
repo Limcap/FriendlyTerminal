@@ -23,11 +23,9 @@ namespace Limcap.UTerminal.Mantest {
 
 			var t = new Terminal( null, Close ) { Locale = "ptbr" };
 			t.RegisterCommandsInNamespaces(
-				"Limcap.UTerminal.Cmds.Misc",
 				"Limcap.UTerminal.Cmds.AccessControl",
+				"Limcap.UTerminal.Cmds.Basic",
 				"Limcap.UTerminal.Cmds.Customization",
-				"Limcap.UTerminal.Cmds.IO",
-				"Limcap.UTerminal.Cmds.Config",
 				"Limcap.UTerminal.Cmds.Dev"
 			);
 			t.Start();

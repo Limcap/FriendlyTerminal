@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace Limcap.UTerminal.Cmds.Dev {
+namespace Limcap.UTerminal.Cmds.Customization {
 	public class ToggleStatusBar : ACommand {
 
 		//public static void Register( TerminalClient term ) {
@@ -15,7 +15,7 @@ namespace Limcap.UTerminal.Cmds.Dev {
 
 
 		public const string DEFAULT_LOCALE = "enus";
-		public const string INVOKE_TEXT = "toggle status bar";
+		public const string INVOKE_TEXT = "terminal, config status-bar";
 		public const int REQUIRED_PRIVILEGE = 1;
 
 

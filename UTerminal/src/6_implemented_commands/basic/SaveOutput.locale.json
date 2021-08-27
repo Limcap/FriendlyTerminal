@@ -1,7 +1,7 @@
 {
 	"INVOKE_TEXT": {
-		"enus": "save output",
-		"ptbr": "salvar tela"
+		"enus": "terminal, save-output",
+		"ptbr": "terminal, salvar-tela"
 	},
 	"desc": {
 		"enus": "Save the outut text on screen to a file.",

@@ -1,11 +1,11 @@
 {
 	"INVOKE_TEXT": {
-		"enus": "toggle assist bar",
-		"ptbr": "alternar barra de previsão"
+		"enus": "terminal, config status-bar",
+		"ptbr": "terminal, config barra-de-status"
 	},
 	"desc": {
-		"enus": "Shows or hides the assist bar.",
-		"ptbr": "Exibe ou esconde a barra do assistente de digitação."
+		"enus": "Makes the status bar visible or invisible.",
+		"ptbr": "Exibe ou esconde a barra de status (informações tecnicas)."
 	},
 
 

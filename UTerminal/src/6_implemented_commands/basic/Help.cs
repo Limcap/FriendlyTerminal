@@ -7,13 +7,13 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace Limcap.UTerminal.Cmds.Misc {
+namespace Limcap.UTerminal.Cmds.Basic {
 	public class Help : ACommand {
 
 		public Help( string locale ) : base( locale ) { }
 
 		public const string DEFAULT_LOCALE = "enus";
-		public const string INVOKE_TEXT = "help";
+		public const string INVOKE_TEXT = "terminal, help";
 
 
 		//public override Information GetInfo() => new Information(
@@ -37,7 +37,7 @@ namespace Limcap.UTerminal.Cmds.Misc {
 
 		//public override Information InfoBuilder() => new Information( DefaultTextSource["desc"] );
 		protected private override string DescriptionBuilder() {
-			return Txt("desc");
+			return Txt( "desc" );
 		}
 
 
@@ -47,9 +47,9 @@ namespace Limcap.UTerminal.Cmds.Misc {
 
 
 		public override string MainFunction( Terminal t, Arg[] args ) {
-			string output = NEW_LINE + Txt("intro");
-			var cmds = string.Join( NEW_LINE + " • ", t.AvailableCommands );
-			output += cmds.Length == 0 ? Txt("no-cmds") : (" • " + cmds);
+			string output = NEW_LINE + Txt( "intro" );
+			var cmds = string.Join( NEW_LINE + " • ", t.AvailableCommands.OrderBy( c => c ) );
+			output += cmds.Length == 0 ? Txt( "no-cmds" ) : (" • " + cmds);
 			return output;
 		}
 

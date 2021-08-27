@@ -6,14 +6,14 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace Limcap.UTerminal.Cmds.IO {
+namespace Limcap.UTerminal.Cmds.Dev {
 	public class MemUsage : ACommand {
 
 		public MemUsage( string locale ) : base( locale ) { }
 
 
 		public const string DEFAULT_LOCALE = "enus";
-		public const string INVOKE_TEXT = "mem usage";
+		public const string INVOKE_TEXT = "dev, mem-usage";
 
 
 
