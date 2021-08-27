@@ -106,8 +106,12 @@ namespace Limcap.UTerminal {
 			}
 
 			var cmd = _assistant.ParsedCommand;
-			if(cmd == null)
+			if (cmd == null) {
+				// If the command does not exist and thus won't be executed, we need to clean old info in the assistant,
+				// so that if user press tab right away, there wont be any confirmed nodes in the CmdParser.
+				_assistant.Reset();
 				return "Comando não reconhecido.";
+			}
 
 			var args = _assistant.RawArgs;
 			if (args == "?")
@@ -120,6 +124,7 @@ namespace Limcap.UTerminal {
 
 			try {
 				var result = cmd.MainFunction( this, _assistant.ParsedArgs );
+				// Clean up the data in the assistant.
 				_assistant.Reset();
 				GC.Collect();
 				GC.WaitForPendingFinalizers();
