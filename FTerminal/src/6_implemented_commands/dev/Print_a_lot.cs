@@ -36,9 +36,9 @@ namespace Limcap.FTerminal.Cmds.Dev {
 		}
 
 
-		private protected override string DescriptionBuilder() => "Very long repetitive text.";
+		protected override string DescriptionBuilder() => "Very long repetitive text.";
 
 
-		private protected override Parameter[] ParametersBuilder() => null;
+		protected override Parameter[] ParametersBuilder() => null;
 	}
 }

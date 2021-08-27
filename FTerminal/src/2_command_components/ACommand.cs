@@ -36,12 +36,12 @@ namespace Limcap.FTerminal {
 		#region INFORMATION
 		#endregion
 		private Parameter[] _parameters;
-		protected private abstract Parameter[] ParametersBuilder();
+		protected abstract Parameter[] ParametersBuilder();
 		public Parameter[] Parameters { get { _parameters = _parameters ?? ParametersBuilder(); return _parameters; } }
 
 
 		private string _description;
-		protected private abstract string DescriptionBuilder();
+		protected abstract string DescriptionBuilder();
 		public string Description { get { _description = _description ?? DescriptionBuilder(); return _description; } }
 
 

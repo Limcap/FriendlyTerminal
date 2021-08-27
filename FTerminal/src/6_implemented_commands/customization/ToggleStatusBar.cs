@@ -19,12 +19,12 @@ namespace Limcap.FTerminal.Cmds.Customization {
 		public const int REQUIRED_PRIVILEGE = 1;
 
 
-		protected private override string DescriptionBuilder() {
+		protected override string DescriptionBuilder() {
 			return Txt( "desc" );
 		}
 
 
-		protected private override Parameter[] ParametersBuilder() {
+		protected override Parameter[] ParametersBuilder() {
 			return new[] {
 				new Parameter( Txt( "param1" ), Parameter.Type.BOOLEAN, true, Txt( "param1desc" ) )
 			};

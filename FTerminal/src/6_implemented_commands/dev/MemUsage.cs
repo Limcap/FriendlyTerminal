@@ -17,12 +17,12 @@ namespace Limcap.FTerminal.Cmds.Dev {
 
 
 
-		protected private override string DescriptionBuilder() {
+		protected override string DescriptionBuilder() {
 			return Txt( "desc" );
 		}
 		
 
-		protected private override Parameter[] ParametersBuilder() {
+		protected override Parameter[] ParametersBuilder() {
 			return null;
 		}
 

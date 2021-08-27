@@ -30,12 +30,12 @@ namespace Limcap.FTerminal.Cmds.Customization {
 		//);
 
 
-		protected private override string DescriptionBuilder() {
+		protected override string DescriptionBuilder() {
 			return Txt( "desc" );
 		}
 
 
-		protected private override Parameter[] ParametersBuilder() {
+		protected override Parameter[] ParametersBuilder() {
 			return new Parameter[] {
 				new Parameter( Txt("param1"), Parameter.Type.LETTERS, true, Txt("param1desc") ),
 				new Parameter( Txt("param2"), Parameter.Type.NUMBER, true, Txt("param2desc") ),

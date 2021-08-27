@@ -30,8 +30,8 @@ namespace Limcap.FTerminal.Cmds.Customization {
 		//	new Parameter( DefaultTextSource["param1"], Parameter.Type.BOOLEAN, true, DefaultTextSource["param1desc"] )
 		//);
 
-		protected private override string DescriptionBuilder() { return Txt("desc"); }
-		protected private override Parameter[] ParametersBuilder() { return null; }
+		protected override string DescriptionBuilder() { return Txt("desc"); }
+		protected override Parameter[] ParametersBuilder() { return null; }
 
 
 		public override string MainFunction( Terminal t, Arg[] args ) {

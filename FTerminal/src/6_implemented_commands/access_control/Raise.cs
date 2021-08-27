@@ -12,12 +12,12 @@ namespace Limcap.FTerminal.Cmds.AccessControl {
 		public const string HELP_INFO = "Raises your user privilege in this terminal.";
 
 
-		protected private override string DescriptionBuilder() {
+		protected override string DescriptionBuilder() {
 			return Txt("desc");
 		}
 		
 		
-		protected private override Parameter[] ParametersBuilder() {
+		protected override Parameter[] ParametersBuilder() {
 			return null;
 		}
 

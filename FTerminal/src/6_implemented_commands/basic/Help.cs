@@ -36,12 +36,12 @@ namespace Limcap.FTerminal.Cmds.Basic {
 
 
 		//public override Information InfoBuilder() => new Information( DefaultTextSource["desc"] );
-		protected private override string DescriptionBuilder() {
+		protected override string DescriptionBuilder() {
 			return Txt( "desc" );
 		}
 
 
-		protected private override Parameter[] ParametersBuilder() {
+		protected override Parameter[] ParametersBuilder() {
 			return null;
 		}
 
