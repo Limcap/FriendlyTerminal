@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace Limcap.UTerminal {
 	public partial class Terminal {
@@ -41,6 +42,9 @@ namespace Limcap.UTerminal {
 			//_mainArea.Inlines.Add( CaretRun );
 			_allowAssistant = true;
 		}
+		public void AppendText( string txt, Brush color ) {
+			Inlines.InsertBefore( InputRun, new Run( txt ) { Foreground = color } );
+		}
 
 
 
@@ -57,7 +61,7 @@ namespace Limcap.UTerminal {
 
 		public void ReadLine( Func<string, string> inputHandler ) {
 			_usePasswordMask = false;
-			_inputHandler = inputHandler;
+			_customInterpreter = inputHandler;
 		}
 
 
@@ -65,7 +69,7 @@ namespace Limcap.UTerminal {
 
 		public void ReadPassword( Func<string, string> inputHandler ) {
 			_usePasswordMask = true;
-			_inputHandler = inputHandler;
+			_customInterpreter = inputHandler;
 		}
 
 

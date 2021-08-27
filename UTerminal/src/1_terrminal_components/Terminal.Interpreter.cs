@@ -65,7 +65,7 @@ namespace Limcap.UTerminal {
 
 
 
-		public string ProcessInput( string input ) {
+		public string CommandInterpreter( string input ) {
 			//System.GC.Collect();
 			if (input == "exit") {
 				Clear();

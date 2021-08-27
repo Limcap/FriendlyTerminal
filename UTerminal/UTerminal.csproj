@@ -89,7 +89,7 @@
     <Compile Include="src\5_util\Util_Optimization.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="src\1_terrminal_components\Terminal.InputHandlers.cs" />
+    <Compile Include="src\1_terrminal_components\Terminal.Handlers.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="src\6_implemented_commands\customization\ConfigTerminal_Theme.locale.json" />

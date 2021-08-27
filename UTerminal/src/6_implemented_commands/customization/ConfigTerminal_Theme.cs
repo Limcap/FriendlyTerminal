@@ -50,8 +50,8 @@ namespace Limcap.UTerminal.Cmds.Customization {
 			var arg_backcolor = args.Get( Parameters[2] );
 
 			if (arg_fontsize == "") t.FontSize = 14;
-			if (arg_fontcolor == "") t.FontColor = Brushes.GreenYellow;
-			if (arg_backcolor == "") t.BackColor = new SolidColorBrush( Color.FromRgb( 25, 25, 27 ) );
+			if (arg_fontcolor == "") t.FontColor = t.ColorF1;
+			if (arg_backcolor == "") t.BackColor = t.ColorB1;//new SolidColorBrush( Color.FromRgb( 25, 25, 27 ) );
 
 			arg_fontsize.SafeParseInt()?.As( s => t.FontSize = s.MinMax(9,28) );
 			arg_fontcolor.SafeParseBrush()?.As( b => t.FontColor = b );

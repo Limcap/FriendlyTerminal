@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace Limcap.UTerminal {
 	public partial class Terminal {
@@ -17,8 +18,8 @@ namespace Limcap.UTerminal {
 					_passwordInput.Remove( _passwordInput.Length - 1, 1 );
 			}
 			else if (e.Key == Key.Return) {
-				var processor = _inputHandler is null ? ProcessInput : _inputHandler;
-				_inputHandler = null;
+				var processor = _customInterpreter is null ? CommandInterpreter : _customInterpreter;
+				_customInterpreter = null;
 				var input = _passwordInput.ToString();
 				//var caretIndexBefore = CaretIndex;
 				TypeText( NEW_LINE );
@@ -31,7 +32,7 @@ namespace Limcap.UTerminal {
 					_statusArea.Text = $"Saída: {output.Length} caracteres";
 				}
 				// pede um novo prompt somente se não existir um input handler.
-				StartNewInputBuffer( usePrompt: _inputHandler is null );
+				StartNewInputBuffer( usePrompt: _customInterpreter is null );
 				//if (output.Length > 500) CaretIndex = caretIndexBefore;
 			}
 			else {
@@ -47,6 +48,10 @@ namespace Limcap.UTerminal {
 
 
 
+
+
+
+
 		private void HandleRegularInput( object sender, KeyEventArgs e ) {
 			if (e.IsRepeat)
 				UpdateTraceArea( e.Key );
@@ -57,7 +62,7 @@ namespace Limcap.UTerminal {
 			}
 
 			if (e.Key == Key.Up && IsControlDown) {
-				if (_inputHandler == null) {
+				if (_customInterpreter == null) {
 					SetInputBuffer( _cmdHistory.Prev() );
 					CaretToEnd();
 					e.Handled = true;
@@ -65,7 +70,7 @@ namespace Limcap.UTerminal {
 			}
 
 			else if (e.Key == Key.Down && IsControlDown) {
-				if (_inputHandler == null) {
+				if (_customInterpreter == null) {
 					SetInputBuffer( _cmdHistory.Next() );
 					CaretToEnd();
 					e.Handled = true;
@@ -79,7 +84,7 @@ namespace Limcap.UTerminal {
 
 
 			else if (e.Key == Key.Tab) {
-				isAutocompleting = true;
+				IsAutocompleting = true;
 				if (!e.IsRepeat) {
 					var input = GetInputBuffer();
 					var autocomplete = _assistant.GetNextAutocompleteEntry( input );
@@ -90,7 +95,7 @@ namespace Limcap.UTerminal {
 			}
 
 			else if (e.Key == Key.Return) {
-				if( isAutocompleting ) {
+				if( IsAutocompleting ) {
 					HandleTextChanged( null, null );
 					return;
 				}
@@ -99,29 +104,28 @@ namespace Limcap.UTerminal {
 				if (input.Trim().Length == 0) {
 					e.Handled = true;
 					// pede um novo prompt somente se não existir um input handler.
-					StartNewInputBuffer( usePrompt: _inputHandler is null );
+					StartNewInputBuffer( usePrompt: _customInterpreter is null );
 				}
 				else {
 					_cmdHistory.Add( input );
 					// Se houver um inputHandler esperando por input, copia ele para a variavel processos e já reseta
 					// oo _inputHandler para que caso o handler atual defina outro inputHandler, não haja problema de 
 					// substituição e para que 
-					var processor = _inputHandler is null ? ProcessInput : _inputHandler;
-					_inputHandler = null;
-					//var caretIndexBefore = CaretIndex;
+					var interpreter = _customInterpreter is null ? CommandInterpreter : _customInterpreter;
+					_customInterpreter = null;
 					AppendText( InputRun.Text );
 					AppendText( NEW_LINE );
 					InputRun.Text = string.Empty;
-					var output = processor( input );
+					var output = interpreter( input );
 					if (output != null) {
 						if (!LastRun.Text.EndsWith( NEW_LINE )) AppendText( NEW_LINE );
-						AppendText( output.TrimEnd() );
+						AppendText( output.TrimEnd(), ColorF2 );
 						AppendText( NEW_LINE );
 						_statusArea.Text = $"Saída: {output.Length} caracteres";
 						CaretToEnd();
 					}
 					// pede um novo prompt somente se não existir um input handler.
-					StartNewInputBuffer( usePrompt: _inputHandler is null );
+					StartNewInputBuffer( usePrompt: _customInterpreter is null );
 					//if (output?.Length > 500) CaretIndex = caretIndexBefore;
 				}
 
@@ -147,8 +151,13 @@ namespace Limcap.UTerminal {
 
 
 
+
+
+
+
+
 		private void HandleTextChanged( object sender, TextChangedEventArgs args ) {
-			isAutocompleting = false;
+			IsAutocompleting = false;
 			if (!_allowAssistant) return;
 			var input = GetInputBuffer();
 			var text = _assistant.GetPredictions( input ).ToString();
@@ -157,8 +166,13 @@ namespace Limcap.UTerminal {
 
 
 
-		public int TextLength;
-		public int CaretIndexPrevious;
-		private bool isAutocompleting;
+
+
+
+
+
+		//public int TextLength;
+		//public int CaretIndexPrevious;
+		public bool IsAutocompleting { get; private set; }
 	}
 }

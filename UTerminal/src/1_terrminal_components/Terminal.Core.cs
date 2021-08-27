@@ -33,23 +33,28 @@ namespace Limcap.UTerminal {
 		public Action onExit;
 		public event PropertyChangedEventHandler PropertyChanged;
 		public DuxNamedList vars;
-		private Func<string, string> _inputHandler;
+		private Func<string, string> _customInterpreter;
 		private bool _usePasswordMask;
 		private readonly StringBuilder _passwordInput = new StringBuilder();
 
-		
 
-		public readonly Run CaretRun = new Run( "█" ) { IsEnabled = false, Background=Brushes.GreenYellow };//█
-		public readonly Run InputRun = new Run( String.Empty );
+		public Brush ColorF1 { get; set; }
+		public Brush ColorF2 { get; set; }
+		public Brush ColorB1 { get; set; }
+		public readonly Run CaretRun;
+		public readonly Run InputRun;
 		public InlineCollection Inlines => _mainArea.Inlines;
 		public Run LastRun => Inlines.LastInline.PreviousInline.PreviousInline as Run;
 		public string Text => _mainArea.Text;
 
 
 
+
 		public Panel Panel { get; private set; }
 		public int CurrentPrivilege { get; set; }
 		public string Locale { get; set; }
+
+
 
 
 		public Brush FontColor { get => _mainArea.Foreground; set => _mainArea.Foreground = value; }
@@ -59,7 +64,17 @@ namespace Limcap.UTerminal {
 
 
 
+
+
+
+
 		public Terminal( string introText, Action onExit = null ) {
+			ColorF1 = new SolidColorBrush( Color.FromRgb( 171, 255, 46 ) );
+			ColorF2 = new SolidColorBrush( Color.FromRgb( 120, 179, 32 ) );
+			ColorB1 = new SolidColorBrush( Color.FromArgb( 200, 25, 27, 27 ) );
+			CaretRun = new Run( "█" ) { IsEnabled = false, Background = ColorF1 };//█
+			InputRun = new Run( String.Empty );
+
 			_introText = introText ?? _introText;
 			this.onExit = onExit;
 			vars = new DuxNamedList();
@@ -96,6 +111,10 @@ namespace Limcap.UTerminal {
 
 
 
+
+
+
+
 		public void Start() {
 			_assistant = new Assistant( _cmdList, Locale );
 			_mainArea.IsEnabled = true;
@@ -109,9 +128,15 @@ namespace Limcap.UTerminal {
 
 
 
+
+
+
+
 		public string[] AvailableCommands {
 			get => _cmdList.Select( entry => entry.Key ).ToArray();
 		}
+
+
 
 
 
@@ -128,9 +153,13 @@ namespace Limcap.UTerminal {
 
 
 
+
+
 		public bool IsControlDown {
 			get => Keyboard.IsKeyDown( Key.LeftCtrl ) || Keyboard.IsKeyDown( Key.RightCtrl );
 		}
+
+
 
 
 
@@ -146,10 +175,16 @@ namespace Limcap.UTerminal {
 
 
 
+
+
 		private char CurrentChar {
 			//get => CaretIndex == Text.Length ? ' ' : Text[CaretIndex];
 			get => '-';
 		}
+
+
+
+
 
 
 
@@ -161,10 +196,14 @@ namespace Limcap.UTerminal {
 
 
 
+
+
+
+
 		private TextBlock BuildMainArea() {
 			var mainArea = new TextBlock() {
-				Background = new SolidColorBrush( Color.FromArgb( 200, 25, 27, 27 ) ),
-				Foreground = Brushes.GreenYellow,
+				Background = ColorB1,
+				Foreground = ColorF1,
 				FontFamily = new FontFamily( "Consolas" ),
 				FontSize = 14,
 				Padding = new Thickness( 5 ),
@@ -196,6 +235,10 @@ namespace Limcap.UTerminal {
 			//mainArea.TextChanged += HandleTextChanged;
 			return mainArea;
 		}
+
+
+
+
 
 
 

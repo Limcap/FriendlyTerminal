@@ -39,7 +39,7 @@ namespace Limcap.UTerminal.Cmds.IO {
 			nfi.NumberGroupSeparator = ".";
 			nfi.CurrencySymbol = "";
 			nfi.NumberDecimalDigits = 0;
-			return "\nUsed memory: - heap: " + mem.ToString( "N", nfi ) + ", private bytes: " + usedMemory.ToString( "N", nfi );
+			return "\nUsed heap memory: " + mem.ToString( "N", nfi ) + ", private bytes: " + usedMemory.ToString( "N", nfi );
 		}
 	}
 }
