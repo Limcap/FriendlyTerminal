@@ -115,13 +115,17 @@ namespace Limcap.FTerminal {
 			}
 
 			var args = _assistant.RawArgs;
-			if (args == "?")
+			if (args == "?") {
+				_assistant.Reset();
 				return cmd.Info;
+			}
 
 			Type cmdType = cmd.GetType();
 			int requiredPrivilege = (int)(cmdType.GetConst( "REQUIRED_PRIVILEGE" ) ?? 0);
-			if (CurrentPrivilege < requiredPrivilege)
+			if (CurrentPrivilege < requiredPrivilege) {
+				_assistant.Reset();
 				return INSUFICIENT_PRIVILEGE_MESSAGE;
+			}
 
 			try {
 				var result = cmd.MainFunction( this, _assistant.ParsedArgs );
