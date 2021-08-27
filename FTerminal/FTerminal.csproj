@@ -7,8 +7,8 @@
     <ProjectGuid>{B094E712-A262-431A-9B4C-79861284DF63}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Limcap.UTerminal</RootNamespace>
-    <AssemblyName>Limcap.UTerminal</AssemblyName>
+    <RootNamespace>Limcap.FTerminal</RootNamespace>
+    <AssemblyName>Limcap.Lift</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -21,7 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\Limcap.UTerminal.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\Limcap.Lift.xml</DocumentationFile>
     <NoWarn>1591</NoWarn>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
