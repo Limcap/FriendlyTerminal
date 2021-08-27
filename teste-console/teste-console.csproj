@@ -53,7 +53,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\UTerminal\FTerminal.csproj">
+    <ProjectReference Include="..\FTerminal\FTerminal.csproj">
       <Project>{b094e712-a262-431a-9b4c-79861284df63}</Project>
       <Name>FTerminal</Name>
     </ProjectReference>
