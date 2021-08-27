@@ -42,7 +42,7 @@ namespace Limcap.UTerminal {
 		public Brush ColorF2 { get; set; }
 		public Brush ColorB1 { get; set; }
 		public readonly Run CaretRun;
-		public readonly Run InputRun;
+		public readonly Run InputBufferRun;
 		public InlineCollection Inlines => _mainArea.Inlines;
 		public Run LastRun => Inlines.LastInline.PreviousInline.PreviousInline as Run;
 		public string Text => _mainArea.Text;
@@ -73,7 +73,7 @@ namespace Limcap.UTerminal {
 			ColorF2 = new SolidColorBrush( Color.FromRgb( 120, 179, 32 ) );
 			ColorB1 = new SolidColorBrush( Color.FromArgb( 200, 25, 27, 27 ) );
 			CaretRun = new Run( "█" ) { IsEnabled = false, Background = ColorF1 };//█
-			InputRun = new Run( String.Empty );
+			InputBufferRun = new Run( String.Empty );
 
 			_introText = introText ?? _introText;
 			this.onExit = onExit;
@@ -217,7 +217,7 @@ namespace Limcap.UTerminal {
 				IsEnabled = true,
 				Focusable = true,
 			};
-			mainArea.Inlines.Add( InputRun );
+			mainArea.Inlines.Add( InputBufferRun );
 			mainArea.Inlines.Add( CaretRun );
 
 			mainArea.PreviewMouseDown += ( o, a ) =>(o as TextBlock).Focus();

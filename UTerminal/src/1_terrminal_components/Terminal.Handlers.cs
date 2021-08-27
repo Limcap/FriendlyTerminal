@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -44,7 +45,7 @@ namespace Limcap.UTerminal {
 		private void Handle2_AddToBuffer( KeyEventArgs e ) {
 			var c = KeyGrabber.GetCharFromKey( e.Key );
 			if (c != 0) {
-				InputRun.ContentEnd.InsertTextInRun( c.ToString() );
+				InputBufferRun.ContentEnd.InsertTextInRun( c.ToString() );
 				UpdateTraceArea( e.Key );
 			}
 			Handle3_TextChanged( null, null );
@@ -58,7 +59,7 @@ namespace Limcap.UTerminal {
 
 
 		private void Handle2_DeleteFromBuffer( KeyEventArgs e ) {
-			InputRun.ContentEnd.DeleteTextInRun( -1 );
+			InputBufferRun.ContentEnd.DeleteTextInRun( -1 );
 			//InputRun.ContentEnd.GetPositionAtOffset( -1 ).DeleteTextInRun( 1 );
 			Handle3_TextChanged( null, null );
 		}
@@ -91,7 +92,7 @@ namespace Limcap.UTerminal {
 				var autocomplete = _assistant.GetNextAutocompleteEntry();
 				if (autocomplete != null && autocomplete.Length > 0)
 					SetInputBuffer( autocomplete.ToString(), predict: false );
-				CaretToEnd();
+				ScrollToEnd();
 			}
 			e.Handled = true;
 		}
@@ -107,7 +108,7 @@ namespace Limcap.UTerminal {
 			if (_customInterpreter == null) {
 				IsAutocompleting = true;
 				SetInputBuffer( e.Key == Key.Up ? _cmdHistory.Prev() : _cmdHistory.Next() );
-				CaretToEnd();
+				ScrollToEnd();
 				e.Handled = true;
 			}
 		}
@@ -140,20 +141,18 @@ namespace Limcap.UTerminal {
 				// definir ainda um outro, não haja problema de sobrescrever.
 				var interpreter = _customInterpreter is null ? CommandInterpreter : _customInterpreter;
 				_customInterpreter = null;
-				AppendText( InputRun.Text );
+				AppendText( InputBufferRun.Text );
 				AppendText( NEW_LINE );
-				InputRun.Text = string.Empty;
+				InputBufferRun.Text = string.Empty;
 				var output = interpreter( input );
 				if (output != null) {
-					if (!LastRun.Text.EndsWith( NEW_LINE )) AppendText( NEW_LINE );
-					AppendText( output.TrimEnd(), ColorF2 );
-					AppendText( NEW_LINE );
+					AppendWithSpace( output, ColorF2 );
 					_statusArea.Text = $"Saída: {output.Length} caracteres";
-					CaretToEnd();
+					ScrollToEnd();
 				}
 				// pede um novo prompt somente se não existir um input handler.
 				StartNewInputBuffer( usePrompt: _customInterpreter is null );
-				if (output?.Length > 500) CaretToEnd();
+				if (output?.Length > 500) ScrollToEnd();
 			}
 		}
 
@@ -165,7 +164,7 @@ namespace Limcap.UTerminal {
 
 
 		private void Handle_PasswordInput( KeyEventArgs e ) {
-			CaretToEnd();
+			ScrollToEnd();
 			if (e.Key == Key.Back) {
 				if (_passwordInput.Length > 0)
 					_passwordInput.Remove( _passwordInput.Length - 1, 1 );
