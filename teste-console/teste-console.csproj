@@ -53,9 +53,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\UTerminal\UTerminal.csproj">
+    <ProjectReference Include="..\UTerminal\FTerminal.csproj">
       <Project>{b094e712-a262-431a-9b4c-79861284df63}</Project>
-      <Name>UTerminal</Name>
+      <Name>FTerminal</Name>
     </ProjectReference>
     <ProjectReference Include="..\teste-window\teste-window.csproj">
       <Project>{ed2a1d88-c1a7-40b9-aa9b-14ee4d403235}</Project>

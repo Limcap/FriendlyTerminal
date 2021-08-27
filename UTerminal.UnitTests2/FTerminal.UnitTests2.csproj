@@ -55,9 +55,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\UTerminal\UTerminal.csproj">
+    <ProjectReference Include="..\UTerminal\FTerminal.csproj">
       <Project>{b094e712-a262-431a-9b4c-79861284df63}</Project>
-      <Name>UTerminal</Name>
+      <Name>FTerminal</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
