@@ -86,8 +86,8 @@ namespace Limcap.UTerminal {
 			IsAutocompleting = true;
 			if (!e.IsRepeat) {
 				var autocomplete = _assistant.GetNextAutocompleteEntry();
-				if (autocomplete != null && autocomplete.Length > 0)
-					SetInputBuffer( autocomplete.ToString(), predict: false );
+				//if (autocomplete != null && autocomplete.Length > 0)
+					SetInputBuffer( autocomplete?.ToString(), predict: false );
 				ScrollToEnd();
 			}
 			e.Handled = true;
