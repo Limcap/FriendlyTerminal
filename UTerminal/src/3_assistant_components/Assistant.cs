@@ -67,6 +67,33 @@ namespace Limcap.UTerminal {
 
 
 
+		public void ProcessInput( string input ) {
+			var (inpCmd, inpArgs) = SplitInput( input );
+			RawArgs = inpArgs;
+
+			_cmdParser.Parse( inpCmd, _locale );
+
+			if (_cmdParser.parsedCmd == null) {
+				AutocompleteParams = false;
+				_argsParser.Reset();
+			}
+
+			else {
+				_argsParser.Parse( inpArgs, _cmdParser.parsedCmd?.Parameters );
+				AutocompleteParams = true;
+			}
+
+			// Resets the autocomplete index, because new prediction options have been generated.
+			Index = -1;
+		}
+
+
+
+
+
+
+
+
 		public StringBuilder GetPredictions( string input ) {
 			var (inpCmd, inpArgs) = SplitInput( input );
 			RawArgs = inpArgs;
@@ -81,6 +108,7 @@ namespace Limcap.UTerminal {
 			if (_cmdParser.parsedCmd == null) {
 				_cmdParser.GetPredictionPossibilitiesText( _predictionResult );
 				AutocompleteParams = false;
+				_argsParser.Reset();
 			}
 
 			else {
@@ -123,7 +151,7 @@ namespace Limcap.UTerminal {
 
 
 
-		public StringBuilder GetNextAutocompleteEntry( string input ) {
+		public StringBuilder GetNextAutocompleteEntry() {
 			// Adjust Index
 			 Index++;
 			//if (AutocompleteParams == false && Index >= _cmdParser.predictedNodes.Count ||
@@ -145,6 +173,18 @@ namespace Limcap.UTerminal {
 			}
 
 			return _autocompleteResult;
+		}
+
+
+
+
+
+
+
+		public void Reset() {
+			RawArgs = null;
+			_cmdParser.Reset();
+			_argsParser.Reset();
 		}
 	}
 }

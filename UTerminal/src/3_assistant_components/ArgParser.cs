@@ -229,5 +229,17 @@ namespace Limcap.UTerminal {
 			if (index == -1) return;
 			else res_text.Append( possible?[index].name ).Append( ARG_VALUE_SEPARATOR );
 		}
+
+
+
+
+
+
+
+
+		public void Reset() {
+			list.Clear();
+			possible.Clear();
+		}
 	}
 }

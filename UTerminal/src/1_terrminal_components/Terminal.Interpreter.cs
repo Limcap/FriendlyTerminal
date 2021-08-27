@@ -16,9 +16,14 @@ namespace Limcap.UTerminal {
 		public void RegisterCommand<T>( string invokeString = null ) where T : ICommand, new() {
 			RegisterCommand( typeof( T ), invokeString );
 		}
+		
 		public void RegisterCommand<T>( params T[] commands  ) where T : ICommand, new() {
 			foreach( var command in commands ) RegisterCommand( typeof( T ) );
 		}
+
+
+
+
 
 
 
@@ -34,6 +39,10 @@ namespace Limcap.UTerminal {
 				foreach (var t in types) RegisterCommand( t );
 			}
 		}
+
+
+
+
 
 
 
@@ -57,6 +66,10 @@ namespace Limcap.UTerminal {
 
 
 
+
+
+
+
 		string GetTranslatedInvokeText( Type type, string locale ) {
 			var translator = Translator.LoadTranslator( type, locale );
 			//var invokeText = type.GetConst( "INVOKE_TEXT" ) as string;
@@ -65,8 +78,12 @@ namespace Limcap.UTerminal {
 
 
 
+
+
+
+
+
 		public string CommandInterpreter( string input ) {
-			//System.GC.Collect();
 			if (input == "exit") {
 				Clear();
 				onExit?.Invoke();
@@ -103,6 +120,7 @@ namespace Limcap.UTerminal {
 
 			try {
 				var result = cmd.MainFunction( this, _assistant.ParsedArgs );
+				_assistant.Reset();
 				GC.Collect();
 				GC.WaitForPendingFinalizers();
 				GC.Collect();
@@ -112,6 +130,10 @@ namespace Limcap.UTerminal {
 				return ex.ToString();
 			}
 		}
+
+
+
+
 
 
 

@@ -68,6 +68,13 @@ namespace Limcap.UTerminal {
 		public void GetPredictionText( int indexOfPrediction, StringBuilder res_string )
 			=> GetPredictionText( predictedNodes, indexOfPrediction, res_string );
 
+		public void Reset() {
+			parsedCmd = null;
+			confirmedNode = null;
+			_startNode.next = null;
+			predictedNodes.Clear();
+		}
+
 
 
 

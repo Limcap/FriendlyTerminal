@@ -222,7 +222,7 @@ namespace Limcap.UTerminal {
 
 			mainArea.PreviewMouseDown += ( o, a ) =>(o as TextBlock).Focus();
 			mainArea.Loaded += ( o, a ) => mainArea.Focus();
-			mainArea.PreviewKeyDown += HandleRegularInput;
+			mainArea.PreviewKeyDown += Handle_KeyboardInput;
 			mainArea.PreviewKeyUp += ( o, a ) => UpdateTraceArea( a.Key );
 			mainArea.PreviewKeyUp += ( o, a ) => {
 				if (a.Key.IsIn( Key.Down, Key.PageDown )) {
