@@ -113,7 +113,7 @@ namespace Limcap.UTerminal {
 
 			else {
 				_argsParser.Parse( inpArgs, _cmdParser.parsedCmd?.Parameters );
-				_argsParser.GetPredictionPossibilities( _predictionResult );
+				_argsParser.GetPossibilities( _predictionResult );
 				AutocompleteParams = true;
 			}
 
@@ -168,8 +168,8 @@ namespace Limcap.UTerminal {
 			else {
 				if (Index >= _argsParser.possible.Count) Index = -1;
 				_cmdParser.GetConfirmedText( _autocompleteResult );
-				_argsParser.GetConfirmedText( _autocompleteResult );
-				_argsParser.GetPredictionText( Index, _autocompleteResult );
+				_argsParser.GetConfirmed( _autocompleteResult );
+				_argsParser.GetSelected( Index, _autocompleteResult );
 			}
 
 			return _autocompleteResult;

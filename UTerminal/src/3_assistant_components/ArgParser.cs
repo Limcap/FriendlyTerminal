@@ -19,6 +19,7 @@ namespace Limcap.UTerminal {
 
 		public readonly List<Arg> list;
 		public readonly List<Parameter> possible;
+		private Parameter[] _parameters;
 		public bool IsLastParamInvalid { get; private set; }
 
 
@@ -120,6 +121,7 @@ namespace Limcap.UTerminal {
 
 		public void CollectPossibilities( Parameter[] parameters ) {
 			possible.Clear();
+			_parameters = parameters;
 
 			if (list.Count == 0) return;
 			var arg = list[list.Count - 1];
@@ -155,14 +157,14 @@ namespace Limcap.UTerminal {
 
 
 
-		public void GetPredictionPossibilities( StringBuilder res_text ) {
+		public void GetPossibilities( StringBuilder res_text ) {
 			res_text.Clear();
 			// Last, build the string
 			//if( possible.Count == 1 && possible[0] == InvalidParam )
 			//text.Append( possible[0].description );
 			if (IsLastParamInvalid)
 				res_text.Append( "Invalid parameter" );
-			else if (possible.Count == 0)
+			else if (possible.Count == 0 && list.Count < (_parameters?.Length ?? 0))
 				res_text.Append( ',' );
 			else foreach (var p in possible)
 					res_text.Append( p.optional ? $"[{p.name}=]" : $"{p.name}=" ).Append( PREDICTIONS_SEPARATOR );
@@ -200,7 +202,7 @@ namespace Limcap.UTerminal {
 
 
 
-		public void GetConfirmedText( StringBuilder res_text ) {
+		public void GetConfirmed( StringBuilder res_text ) {
 			if (Length == 0) return;
 			Arg a;
 			for (int i = 0; i < Length - 1; i++) {
@@ -211,7 +213,11 @@ namespace Limcap.UTerminal {
 			a = this[Length - 1];
 			if (a.NameIsComplete) {
 				res_text.Append( a.name ).Append( ARG_VALUE_SEPARATOR ).Append( a.value );
-				if (possible.Count == 0) res_text.Append( ARGS_SEPARATOR );
+				//if (possible.Count == 0) res_text.Append( ARGS_SEPARATOR );
+				// case there are no possible predictions AND all parameters have been already entered correctly, will
+				// not return a arg separator.
+				if (possible.Count == 0 && list.Where( p => p.NameIsComplete ).Count() < _parameters.Length)
+					res_text.Append( ARGS_SEPARATOR );
 			}
 			//// Append the predicted parameter
 			//else if (index != -1)
@@ -225,9 +231,9 @@ namespace Limcap.UTerminal {
 
 
 
-		public void GetPredictionText( int index, StringBuilder res_text ) {
-			if (index == -1) return;
-			else res_text.Append( possible?[index].name ).Append( ARG_VALUE_SEPARATOR );
+		public void GetSelected( int index, StringBuilder res_text ) {
+			if (index > -1)
+				res_text.Append( possible?[index].name ).Append( ARG_VALUE_SEPARATOR );
 		}
 
 
