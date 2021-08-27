@@ -4,8 +4,8 @@
 		"ptbr": "alternar barra de status"
 	},
 	"desc": {
-		"enus": "Shows or hides the status bar.",
-		"ptbr": "Exibe ou esconde a barra de status."
+		"enus": "Makes the status bar visible or invisible.",
+		"ptbr": "Exibe ou esconde a barra de status (informações tecnicas)."
 	},
 
 

@@ -121,16 +121,17 @@ namespace Limcap.UTerminal {
 
 
 
-		private void UpdateTraceArea( Key pressedKey ) {
-			//var lastLineStartIndex = mainArea.Text.LastIndexOf( NewLine );
-			//lastLineStartIndex = lastLineStartIndex < 0 ? 0 : lastLineStartIndex;
-			//_lastLine = mainArea.Text.Substring( lastLineStartIndex );
-			//_lastLineCaretIndex = mainArea.CaretIndex - (mainArea.Text.Length - _lastLine.Length);
-			//var curChar = _lastLineCaretIndex == _lastLine.Length ? ' ' : _lastLine[_lastLineCaretIndex];
-			//statusArea.Text = $"{pressedKey} - {curChar} - ({_lastLineCaretIndex})";
+		private void UpdateTraceInfo( Key pressedKey ) {
 			var c = KeyGrabber.GetCharFromKey( pressedKey );
-			//_traceArea.Text = $"pressed:{pressedKey}   typed:{c}   current:{CurrentChar}   caret:{CaretIndex}";
-			_traceArea.Text = $"pressed:{pressedKey}   typed:{c}   current:{CurrentChar}";
+			_statusArea.Text = $"pressed:{pressedKey}   typed:{c}   current:{CurrentChar}";
+		}
+
+
+
+
+		public bool ShowAssistBar {
+			get => _assistantArea.Visibility == Visibility.Visible;
+			set => _assistantArea.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
 		}
 
 
@@ -139,14 +140,6 @@ namespace Limcap.UTerminal {
 		public bool ShowStatusBar {
 			get => _statusArea.Visibility == Visibility.Visible;
 			set => _statusArea.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
-		}
-
-
-
-
-		public bool ShowTraceBar {
-			get => _traceArea.Visibility == Visibility.Visible;
-			set => _traceArea.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
 		}
 
 

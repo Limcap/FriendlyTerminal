@@ -24,8 +24,8 @@ namespace Limcap.UTerminal {
 		private readonly string _introText = "Limcap Utility Terminal";
 		private readonly ScrollViewer _scrollArea;
 		private TextBlock _mainArea;
+		private readonly TextBlock _assistantArea;
 		private readonly TextBlock _statusArea;
-		private readonly TextBlock _traceArea;
 		private readonly HistoryNavigator _cmdHistory = new HistoryNavigator(15);
 		public Assistant _assistant;
 		private bool _allowAssistant;
@@ -81,10 +81,10 @@ namespace Limcap.UTerminal {
 			_cmdList = new Dictionary<string, Type>();
 			Panel = new DockPanel() { LastChildFill = true };
 
-			_traceArea = BuildStatuArea();
-			Panel.Children.Add( _traceArea );
-			DockPanel.SetDock( _traceArea, Dock.Bottom );
-			ShowTraceBar = true;
+			_assistantArea = BuildStatuArea();
+			Panel.Children.Add( _assistantArea );
+			DockPanel.SetDock( _assistantArea, Dock.Bottom );
+			ShowAssistBar = true;
 
 			_statusArea = BuildStatuArea();
 			Panel.Children.Add( _statusArea );
@@ -120,7 +120,7 @@ namespace Limcap.UTerminal {
 			_mainArea.IsEnabled = true;
 			AppendText( _introText );
 			StartNewInputBuffer();
-			_statusArea.Text = _assistant.GetPredictions( string.Empty ).ToString();
+			_assistantArea.Text = _assistant.GetPredictions( string.Empty ).ToString();
 
 			_mainArea.Focus();
 		}
@@ -144,8 +144,8 @@ namespace Limcap.UTerminal {
 
 
 		public string Status {
-			get => _statusArea.Text;
-			set => _statusArea.Text = value;
+			get => _assistantArea.Text;
+			set => _assistantArea.Text = value;
 		}
 
 
@@ -223,7 +223,7 @@ namespace Limcap.UTerminal {
 			mainArea.PreviewMouseDown += ( o, a ) =>(o as TextBlock).Focus();
 			mainArea.Loaded += ( o, a ) => mainArea.Focus();
 			mainArea.PreviewKeyDown += Handle_KeyboardInput;
-			mainArea.PreviewKeyUp += ( o, a ) => UpdateTraceArea( a.Key );
+			//mainArea.PreviewKeyUp += ( o, a ) => UpdateTraceArea( a.Key );
 			mainArea.PreviewKeyUp += ( o, a ) => {
 				if (a.Key.IsIn( Key.Down, Key.PageDown )) {
 					//var curlineIndex = mainArea.GetLineIndexFromCharacterIndex( CaretIndex );

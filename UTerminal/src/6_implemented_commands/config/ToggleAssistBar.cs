@@ -2,7 +2,7 @@
 using System.Reflection;
 
 namespace Limcap.UTerminal.Cmds.Config {
-	public class ToggleStatusBar : ACommand {
+	public class ToggleAssistBar : ACommand {
 
 		//public static void Register( TerminalClient term ) {
 		//	term.RegisterCommand( "command2", MainFunction, HelpInfo );
@@ -11,11 +11,11 @@ namespace Limcap.UTerminal.Cmds.Config {
 		//	ICommand instanceOfMyType = (ICommand) Activator.CreateInstance( type );
 		//}
 
-		public ToggleStatusBar( string locale ) : base( locale ) { }
+		public ToggleAssistBar( string locale ) : base( locale ) { }
 
 
 		public const string DEFAULT_LOCALE = "enus";
-		public const string INVOKE_TEXT = "toggle status bar";
+		public const string INVOKE_TEXT = "toggle assist bar";
 		//public const string HELP_INFO =
 		//	"DESCRIPTION:\n" +
 		//	"\tMakes the status bar visible or invisible.\n" +
@@ -36,16 +36,16 @@ namespace Limcap.UTerminal.Cmds.Config {
 
 		public override string MainFunction( Terminal t, Arg[] args ) {
 			var arg = args.Get( Parameters[0] );
-			if (arg == Txt("on") ) t.ShowStatusBar = true;
-			else if (arg == Txt("off") ) t.ShowStatusBar = false;
-			else if (args?.Length == 0) t.ShowStatusBar = !t.ShowStatusBar;
+			if (arg == Txt("on") ) t.ShowAssistBar = true;
+			else if (arg == Txt("off") ) t.ShowAssistBar = false;
+			else if (args?.Length == 0) t.ShowAssistBar = !t.ShowAssistBar;
 			else return Info;
 			return null;
 		}
 
 
 		//protected override TextSource DefaultTextSource { get; set; } = new TextSource {
-		//	["desc"] = "Makes the status bar visible or invisible.\n",
+		//	["desc"] = "Makes the assist bar visible or invisible.\n",
 		//	["param1"] = "state",
 		//	["param1desc"] = "on/off",
 		//	["on"] = "on",

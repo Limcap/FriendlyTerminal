@@ -72,9 +72,9 @@
     <Compile Include="src\6_implemented_commands\misc\Help.cs" />
     <Compile Include="src\6_implemented_commands\access_control\Raise.cs" />
     <Compile Include="src\6_implemented_commands\io\SaveOutput.cs" />
-    <Compile Include="src\6_implemented_commands\customization\ToggleStatusBar.cs" />
+    <Compile Include="src\6_implemented_commands\config\ToggleAssistBar.cs" />
     <Compile Include="src\6_implemented_commands\dev\Print_a_lot.cs" />
-    <Compile Include="src\6_implemented_commands\config\ToggleTraceBar.cs" />
+    <Compile Include="src\6_implemented_commands\config\ToggleStatusBar.cs" />
     <Compile Include="src\2_command_components\ICommand.cs" />
     <Compile Include="src\4_generic_components\KeyedSet.cs" />
     <Compile Include="src\4_generic_components\Range.cs" />
@@ -105,10 +105,10 @@
     <EmbeddedResource Include="src\6_implemented_commands\io\SaveOutput.locale.json" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="src\6_implemented_commands\customization\ToggleStatusBar.locale.json" />
+    <EmbeddedResource Include="src\6_implemented_commands\config\ToggleAssistBar.locale.json" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="src\6_implemented_commands\config\ToggleTraceBar.locale.json" />
+    <EmbeddedResource Include="src\6_implemented_commands\config\ToggleStatusBar.locale.json" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="System.Memory">

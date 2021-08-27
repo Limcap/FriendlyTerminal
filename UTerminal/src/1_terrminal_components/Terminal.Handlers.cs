@@ -12,8 +12,6 @@ using System.Windows.Media;
 namespace Limcap.UTerminal {
 	public partial class Terminal {
 
-		//public int TextLength;
-		//public int CaretIndexPrevious;
 		public bool IsAutocompleting { get; private set; }
 
 
@@ -24,7 +22,7 @@ namespace Limcap.UTerminal {
 
 
 		private void Handle_KeyboardInput( object sender, KeyEventArgs e ) {
-			if (e.IsRepeat) UpdateTraceArea( e.Key );
+			//if (e.IsRepeat) UpdateTraceInfo( e.Key );
 			if (_usePasswordMask) Handle_PasswordInput( e );
 			//else if (e.Key.IsIn( Key.Left, Key.Right, Key.Up, Key.Down, Key.Home, Key.End, Key.PageUp, Key.PageDown )) {}
 			//else if (e.Key.IsIn( Key.LeftShift, Key.RightShift, Key.LeftAlt, Key.RightAlt, Key.LeftCtrl, Key.RightCtrl, Key.CapsLock, Key.Insert, Key.RWin, Key.LWin )) {}
@@ -44,11 +42,9 @@ namespace Limcap.UTerminal {
 
 		private void Handle2_AddToBuffer( KeyEventArgs e ) {
 			var c = KeyGrabber.GetCharFromKey( e.Key );
-			if (c != 0) {
+			if (c != 0)
 				InputBufferRun.ContentEnd.InsertTextInRun( c.ToString() );
-				UpdateTraceArea( e.Key );
-			}
-			Handle3_TextChanged( null, null );
+			Handle3_TextChanged();
 		}
 
 
@@ -59,9 +55,9 @@ namespace Limcap.UTerminal {
 
 
 		private void Handle2_DeleteFromBuffer( KeyEventArgs e ) {
-			InputBufferRun.ContentEnd.DeleteTextInRun( -1 );
 			//InputRun.ContentEnd.GetPositionAtOffset( -1 ).DeleteTextInRun( 1 );
-			Handle3_TextChanged( null, null );
+			InputBufferRun.ContentEnd.DeleteTextInRun( -1 );
+			Handle3_TextChanged();
 		}
 
 
@@ -71,12 +67,12 @@ namespace Limcap.UTerminal {
 
 
 
-		private void Handle3_TextChanged( object sender, TextChangedEventArgs args ) {
+		private void Handle3_TextChanged() {//object sender, TextChangedEventArgs args 
 			IsAutocompleting = false;
 			if (!_allowAssistant) return;
 			var input = GetInputBuffer();
 			var text = _assistant.GetPredictions( input ).ToString();
-			_statusArea.Text = text;
+			_assistantArea.Text = text;
 		}
 
 
@@ -125,10 +121,7 @@ namespace Limcap.UTerminal {
 			if (IsAutocompleting) {
 				IsAutocompleting = false;
 				_assistant.ProcessInput( input );
-				//HandleTextChanged( null, null );
-				//return;
 			}
-			UpdateTraceArea( e.Key );
 			if (input.Trim().Length == 0) {
 				e.Handled = true;
 				// pede um novo prompt somente se não existir um input handler.
@@ -147,8 +140,9 @@ namespace Limcap.UTerminal {
 				var output = interpreter( input );
 				if (output != null) {
 					AppendWithSpace( output, ColorF2 );
-					_statusArea.Text = $"Saída: {output.Length} caracteres";
 					ScrollToEnd();
+					_statusArea.Text = $"Saída: {output.Length} caracteres";
+					Handle3_TextChanged();
 				}
 				// pede um novo prompt somente se não existir um input handler.
 				StartNewInputBuffer( usePrompt: _customInterpreter is null );

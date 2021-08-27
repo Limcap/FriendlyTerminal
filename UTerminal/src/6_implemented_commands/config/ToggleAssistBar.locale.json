@@ -1,11 +1,11 @@
 {
 	"INVOKE_TEXT": {
-		"enus": "toggle trace bar",
-		"ptbr": "alternar barra de trace"
+		"enus": "toggle assist bar",
+		"ptbr": "alternar barra de previsão"
 	},
 	"desc": {
-		"enus": "Makes the trace bar visible or invisible.",
-		"ptbr": "Exibe ou esconde a barra de trace (informações tecnicas)."
+		"enus": "Shows or hides the assist bar.",
+		"ptbr": "Exibe ou esconde a barra do assistente de digitação."
 	},
 
 
