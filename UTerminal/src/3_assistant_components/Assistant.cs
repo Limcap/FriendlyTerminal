@@ -20,8 +20,8 @@ namespace Limcap.UTerminal {
 		protected readonly StringBuilder _predictionResult = new StringBuilder( 60 );
 		protected readonly StringBuilder _autocompleteResult = new StringBuilder( 30 );
 
-		protected readonly ArgParser _argsParser;
-		protected readonly CmdParser _cmdParser;
+		protected ArgParser _argsParser;
+		protected CmdParser _cmdParser;
 
 		public ACommand ParsedCommand { get => _cmdParser?.parsedCmd; }
 		public PString RawArgs { get; protected set; }
@@ -70,7 +70,12 @@ namespace Limcap.UTerminal {
 		public StringBuilder GetPredictions( string input ) {
 			var (inpCmd, inpArgs) = SplitInput( input );
 			RawArgs = inpArgs;
-			
+
+			//_cmdParser = new CmdParser( commandsSet, locale );
+			//_argsParser = new ArgParser( 8 );
+			//GC.Collect();
+			//GC.WaitForPendingFinalizers();
+			//GC.Collect();
 			_cmdParser.Parse( inpCmd, _locale );
 	
 			if (_cmdParser.parsedCmd == null) {

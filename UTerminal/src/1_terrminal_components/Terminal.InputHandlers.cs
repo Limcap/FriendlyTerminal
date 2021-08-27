@@ -79,6 +79,7 @@ namespace Limcap.UTerminal {
 
 
 			else if (e.Key == Key.Tab) {
+				isAutocompleting = true;
 				if (!e.IsRepeat) {
 					var input = GetInputBuffer();
 					var autocomplete = _assistant.GetNextAutocompleteEntry( input );
@@ -89,6 +90,10 @@ namespace Limcap.UTerminal {
 			}
 
 			else if (e.Key == Key.Return) {
+				if( isAutocompleting ) {
+					HandleTextChanged( null, null );
+					return;
+				}
 				var input = GetInputBuffer();
 				UpdateTraceArea( e.Key );
 				if (input.Trim().Length == 0) {
@@ -111,7 +116,9 @@ namespace Limcap.UTerminal {
 					if (output != null) {
 						if (!LastRun.Text.EndsWith( NEW_LINE )) AppendText( NEW_LINE );
 						AppendText( output.TrimEnd() );
+						AppendText( NEW_LINE );
 						_statusArea.Text = $"Saída: {output.Length} caracteres";
+						CaretToEnd();
 					}
 					// pede um novo prompt somente se não existir um input handler.
 					StartNewInputBuffer( usePrompt: _inputHandler is null );
@@ -126,6 +133,7 @@ namespace Limcap.UTerminal {
 			else if (e.Key == Key.Back) {
 				InputRun.ContentEnd.DeleteTextInRun( -1 );
 				//InputRun.ContentEnd.GetPositionAtOffset( -1 ).DeleteTextInRun( 1 );
+				HandleTextChanged( null, null );
 			}
 			else {
 				var c = KeyGrabber.GetCharFromKey( e.Key );
@@ -133,13 +141,14 @@ namespace Limcap.UTerminal {
 					InputRun.ContentEnd.InsertTextInRun( c.ToString() );
 					UpdateTraceArea( e.Key );
 				}
+				HandleTextChanged( null, null );
 			}
-			HandleTextChanged( null, null );
 		}
 
 
 
 		private void HandleTextChanged( object sender, TextChangedEventArgs args ) {
+			isAutocompleting = false;
 			if (!_allowAssistant) return;
 			var input = GetInputBuffer();
 			var text = _assistant.GetPredictions( input ).ToString();
@@ -150,5 +159,6 @@ namespace Limcap.UTerminal {
 
 		public int TextLength;
 		public int CaretIndexPrevious;
+		private bool isAutocompleting;
 	}
 }

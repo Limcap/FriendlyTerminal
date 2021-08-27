@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace Limcap.UTerminal {
 	public partial class Terminal {
@@ -75,6 +76,16 @@ namespace Limcap.UTerminal {
 				Clear();
 				GC.Collect();
 				return null;
+			}
+			if (input == "reset") {
+				_mainArea = BuildMainArea();
+				_scrollArea.Content = _mainArea;
+				StartNewInputBuffer();
+				_mainArea.Focus();
+				GC.Collect();
+				GC.WaitForPendingFinalizers();
+				GC.Collect();
+				DockPanel.SetDock( _mainArea, Dock.Top );
 			}
 
 			var cmd = _assistant.ParsedCommand;

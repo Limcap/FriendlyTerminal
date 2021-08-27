@@ -23,7 +23,7 @@ namespace Limcap.UTerminal {
 
 		private readonly string _introText = "Limcap Utility Terminal";
 		private readonly ScrollViewer _scrollArea;
-		private readonly TextBlock _mainArea;
+		private TextBlock _mainArea;
 		private readonly TextBlock _statusArea;
 		private readonly TextBlock _traceArea;
 		private readonly HistoryNavigator _cmdHistory = new HistoryNavigator(15);
@@ -83,6 +83,7 @@ namespace Limcap.UTerminal {
 			Panel.Children.Add( _scrollArea );
 			DockPanel.SetDock( _mainArea, Dock.Top );
 
+			_scrollArea.GotFocus += ( o, a ) => _mainArea.Focus();
 			//Binding myBinding = new Binding {
 			//	Source = this,
 			//	Path = new PropertyPath( "Text" ),
@@ -180,7 +181,7 @@ namespace Limcap.UTerminal {
 			mainArea.Inlines.Add( InputRun );
 			mainArea.Inlines.Add( CaretRun );
 
-			mainArea.MouseDown += ( o, a ) => (o as TextBlock).Focus();
+			mainArea.PreviewMouseDown += ( o, a ) =>(o as TextBlock).Focus();
 			mainArea.Loaded += ( o, a ) => mainArea.Focus();
 			mainArea.PreviewKeyDown += HandleRegularInput;
 			mainArea.PreviewKeyUp += ( o, a ) => UpdateTraceArea( a.Key );
