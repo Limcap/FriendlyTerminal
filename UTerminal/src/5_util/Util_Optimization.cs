@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Stan = System.ReadOnlySpan<char>;
 using Chan = System.Span<char>;
 
-namespace Limcap.UTerminal {
+namespace Limcap.FTerminal {
 
 
 	public ref struct StanTuple {

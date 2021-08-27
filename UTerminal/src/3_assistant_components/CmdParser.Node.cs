@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-namespace Limcap.UTerminal {
+namespace Limcap.FTerminal {
 	public partial class CmdParser {
 
 		[Serializable]

@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
-namespace Limcap.UTerminal {
+namespace Limcap.FTerminal {
 	public partial class Terminal {
 
 		private readonly Dictionary<string, Type> _cmdList;

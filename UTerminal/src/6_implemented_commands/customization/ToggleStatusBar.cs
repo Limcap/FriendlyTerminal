@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace Limcap.UTerminal.Cmds.Customization {
+namespace Limcap.FTerminal.Cmds.Customization {
 	public class ToggleStatusBar : ACommand {
 
 		//public static void Register( TerminalClient term ) {

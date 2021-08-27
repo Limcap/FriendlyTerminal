@@ -8,7 +8,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace Limcap.UTerminal {
+namespace Limcap.FTerminal {
 	public partial class Terminal {
 
 		public void Exit() {

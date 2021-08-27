@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Limcap.UTerminal.Mantest {
+namespace Limcap.FTerminal.Mantest {
 	/// <summary>
 	/// Interaction logic for MainWindow.xaml
 	/// </summary>
@@ -23,10 +23,10 @@ namespace Limcap.UTerminal.Mantest {
 
 			var t = new Terminal( null, Close ) { Locale = "ptbr" };
 			t.RegisterCommandsInNamespaces(
-				"Limcap.UTerminal.Cmds.AccessControl",
-				"Limcap.UTerminal.Cmds.Basic",
-				"Limcap.UTerminal.Cmds.Customization",
-				"Limcap.UTerminal.Cmds.Dev"
+				"Limcap.FTerminal.Cmds.AccessControl",
+				"Limcap.FTerminal.Cmds.Basic",
+				"Limcap.FTerminal.Cmds.Customization",
+				"Limcap.FTerminal.Cmds.Dev"
 			);
 			t.Start();
 

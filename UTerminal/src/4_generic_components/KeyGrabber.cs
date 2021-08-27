@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace Limcap.UTerminal {
+namespace Limcap.FTerminal {
 	public class KeyGrabber {
 
 		readonly static byte[] _keyboardState = new byte[256];

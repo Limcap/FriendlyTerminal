@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Limcap.UTerminal {
+namespace Limcap.FTerminal {
 	public class HistoryNavigator {
 		private readonly List<string> _history = new List<string>();
 

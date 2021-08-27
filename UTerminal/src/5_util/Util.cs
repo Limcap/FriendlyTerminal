@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace Limcap.UTerminal {
+namespace Limcap.FTerminal {
 	public class Util {
 
 		public static unsafe char* GetPointer( ReadOnlySpan<char> span ) {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace Limcap.UTerminal {
+namespace Limcap.FTerminal {
 	//public partial class ArgParser {
 
 	[DebuggerDisplay( "{Preview(), nq}" )]

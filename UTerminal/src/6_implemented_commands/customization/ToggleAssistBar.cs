@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace Limcap.UTerminal.Cmds.Customization {
+namespace Limcap.FTerminal.Cmds.Customization {
 	public class ToggleAssistBar : ACommand {
 
 		//public static void Register( TerminalClient term ) {

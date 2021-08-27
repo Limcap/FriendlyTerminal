@@ -8,7 +8,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading;
 
-namespace Limcap.UTerminal {
+namespace Limcap.FTerminal {
 	public partial class Assistant {
 
 		protected readonly List<string> _invokeStrings;

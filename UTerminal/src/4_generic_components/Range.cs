@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Limcap.UTerminal {
+namespace Limcap.FTerminal {
 	public struct Range {
 		public int start { get; set; }
 		public int length { get; set; }

@@ -11,9 +11,9 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using Cmds = Limcap.UTerminal.Cmds;
+using Cmds = Limcap.FTerminal.Cmds;
 
-namespace Limcap.UTerminal {
+namespace Limcap.FTerminal {
 
 	public partial class Terminal : INotifyPropertyChanged {
 
@@ -21,7 +21,7 @@ namespace Limcap.UTerminal {
 		public const string PROMPT_STRING = "» ";//›»
 		public const string INSUFICIENT_PRIVILEGE_MESSAGE = "Este comando requer um nível de privilégio maior do que o definido no momento.";
 
-		private readonly string _introText = "Limcap Utility Terminal";
+		private readonly string _introText = "Limcap Friendly Terminal";
 		private readonly ScrollViewer _scrollArea;
 		private TextBlock _mainArea;
 		private readonly TextBlock _assistantArea;

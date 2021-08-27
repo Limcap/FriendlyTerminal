@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static Limcap.UTerminal.ACommand;
+using static Limcap.FTerminal.ACommand;
 
-namespace Limcap.UTerminal {
+namespace Limcap.FTerminal {
 	public class Args_Old {
 		public readonly string value;
 

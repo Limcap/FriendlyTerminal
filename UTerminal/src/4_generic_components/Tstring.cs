@@ -1,4 +1,4 @@
-﻿namespace Limcap.UTerminal {
+﻿namespace Limcap.FTerminal {
 	public struct Tstring {
 		public Tstring( string idstr ) {
 			if (idstr is null) {

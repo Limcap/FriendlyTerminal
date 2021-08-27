@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace Limcap.UTerminal.Cmds.Basic {
+namespace Limcap.FTerminal.Cmds.Basic {
 	public class SaveOutput : ACommand {
 
 		public SaveOutput( string locale ) : base( locale ) { }

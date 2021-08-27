@@ -3,7 +3,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 
-namespace Limcap.UTerminal.Cmds.Dev {
+namespace Limcap.FTerminal.Cmds.Dev {
 	public class Print_a_lot : ACommand {
 
 		//public static void Register( TerminalClient term ) {
