@@ -60,13 +60,13 @@ namespace Limcap.UTerminal {
 		//	=>ConstructCommand( confirmedNode, locale, ref parsedCmd );
 
 		public void GetPredictionPossibilitiesText( StringBuilder res_string )
-			=> GetPredictionPossibilitiesText( predictedNodes, res_string );
+			=> GetPossibilities( predictedNodes, res_string );
 
 		public void GetConfirmedText( StringBuilder res_string )
-			=> GetConfirmedText( _startNode, res_string );
+			=> GetConfirmed( _startNode, res_string );
 
 		public void GetPredictionText( int indexOfPrediction, StringBuilder res_string )
-			=> GetPredictionText( predictedNodes, indexOfPrediction, res_string );
+			=> GetSelected( predictedNodes, indexOfPrediction, res_string );
 
 		public void Reset() {
 			parsedCmd = null;
@@ -191,7 +191,7 @@ namespace Limcap.UTerminal {
 
 
 
-		public static void GetPredictionPossibilitiesText( List<Node> possibleNextNodes, StringBuilder result ) {
+		public static void GetPossibilities( List<Node> possibleNextNodes, StringBuilder result ) {
 			if (possibleNextNodes.IsNullOrEmpty()) result.Reset( "Command not found" );
 			//Index = -1;
 			result.Reset();
@@ -205,7 +205,7 @@ namespace Limcap.UTerminal {
 
 
 
-		public static void GetConfirmedText( Node startNode, StringBuilder result ) {
+		public static void GetConfirmed( Node startNode, StringBuilder result ) {
 			var node = startNode;
 			while (node.next != null) {
 				result.Append( node.next.word );
@@ -220,7 +220,7 @@ namespace Limcap.UTerminal {
 
 
 
-		public static void GetPredictionText( List<Node> predictedNodes, int predictionIndex, StringBuilder res_text ) {
+		public static void GetSelected( List<Node> predictedNodes, int predictionIndex, StringBuilder res_text ) {
 			if (predictionIndex == -1) return;
 			res_text.Append( ((PString)predictedNodes[predictionIndex].word).Trim() );
 		}
