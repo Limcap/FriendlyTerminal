@@ -34,7 +34,7 @@ namespace Limcap.UTerminal {
 			// Results
 			confirmedNode = _startNode;
 			predictedNodes = new List<Node>();
-			
+
 			Stopwatch sw = new Stopwatch();
 			sw.Start();
 			var memoryBefore = GC.GetTotalMemory( true );
@@ -164,7 +164,7 @@ namespace Limcap.UTerminal {
 		public static void PredictNextWord( Node confirmedNode, PString inputResidue, Node invalidNode, ref List<Node> res_predicted ) {
 			// Select the possible next nodes.
 			res_predicted.AddRange( confirmedNode.edges.Where( n => n.word.StartsWith( inputResidue ) ).OrderBy( n => n.word ) );
-			if (res_predicted.Count == 0) res_predicted.Add( invalidNode );
+			if (res_predicted.Count == 0 && inputResidue.EndsWith( CMD_TERMINATOR )) res_predicted.Add( invalidNode );
 		}
 
 
