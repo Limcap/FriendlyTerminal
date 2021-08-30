@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -43,7 +44,8 @@ namespace Limcap.FTerminal {
 		private void Handle2_AddToBuffer( KeyEventArgs e ) {
 			var c = KeyGrabber.GetCharFromKey( e.Key );
 			if (c != 0)
-				InputBufferRun.ContentEnd.InsertTextInRun( c.ToString() );
+				_screen.Append( c.ToString() );
+				//InputBufferRun.ContentEnd.InsertTextInRun( c.ToString() );
 			Handle3_TextChanged();
 		}
 
@@ -56,7 +58,7 @@ namespace Limcap.FTerminal {
 
 		private void Handle2_DeleteFromBuffer( KeyEventArgs e ) {
 			//InputRun.ContentEnd.GetPositionAtOffset( -1 ).DeleteTextInRun( 1 );
-			InputBufferRun.ContentEnd.DeleteTextInRun( -1 );
+			_screen.Buffer.ContentEnd.DeleteTextInRun( -1 );
 			Handle3_TextChanged();
 		}
 
@@ -125,7 +127,7 @@ namespace Limcap.FTerminal {
 			if (input.Trim().Length == 0) {
 				e.Handled = true;
 				// pede um novo prompt somente se não existir um input handler.
-				StartNewInputBuffer( usePrompt: _customInterpreter is null );
+				StartNewPrompt( usePrompt: _customInterpreter is null );
 			}
 			else {
 				_cmdHistory.Add( input );
@@ -134,15 +136,32 @@ namespace Limcap.FTerminal {
 				// definir ainda um outro, não haja problema de sobrescrever.
 				var interpreter = _customInterpreter is null ? CommandInterpreter : _customInterpreter;
 				_customInterpreter = null;
-				ConsolidateBuffer();
+				_screen.NewParagraph( ColorF2 );
 				var output = interpreter( input );
 				if (output != null) {
-					AppendWithSpace( output, ColorF2 );
+					if (output.Length > 200001) {
+						var w = new Window();
+						var f = new FlowDocument();
+						w.Content = f;
+						f.ContentStart.InsertTextInRun( output );
+						w.Show();
+					}
+					else {
+						_screen.AppendWithSpace( output, ColorF2 );
+						//var sr = new StringReader( output );
+						//string line;
+						//while((line = sr.ReadLine()) != null) {
+						//	_screen.NewParagraph( ColorF2 );
+						//	_screen.Append( line );
+						//}
+						_statusArea.Text = $"Saída: {output.Length} caracteres";
+					}
+					//AppendWithSpace( output, ColorF2 );
 					ScrollToEnd();
-					_statusArea.Text = $"Saída: {output.Length} caracteres";
+					//_statusArea.Text = $"Saída: {output.Length} caracteres";
 				}
 				// pede um novo prompt somente se não existir um input handler.
-				StartNewInputBuffer( usePrompt: _customInterpreter is null );
+				StartNewPrompt( usePrompt: _customInterpreter is null );
 				if (output?.Length > 500) ScrollToEnd();
 				Handle3_TextChanged();
 			}
@@ -160,14 +179,14 @@ namespace Limcap.FTerminal {
 			if (e.Key == Key.Back) {
 				if (_passwordInput.Length > 0) {
 					_passwordInput.Remove( _passwordInput.Length - 1, 1 );
-					InputBufferRun.ContentEnd.DeleteTextInRun( -1 );
+					_screen.Buffer.ContentEnd.DeleteTextInRun( -1 );
 				}
 			}
 			else if (e.Key == Key.Return) {
 				var interpreter = _customInterpreter is null ? CommandInterpreter : _customInterpreter;
 				_customInterpreter = null;
 				var input = _passwordInput.ToString();
-				ConsolidateBuffer();
+				_screen.NewParagraph();
 				TypeText( NEW_LINE );
 				var output = interpreter( input );
 				_passwordInput.Clear();
@@ -175,31 +194,23 @@ namespace Limcap.FTerminal {
 				if (output != null) {
 					//if (!LastRun.Text.EndsWith( NEW_LINE )) AppendText( NEW_LINE );
 					//AppendText( output, ColorF2 );
-					AppendWithSpace( output, ColorF2 );
+					_screen.AppendWithSpace( output, ColorF2 );
 					_statusArea.Text = $"Saída: {output.Length} caracteres";
 				}
 				// pede um novo prompt somente se não existir um input handler.
-				StartNewInputBuffer( usePrompt: _customInterpreter is null );
+				StartNewPrompt( usePrompt: _customInterpreter is null );
 				if (output.Length > 500) ScrollToEnd();
 				Handle3_TextChanged();
 			}
 			else {
 				var c = e.Key.ToPasswordAllowedChar();
 				if (c.HasValue) {
-					InputBufferRun.ContentEnd.InsertTextInRun( "*" );
+					_screen.Append( "*" );
 					//TypeText( "*" );
 					_passwordInput.Append( c );
 				}
 				e.Handled = true;
 			}
-		}
-
-
-
-		private void ConsolidateBuffer() {
-			AppendText( InputBufferRun.Text );
-			AppendText( NEW_LINE );
-			InputBufferRun.Text = string.Empty;
 		}
 	}
 }

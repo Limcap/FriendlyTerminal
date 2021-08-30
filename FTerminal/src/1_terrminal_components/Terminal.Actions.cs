@@ -18,43 +18,16 @@ namespace Limcap.FTerminal {
 
 
 		public void Clear() {
-			Inlines.Clear();
-			Inlines.Add( InputBufferRun );
-			Inlines.Add( CaretRun );
+			_screen.Clear();
 		}
 
 
 
 
 		public void TypeText( string text ) {
-			AppendText( text, ColorF2 );
+			if (_screen.Buffer.Foreground != ColorF2) _screen.NewBuffer( ColorF2 );
+			_screen.Append( text );
 			ScrollToEnd();
-		}
-
-
-
-
-		public void AppendText( string txt, bool noPredictions = true ) {
-			_allowAssistant = !noPredictions;
-			Inlines.InsertBefore( InputBufferRun, new Run(txt) );
-			//_mainArea.Inlines.Remove( CaretRun );
-			//_mainArea.Inlines.Add( txt );
-			//_mainArea.Inlines.Add( CaretRun );
-			_allowAssistant = true;
-		}
-		public void AppendText( string txt, Brush color ) {
-			Inlines.InsertBefore( InputBufferRun, new Run( txt ) { Foreground = color } );
-		}
-		private void AppendWithSpace( string text, Brush color ) {
-			string spaceAfter = null;
-			string spaceBefore = null;
-			if (!text.StartsWith( NEW_LINE )) spaceBefore = NEW_LINE;
-			//if (!text.StartsWith( NEW_LINE )) AppendText( NEW_LINE );
-			//AppendText( text, ColorF2 );
-			if (text.EndsWith( NEW_LINE + NEW_LINE )) { }
-			else if (text.EndsWith( NEW_LINE )) spaceAfter = NEW_LINE;
-			else spaceAfter = NEW_LINE + NEW_LINE;
-			Inlines.InsertBefore( InputBufferRun, new Run( spaceBefore + text + spaceAfter ) { Foreground = color } );
 		}
 
 
@@ -64,7 +37,7 @@ namespace Limcap.FTerminal {
 			// Only setting the caret to the last index will not scroll the scroll viewer completely to the bottom,
 			// a few pixels will still have to be scrolled manually. To counteract this, we manually scroll the 
 			// scroll viewer to the bottom.
-			_scrollArea.ScrollToBottom();
+			_screen.Scroll.ScrollToEnd();
 		}
 
 
@@ -86,14 +59,12 @@ namespace Limcap.FTerminal {
 
 
 
-		public void StartNewInputBuffer( bool usePrompt = true ) {
+
+		public void StartNewPrompt( bool usePrompt = true ) {
 			if (usePrompt) {
-				//bool newLineNeeded = Inlines.FirstInline != InputBufferRun && !Inlines.Last().ContentStart.GetTextInRun(LogicalDirection.Forward).EndsWith( NEW_LINE );
-				var lastChar = LastRun?.ContentEnd.GetPositionAtOffset( -1 ).GetTextInRun( LogicalDirection.Forward );
-				bool newLineNeeded = Inlines.FirstInline != InputBufferRun && lastChar != NEW_LINE;
-				//if (Inlines.Count == 0) Inlines.Add( CaretRun );
-				//AppendText( (newLineNeeded ? NEW_LINE : string.Empty) + PROMPT_STRING );
-				AppendText( (newLineNeeded ? NEW_LINE : string.Empty) + PROMPT_STRING, ColorF1 );
+				if( !_screen.IsEmpty ) _screen.NewParagraph();
+				_screen.Append( PROMPT_STRING );
+				_screen.NewBuffer( ColorF1 );
 			}
 		}
 
@@ -101,21 +72,15 @@ namespace Limcap.FTerminal {
 
 
 		private void ClearInputBuffer() {
-			InputBufferRun.Text = string.Empty;
-			//var len = InputRun.ContentEnd.GetTextRunLength( LogicalDirection.Forward );
-			//InputRun.ContentStart.DeleteTextInRun( len );
+			_screen.Buffer.Text = string.Empty;
 		}
-
-
-
-
 		private void SetInputBuffer( string text, bool predict = true ) {
 			_allowAssistant = predict;
-			InputBufferRun.Text = text;
+			_screen.Buffer.Text = text;
 			_allowAssistant = true;
 		}
 		public string GetInputBuffer() {
-			return InputBufferRun.Text;
+			return _screen.Buffer.Text;
 		}
 
 

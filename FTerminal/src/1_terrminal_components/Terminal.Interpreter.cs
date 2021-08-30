@@ -95,14 +95,12 @@ namespace Limcap.FTerminal {
 				return null;
 			}
 			if (input == "reset") {
-				_mainArea = BuildMainArea();
-				_scrollArea.Content = _mainArea;
-				//StartNewInputBuffer();
-				_mainArea.Focus();
+				_screen = BuildTextScreen();
+				_screen.Focus();
+				DockPanel.SetDock( _screen.View, Dock.Top );
 				GC.Collect();
 				GC.WaitForPendingFinalizers();
 				GC.Collect();
-				DockPanel.SetDock( _mainArea, Dock.Top );
 				return null;
 			}
 
