@@ -31,16 +31,18 @@ namespace Limcap.FTerminal.Cmds.Dev {
 
 		public override string MainFunction( Terminal t, Arg[] args ) {
 			int length = args.Get( Parameters[0] ).SafeParseInt() ?? 1000;
-			var sb = new StringBuilder();
+			//var sb = new StringBuilder();
 			for (int i = 0; i < length; i = i + loopText2.Length)
-				sb.Append( loopText2 );
-			return sb.ToString();
+				t.TypeText( loopText2 );
+			//sb.Append( loopText2 );
+			return null;
+			//return sb.ToString();
 		}
 
 
 
 
-		public const string loopText1 = "this is a hundred characters long string, with the solo purpose of testing long strings. the end...\n";
-		public const string loopText2 = "the quick brown fox jumped over the lazy dog while chasing a shining dragonfly\n";
+		public const string loopText1 = "\nthis is a hundred characters long string, with the solo purpose of testing long strings. the end...";
+		public const string loopText2 = "\nthe quick brown fox jumped over the lazy dog while chasing a shining dragonfly";
 	}
 }

@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="src\1_terrminal_components\ITerminalScreen.cs" />
+    <Compile Include="src\1_terrminal_components\TerminalScreenV04.cs" />
     <Compile Include="src\1_terrminal_components\TerminalScreenV03.cs" />
     <Compile Include="src\1_terrminal_components\TerminalScreenV02.cs" />
     <Compile Include="src\2_command_components\Parameter.cs" />
