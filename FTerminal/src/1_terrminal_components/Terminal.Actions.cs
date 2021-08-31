@@ -25,7 +25,7 @@ namespace Limcap.FTerminal {
 
 
 		public void TypeText( string text, Brush color = null ) {
-			_screen.Append( color ?? ColorF2, text );
+			_screen.NewColor( color ?? ColorF2 ).AppendText( text );
 			ScrollToEnd();
 		}
 
@@ -61,7 +61,7 @@ namespace Limcap.FTerminal {
 
 		public void StartNewPrompt( bool usePrompt = true ) {
 			if( !_screen.IsEmpty ) _screen.NewBlock( ColorF1 );
-			_screen.Append( PROMPT_STRING );
+			_screen.AppendText( PROMPT_STRING );
 			_screen.NewBuffer();
 		}
 		//public void StartNewPrompt( bool usePrompt = true ) {

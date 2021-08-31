@@ -25,9 +25,9 @@ namespace Limcap.FTerminal.Cmds.AccessControl {
 
 		public override string MainFunction( Terminal t, Arg[] args ) {
 			t.TypeText( Txt("0","Password") + ": " );
-			t.TypeText( "Aqua ", Brushes.Aqua );
-			t.TypeText( "Pink ", Brushes.Pink );
-			t.TypeText( "Default " );
+			//t.TypeText( "Aqua ", Brushes.Aqua );
+			//t.TypeText( "Pink ", Brushes.Pink );
+			//t.TypeText( "Default " );
 			t.ReadPassword( input => Callback1( t, input ) );
 			return null;
 		}

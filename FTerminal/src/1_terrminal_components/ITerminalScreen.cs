@@ -7,22 +7,26 @@ namespace Limcap.FTerminal {
 		Brush Background { get; set; }
 		string Buffer { get; set; }
 		double FontSize { get; set; }
-		Brush BufferColor { get; set; }
-		Brush ForegroundDefault { get; set; }
+		Brush BufferFontColor { get; set; }
+		Brush DefaultFontColor { get; set; }
 		bool IsEmpty { get; }
 		Control UIControlHook { get; }
 
 		event KeyEventHandler OnPreviewKeyDown;
 
-		void Append( Brush color, string text = null );
-		void Append( string text );
+		ITerminalScreen NewBlock( Brush color = null );
+		ITerminalScreen NewBuffer( Brush color = null );
+		ITerminalScreen NewColor( Brush color );
+		ITerminalScreen AppendText( string text );
+		//void NewBlock( Brush color, string text = null );
+		//void NewBlock( string text );
+		//void NewBuffer( Brush color, string text = null );
+		//void NewBuffer( string text );
+		//void Append( Brush color, string text = null );
+		//void Append( string text );
 		void Backspace( int i = 1 );
 		void Clear();
 		void Focus();
-		void NewBlock( Brush color, string text = null );
-		void NewBlock( string text );
-		void NewBuffer( Brush color, string text = null );
-		void NewBuffer( string text );
 		void ScrollToEnd();
 	}
 }

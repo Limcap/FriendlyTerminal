@@ -44,7 +44,7 @@ namespace Limcap.FTerminal {
 		private void Handle2_AddToBuffer( KeyEventArgs e ) {
 			var c = KeyGrabber.GetCharFromKey( e.Key );
 			if (c != 0)
-				_screen.Append( c.ToString() );
+				_screen.AppendText( c.ToString() );
 			Handle3_TextChanged();
 		}
 
@@ -146,7 +146,7 @@ namespace Limcap.FTerminal {
 						w.Show();
 					}
 					else {
-						_screen.Append( output );
+						_screen.AppendText( output );
 						_statusArea.Text = $"Saída: {output.Length} caracteres";
 					}
 					//AppendWithSpace( output, ColorF2 );
@@ -188,7 +188,7 @@ namespace Limcap.FTerminal {
 				if (output != null) {
 					//if (!LastRun.Text.EndsWith( NEW_LINE )) AppendText( NEW_LINE );
 					//AppendText( output, ColorF2 );
-					_screen.Append( NEW_LINE + output );
+					_screen.AppendText( NEW_LINE + output );
 					_statusArea.Text = $"Saída: {output.Length} caracteres";
 					if (output.Length > 500) ScrollToEnd();
 				}
@@ -199,7 +199,7 @@ namespace Limcap.FTerminal {
 			else {
 				var c = e.Key.ToPasswordAllowedChar();
 				if (c.HasValue) {
-					_screen.Append( "*" );
+					_screen.AppendText( "*" );
 					//TypeText( "*" );
 					_passwordInput.Append( c );
 				}

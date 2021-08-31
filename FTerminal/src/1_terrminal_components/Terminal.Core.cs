@@ -23,7 +23,7 @@ namespace Limcap.FTerminal {
 
 		private readonly string _introText = "Limcap Friendly Terminal";
 
-		private TerminalScreen _screen;
+		private ITerminalScreen _screen;
 		//private FlowDocumentScrollViewer _mainContainer;
 		//private ScrollViewer _scrollview => _mainContainer.Template.FindName( "PART_ContentHost", _mainContainer ) as ScrollViewer;
 		//private FlowDocument _mainArea => _mainContainer.Document;
@@ -64,7 +64,7 @@ namespace Limcap.FTerminal {
 
 
 
-		public Brush FontColor { get => _screen.BufferColor; set => _screen.BufferColor = value; }
+		public Brush FontColor { get => _screen.BufferFontColor; set => _screen.BufferFontColor = value; }
 		public Brush BackColor { get => _screen.Background; set => _screen.Background = value; }
 		public double FontSize { get => _screen.FontSize; set => _screen.FontSize = value; }
 
@@ -98,8 +98,8 @@ namespace Limcap.FTerminal {
 			ShowStatusBar = true;
 
 			_screen = BuildTextScreen();
-			Panel.Children.Add( _screen );
-			DockPanel.SetDock( _screen, Dock.Top );
+			Panel.Children.Add( _screen.UIControlHook );
+			DockPanel.SetDock( _screen.UIControlHook, Dock.Top );
 			//_screen.View.GotFocus += ( o, a ) => _screen.Doc.Focus();
 
 			//Binding myBinding = new Binding {
@@ -120,7 +120,7 @@ namespace Limcap.FTerminal {
 
 		public void Start() {
 			_assistant = new Assistant( _cmdList, Locale );
-			_screen.Append( _introText );
+			_screen.AppendText( _introText );
 			StartNewPrompt();
 			_assistantArea.Text = _assistant.GetPredictions( string.Empty ).ToString();
 			_screen.Focus();
@@ -201,8 +201,8 @@ namespace Limcap.FTerminal {
 
 
 
-		private TerminalScreen BuildTextScreen() {
-			var screen = new TerminalScreen();
+		private ITerminalScreen BuildTextScreen() {
+			var screen = new TerminalScreenV03();
 			screen.OnPreviewKeyDown += Handle_KeyboardInput;
 			return screen;
 		}

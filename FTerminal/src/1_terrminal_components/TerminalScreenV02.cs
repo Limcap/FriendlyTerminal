@@ -17,7 +17,7 @@ namespace Limcap.FTerminal {
 	/// Uses <see cref="FlowDocumentScrollViewer"/>, <see cref="FlowDocument"/> and <see cref="Run"/> internally.
 	/// </summary>
 	/// <version>0.2</version>
-	public class TerminalScreen : ITerminalScreen {
+	public class TerminalScreenV02 : ITerminalScreen {
 
 		public const string NEW_LINE = "\n";
 		public const string PROMPT_STRING = "» ";//›»
@@ -34,7 +34,7 @@ namespace Limcap.FTerminal {
 
 		public bool SpaceBetweenBlocks = true;
 		public string Buffer { get => _InputRun.Text; set => _InputRun.Text = value; }
-		public Brush BufferColor { get => _InputRun.Foreground; set => _InputRun.Foreground = value; }
+		public Brush BufferFontColor { get => _InputRun.Foreground; set => _InputRun.Foreground = value; }
 
 
 
@@ -49,9 +49,9 @@ namespace Limcap.FTerminal {
 
 
 
-		public static implicit operator Control( TerminalScreen screen ) => screen.UIControlHook;
+		public static implicit operator Control( TerminalScreenV02 screen ) => screen.UIControlHook;
 		public Control UIControlHook => _view;
-		public Brush ForegroundDefault { get; set; } = new SolidColorBrush( Color.FromRgb( 171, 255, 46 ) );
+		public Brush DefaultFontColor { get; set; } = new SolidColorBrush( Color.FromRgb( 171, 255, 46 ) );
 		public Brush Background { get; set; } = new SolidColorBrush( Color.FromArgb( 200, 25, 27, 27 ) );
 		public double FontSize { get => _Doc.FontSize; set => _Doc.FontSize = value; }
 
@@ -65,7 +65,7 @@ namespace Limcap.FTerminal {
 
 
 
-		public TerminalScreen() {
+		public TerminalScreenV02() {
 			_view = new FlowDocumentScrollViewer() {
 				IsToolBarVisible = false,
 				VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
@@ -74,14 +74,14 @@ namespace Limcap.FTerminal {
 			};
 			var doc = new FlowDocument() {
 				Background = Background,
-				Foreground = ForegroundDefault,
+				Foreground = DefaultFontColor,
 				FontFamily = new FontFamily( "Consolas" ),
 				FontSize = 14,
 				PagePadding = marginThickness,
 				Focusable = false,
 			};
 			_view.Document = doc;
-			NewBlock();
+			NewBlock(null,null);
 		}
 
 
@@ -93,12 +93,12 @@ namespace Limcap.FTerminal {
 
 
 		public void NewBlock( string text = null ) {
-			NewBlock( ForegroundDefault, text );
+			NewBlock( DefaultFontColor, text );
 		}
 
 
 		public void NewBlock( Brush color, string text = null ) {
-			color = color ?? ForegroundDefault;
+			color = color ?? DefaultFontColor;
 			_LastParagraph?.Inlines.Remove( _caretRun );
 			var p = new Paragraph() { Margin = new Thickness( 0 ), Foreground = color };
 			if (_Blocks.Count > 0) p.Inlines.Add( new Run( NEW_LINE ) );
@@ -210,7 +210,7 @@ namespace Limcap.FTerminal {
 
 		public void Clear() {
 			_Blocks.Clear();
-			NewBlock();
+			NewBlock( null, null );
 		}
 
 
@@ -251,12 +251,43 @@ namespace Limcap.FTerminal {
 
 
 
-
-
-
 		public event KeyEventHandler OnPreviewKeyDown {
 			add => _view.PreviewKeyDown += value;
 			remove => _view.PreviewKeyDown -= value;
+		}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		public ITerminalScreen NewBlock( Brush color = null ) {
+			NewBlock( color, null );
+			return this;
+		}
+
+		public ITerminalScreen NewBuffer( Brush color = null ) {
+			NewBuffer( color, null );
+			return this;
+		}
+
+		public ITerminalScreen NewColor( Brush color ) {
+			_Append( color, string.Empty );
+			return this;
+		}
+
+		public ITerminalScreen AppendText( string text ) {
+			Append( text );
+			return this;
 		}
 	}
 }

@@ -97,7 +97,7 @@ namespace Limcap.FTerminal {
 			if (input == "reset") {
 				_screen = BuildTextScreen();
 				_screen.Focus();
-				DockPanel.SetDock( _screen, Dock.Top );
+				DockPanel.SetDock( _screen.UIControlHook, Dock.Top );
 				GC.Collect();
 				GC.WaitForPendingFinalizers();
 				GC.Collect();
