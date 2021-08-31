@@ -45,7 +45,6 @@ namespace Limcap.FTerminal {
 			var c = KeyGrabber.GetCharFromKey( e.Key );
 			if (c != 0)
 				_screen.Append( c.ToString() );
-				//InputBufferRun.ContentEnd.InsertTextInRun( c.ToString() );
 			Handle3_TextChanged();
 		}
 
@@ -58,7 +57,7 @@ namespace Limcap.FTerminal {
 
 		private void Handle2_DeleteFromBuffer( KeyEventArgs e ) {
 			//InputRun.ContentEnd.GetPositionAtOffset( -1 ).DeleteTextInRun( 1 );
-			_screen.Buffer.ContentEnd.DeleteTextInRun( -1 );
+			_screen.Backspace();
 			Handle3_TextChanged();
 		}
 
@@ -72,7 +71,7 @@ namespace Limcap.FTerminal {
 		private void Handle3_TextChanged() {//object sender, TextChangedEventArgs args 
 			IsAutocompleting = false;
 			if (!_allowAssistant) return;
-			var input = GetInputBuffer();
+			var input = _screen.Buffer;
 			var text = _assistant.GetPredictions( input ).ToString();
 			_assistantArea.Text = text;
 		}
@@ -119,7 +118,7 @@ namespace Limcap.FTerminal {
 
 
 		private void Handle2_ConfirmBuffer( KeyEventArgs e ) {
-			var input = GetInputBuffer();
+			var input = _screen.Buffer;
 			if (IsAutocompleting) {
 				IsAutocompleting = false;
 				_assistant.ProcessInput( input );
@@ -136,7 +135,7 @@ namespace Limcap.FTerminal {
 				// definir ainda um outro, não haja problema de sobrescrever.
 				var interpreter = _customInterpreter is null ? CommandInterpreter : _customInterpreter;
 				_customInterpreter = null;
-				_screen.NewParagraph( ColorF2 );
+				_screen.NewBlock( ColorF2 );
 				var output = interpreter( input );
 				if (output != null) {
 					if (output.Length > 200001) {
@@ -147,13 +146,7 @@ namespace Limcap.FTerminal {
 						w.Show();
 					}
 					else {
-						_screen.AppendWithSpace( output, ColorF2 );
-						//var sr = new StringReader( output );
-						//string line;
-						//while((line = sr.ReadLine()) != null) {
-						//	_screen.NewParagraph( ColorF2 );
-						//	_screen.Append( line );
-						//}
+						_screen.Append( output );
 						_statusArea.Text = $"Saída: {output.Length} caracteres";
 					}
 					//AppendWithSpace( output, ColorF2 );
@@ -161,7 +154,8 @@ namespace Limcap.FTerminal {
 					//_statusArea.Text = $"Saída: {output.Length} caracteres";
 				}
 				// pede um novo prompt somente se não existir um input handler.
-				StartNewPrompt( usePrompt: _customInterpreter is null );
+				//StartNewPrompt( usePrompt: _customInterpreter is null );
+				if(_customInterpreter is null) StartNewPrompt();
 				if (output?.Length > 500) ScrollToEnd();
 				Handle3_TextChanged();
 			}
@@ -179,22 +173,22 @@ namespace Limcap.FTerminal {
 			if (e.Key == Key.Back) {
 				if (_passwordInput.Length > 0) {
 					_passwordInput.Remove( _passwordInput.Length - 1, 1 );
-					_screen.Buffer.ContentEnd.DeleteTextInRun( -1 );
+					_screen.Backspace();
 				}
 			}
 			else if (e.Key == Key.Return) {
 				var interpreter = _customInterpreter is null ? CommandInterpreter : _customInterpreter;
 				_customInterpreter = null;
 				var input = _passwordInput.ToString();
-				_screen.NewParagraph();
-				TypeText( NEW_LINE );
+				//_screen.NewBlock( ColorF2 );
+				//TypeText( NEW_LINE );
 				var output = interpreter( input );
 				_passwordInput.Clear();
 				_usePasswordMask = false;
 				if (output != null) {
 					//if (!LastRun.Text.EndsWith( NEW_LINE )) AppendText( NEW_LINE );
 					//AppendText( output, ColorF2 );
-					_screen.AppendWithSpace( output, ColorF2 );
+					_screen.Append( NEW_LINE + output );
 					_statusArea.Text = $"Saída: {output.Length} caracteres";
 				}
 				// pede um novo prompt somente se não existir um input handler.

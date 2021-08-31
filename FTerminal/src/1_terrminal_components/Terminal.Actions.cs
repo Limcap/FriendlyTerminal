@@ -24,9 +24,8 @@ namespace Limcap.FTerminal {
 
 
 
-		public void TypeText( string text ) {
-			if (_screen.Buffer.Foreground != ColorF2) _screen.NewBuffer( ColorF2 );
-			_screen.Append( text );
+		public void TypeText( string text, Brush color = null ) {
+			_screen.Append( color ?? ColorF2, text );
 			ScrollToEnd();
 		}
 
@@ -37,7 +36,7 @@ namespace Limcap.FTerminal {
 			// Only setting the caret to the last index will not scroll the scroll viewer completely to the bottom,
 			// a few pixels will still have to be scrolled manually. To counteract this, we manually scroll the 
 			// scroll viewer to the bottom.
-			_screen.Scroll.ScrollToEnd();
+			_screen.ScrollToEnd();
 		}
 
 
@@ -61,27 +60,32 @@ namespace Limcap.FTerminal {
 
 
 		public void StartNewPrompt( bool usePrompt = true ) {
-			if (usePrompt) {
-				if( !_screen.IsEmpty ) _screen.NewParagraph();
-				_screen.Append( PROMPT_STRING );
-				_screen.NewBuffer( ColorF1 );
-			}
+			if( !_screen.IsEmpty ) _screen.NewBlock( ColorF1 );
+			_screen.Append( PROMPT_STRING );
+			_screen.NewBuffer();
 		}
+		//public void StartNewPrompt( bool usePrompt = true ) {
+		//	if (usePrompt) {
+		//		if (!_screen.IsEmpty) _screen.NewBlock();
+		//		_screen.Append( PROMPT_STRING );
+		//		_screen.NewBuffer( ColorF1 );
+		//	}
+		//}
 
 
 
 
 		private void ClearInputBuffer() {
-			_screen.Buffer.Text = string.Empty;
+			_screen.Buffer = string.Empty;
 		}
 		private void SetInputBuffer( string text, bool predict = true ) {
 			_allowAssistant = predict;
-			_screen.Buffer.Text = text;
+			_screen.Buffer = text;
 			_allowAssistant = true;
 		}
-		public string GetInputBuffer() {
-			return _screen.Buffer.Text;
-		}
+		//public string GetInputBuffer() {
+		//	return _screen.Buffer.Text;
+		//}
 
 
 

@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\UTerminal\UTerminal.csproj" />
+    <ProjectReference Include="..\FTerminal\FTerminal.csproj" />
   </ItemGroup>
 
 </Project>
