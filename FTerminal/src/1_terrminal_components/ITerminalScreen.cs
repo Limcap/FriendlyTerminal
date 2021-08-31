@@ -7,7 +7,7 @@ namespace Limcap.FTerminal {
 		Brush Background { get; set; }
 		string Buffer { get; set; }
 		double FontSize { get; set; }
-		Brush Foreground { get; set; }
+		Brush BufferColor { get; set; }
 		Brush ForegroundDefault { get; set; }
 		bool IsEmpty { get; }
 		Control UIControlHook { get; }

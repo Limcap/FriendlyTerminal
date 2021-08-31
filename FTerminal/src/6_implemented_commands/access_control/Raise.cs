@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows.Media;
 
 namespace Limcap.FTerminal.Cmds.AccessControl {
 
@@ -24,16 +25,24 @@ namespace Limcap.FTerminal.Cmds.AccessControl {
 
 		public override string MainFunction( Terminal t, Arg[] args ) {
 			t.TypeText( Txt("0","Password") + ": " );
-			t.ReadPassword( input => {
-				var level = _levels.IndexOf( input ) + 1;
-				t.CurrentPrivilege = level;
-				return Txt("1","Privilege level") + ": " + level;
-			} );
+			t.TypeText( "Aqua ", Brushes.Aqua );
+			t.TypeText( "Pink ", Brushes.Pink );
+			t.TypeText( "Default " );
+			t.ReadPassword( input => Callback1( t, input ) );
 			return null;
 		}
 
 
 		private readonly List<string> _levels = new List<string>() { "admin1234", "techsupport" };
+
+
+		private string Callback1( Terminal t, string input ) {
+			var level = _levels.IndexOf( input ) + 1;
+			t.CurrentPrivilege = level;
+			t.TypeText( NEW_LINE );
+			t.TypeText( Txt( "1", "Privilege level" ) + ": " + level );
+			return null;
+		}
 
 
 		//protected override TextSource DefaultTextSource { get; set; } = new TextSource {

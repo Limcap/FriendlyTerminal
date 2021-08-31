@@ -64,7 +64,7 @@ namespace Limcap.FTerminal {
 
 
 
-		public Brush FontColor { get => _screen.Foreground; set => _screen.Foreground = value; }
+		public Brush FontColor { get => _screen.BufferColor; set => _screen.BufferColor = value; }
 		public Brush BackColor { get => _screen.Background; set => _screen.Background = value; }
 		public double FontSize { get => _screen.FontSize; set => _screen.FontSize = value; }
 

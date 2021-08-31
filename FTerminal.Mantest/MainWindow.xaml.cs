@@ -32,18 +32,9 @@ namespace Limcap.FTerminal.Mantest {
 			);
 			MainPanel.Children.Add( t.Panel );
 			t.Start();
-			//MainPanel.Children.Add( new TextBox() );
 
-			//var w = new Window();
-			//var f = new FixedDocument();
-			//w.Content = f;
-			//var p = new PageContent();
-			//f.Pages.Add( p  );
-			//p.Child = new FixedPage();
-			//var c = new TextBlock() { Text = "HHASJDKHSA" };
-			//p.Child.Children.Add( c );
-			//w.Show();
 
+			/*
 			var window = new Window() {
 				Width=800,Height=460,
 			};
@@ -62,7 +53,6 @@ namespace Limcap.FTerminal.Mantest {
 				IsColumnWidthFlexible = false,
 				PagePadding = new Thickness( 5 ),
 			};
-			
 			view.Document = doc;
 			window.Content = view;
 			doc.Blocks.Add( new Paragraph(new Run( "Hello Hello baby" ) ) );
@@ -105,6 +95,7 @@ namespace Limcap.FTerminal.Mantest {
 					if( c != 0 ) d.ContentEnd.InsertTextInRun(c.ToString());
 				}
 			};
+			*/
 		}
 	}
 }
