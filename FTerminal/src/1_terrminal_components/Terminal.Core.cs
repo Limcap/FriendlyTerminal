@@ -44,6 +44,7 @@ namespace Limcap.FTerminal {
 		public event PropertyChangedEventHandler PropertyChanged;
 		public DuxNamedList vars;
 		private Func<string, string> _customInterpreter;
+		private bool _customInterpreterIsActive;
 		private bool _usePasswordMask;
 		private readonly StringBuilder _passwordInput = new StringBuilder();
 

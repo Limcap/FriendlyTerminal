@@ -33,8 +33,8 @@ namespace Limcap.FTerminal.Cmds.Customization {
 
 		public override string MainFunction( Terminal t, Arg[] args ) {
 			var arg = args.Get( Parameters[0] );
-			if (arg == "on") t.ShowStatusBar = true;
-			else if (arg == "off") t.ShowStatusBar = false;
+			if (arg == Txt("on")) t.ShowStatusBar = true;
+			else if (arg == Txt("off")) t.ShowStatusBar = false;
 			else if (args?.Length == 0) t.ShowStatusBar = !t.ShowStatusBar;
 			else return Info;
 			return null;

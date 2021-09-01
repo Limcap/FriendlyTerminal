@@ -16,9 +16,9 @@ namespace Limcap.FTerminal {
 		public void RegisterCommand<T>( string invokeString = null ) where T : ICommand, new() {
 			RegisterCommand( typeof( T ), invokeString );
 		}
-		
-		public void RegisterCommand<T>( params T[] commands  ) where T : ICommand, new() {
-			foreach( var command in commands ) RegisterCommand( typeof( T ) );
+
+		public void RegisterCommand<T>( params T[] commands ) where T : ICommand, new() {
+			foreach (var command in commands) RegisterCommand( typeof( T ) );
 		}
 
 
@@ -126,18 +126,28 @@ namespace Limcap.FTerminal {
 				return INSUFICIENT_PRIVILEGE_MESSAGE;
 			}
 
-			try {
-				var result = cmd.MainFunction( this, _assistant.ParsedArgs );
-				// Clean up the data in the assistant.
-				_assistant.Reset();
-				GC.Collect();
-				GC.WaitForPendingFinalizers();
-				GC.Collect();
-				return result;
+			if (IsParametersComplete( cmd, _assistant.ParsedArgs ))
+				return RunCommand( cmd, _assistant.ParsedArgs );
+			else {
+				TypeText( "Forneça os argumentos obrigatórios do comando:" );
+				return CommandRunnerHelper( cmd, _assistant.ParsedArgs );
 			}
-			catch (Exception ex) {
-				return ex.ToString();
-			}
+
+			//try {
+			//	var result = cmd.MainFunction( this, _assistant.ParsedArgs );
+			//	// Clean up the data in the assistant.
+			//	_assistant.Reset();
+			//	GC.Collect();
+			//	GC.WaitForPendingFinalizers();
+			//	GC.Collect();
+			//	return result;
+			//}
+			//catch (ParameterFillingInProgress) {
+			//	return null;
+			//}
+			//catch (Exception ex) {
+			//	return ex.ToString();
+			//}
 		}
 
 
@@ -155,6 +165,87 @@ namespace Limcap.FTerminal {
 			else if (t.IsAssignableFrom( typeof( ICommand ) ))
 				return t.GetConst( "HELP_INFO" ) as string ?? "Este comando não possui informação de ajuda.";
 			return null;
+		}
+
+
+
+
+
+
+
+		private bool IsParametersComplete( ACommand cmd, Arg[] args ) {
+			return cmd.Parameters.All( p => args.Where( a => a.name == p.name ).Count() > 0 );
+		}
+
+
+
+
+
+
+
+
+		private string CommandRunnerHelper( ACommand cmd, Arg[] args, List<Arg> newArgs = null, Parameter missingArg = null, string inputValue = null ) {
+			try {
+				AssistParameterFilling( cmd, args, newArgs, missingArg, inputValue );
+				return RunCommand( cmd, newArgs.ToArray() );
+			}
+			catch (ParameterFillingInProgress) {
+				return null;
+			}
+			catch (Exception ex) {
+				return ex.ToString();
+			}
+		}
+
+
+
+
+
+
+
+
+		private void AssistParameterFilling( ACommand cmd, Arg[] args, List<Arg> newArgs = null, Parameter missingArg = null, string inputValue = null ) {
+			if (cmd.Parameters != null) {
+				if (newArgs is null) {
+					newArgs = new List<Arg>( cmd.Parameters.Length + args.Length );
+					newArgs.AddRange( args );
+				}
+				else
+					newArgs.Add( new Arg() { name = missingArg.name, value = inputValue, parameter = missingArg } );
+
+				bool needsFilling = true;
+				foreach (var p in cmd.Parameters) {//.Where( p => !p.optional )
+					foreach (var a in newArgs) {
+						if (a.name == p.name) { needsFilling = false; break; }
+					}
+					if (needsFilling) {
+						_customInterpreter = ( input ) => CommandRunnerHelper( cmd, args, newArgs, p, input );
+						TypeText( $"\n{p.name}: " );
+						_statusArea.Text = $"Parameter '{p.name}': {p.description}";
+						_screen.NewBuffer( ColorF1 );
+					}
+				}
+
+				if (needsFilling) throw new ParameterFillingInProgress();
+				else args = newArgs.ToArray();
+				//return "Preencha todos os parâmetros obrigatórios.";
+			}
+		}
+
+
+
+
+
+
+
+
+		private string RunCommand( ACommand cmd, Arg[] args ) {
+			var result = cmd.MainFunction( this, args );
+			_assistant.Reset();
+			GC.Collect();
+			GC.WaitForPendingFinalizers();
+			GC.Collect();
+			return result;
 		}
 	}
 }

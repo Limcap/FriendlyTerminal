@@ -70,7 +70,8 @@ namespace Limcap.FTerminal {
 
 
 
-		private void Handle3_TextChanged() {//object sender, TextChangedEventArgs args 
+		private void Handle3_TextChanged() {//object sender, TextChangedEventArgs args
+			if (_customInterpreterIsActive) return;
 			IsAutocompleting = false;
 			if (!_allowAssistant) return;
 			var input = _screen.Buffer;
@@ -90,7 +91,7 @@ namespace Limcap.FTerminal {
 			if (!e.IsRepeat) {
 				var autocomplete = _assistant.GetNextAutocompleteEntry();
 				//if (autocomplete != null && autocomplete.Length > 0)
-					SetInputBuffer( autocomplete?.ToString(), predict: false );
+				SetInputBuffer( autocomplete?.ToString(), predict: false );
 				ScrollToEnd();
 			}
 			e.Handled = true;
@@ -132,29 +133,75 @@ namespace Limcap.FTerminal {
 				NewPrompt( false );
 			}
 			else {
-				_cmdHistory.Add( input );
 				// Se houver um interpretador customizado (que pode ser definido pelos comandos) copia sua ref para uma
 				// variável local e já anula a referencia principal, para que caso este interpretador customizado queria
 				// definir ainda um outro, não haja problema de sobrescrever.
-				var interpreter = _customInterpreter is null ? CommandInterpreter : _customInterpreter;
-				_customInterpreter = null;
+				//var interpreter = _customInterpreter is null ? CommandInterpreter : _customInterpreter;
+				var interpreter = _customInterpreter;
+				
+				// Start a new block for the text printed by the command.
 				_screen.NewBlock( ColorF2 );
-				var output = interpreter( input );
-				if (output != null) {
-					if (output.Length > 100000) {
-						NotepadRunner.Show( output );
+
+				if (_customInterpreter is null) {
+					if(!_customInterpreterIsActive) _cmdHistory.Add( input );
+					else _customInterpreterIsActive = false;
+					var output = CommandInterpreter( input );
+					if (_customInterpreter is null) {
+						//_customInterpreter = null;
+						if (output != null) {
+							if (output.Length > 100000) {
+								NotepadRunner.Show( output );
+							}
+							else {
+								_screen.AppendText( output );
+								_statusArea.Text = $"Saída: {output.Length} caracteres";
+							}
+							ScrollToEnd();
+						}
+						// pede um novo prompt somente se não existir um input handler.
+						//StartNewPrompt( usePrompt: _customInterpreter is null );
+						_customInterpreterIsActive = false;
+						NewPrompt();
+						if (output?.Length > 500) ScrollToEnd();
+						Handle3_TextChanged();
 					}
 					else {
-						_screen.AppendText( output );
-						_statusArea.Text = $"Saída: {output.Length} caracteres";
+						_customInterpreterIsActive = true;
+						_statusArea.Text = string.Empty;
+						_assistantArea.Text = string.Empty;
 					}
-					ScrollToEnd();
 				}
-				// pede um novo prompt somente se não existir um input handler.
-				//StartNewPrompt( usePrompt: _customInterpreter is null );
-				if(_customInterpreter is null) NewPrompt();
-				if (output?.Length > 500) ScrollToEnd();
-				Handle3_TextChanged();
+				else {
+					_statusArea.Text = string.Empty;
+					_assistantArea.Text = string.Empty;
+					var customInterpreter = _customInterpreter;
+					_customInterpreter = null;
+					_customInterpreterIsActive = true;
+					var output = customInterpreter( input );
+					if (_customInterpreter is null) {
+						if (output != null) {
+							if (output.Length > 100000) {
+								NotepadRunner.Show( output );
+							}
+							else {
+								_screen.AppendText( output );
+								_statusArea.Text = $"Saída: {output.Length} caracteres";
+							}
+							ScrollToEnd();
+						}
+						// pede um novo prompt somente se não existir um input handler.
+						//StartNewPrompt( usePrompt: _customInterpreter is null );
+						_customInterpreterIsActive = false;
+						NewPrompt();
+						if (output?.Length > 500) ScrollToEnd();
+						Handle3_TextChanged();
+					}
+					else {
+						_customInterpreterIsActive = true;
+						_statusArea.Text = string.Empty;
+						_assistantArea.Text = string.Empty;
+					}
+				}
 			}
 		}
 

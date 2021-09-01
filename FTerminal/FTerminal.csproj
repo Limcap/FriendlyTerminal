@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="src\1_terrminal_components\ParameterFillingInProgress.cs" />
     <Compile Include="src\1_terrminal_components\ITerminalScreen.cs" />
     <Compile Include="src\1_terrminal_components\TerminalScreenV05.cs" />
     <Compile Include="src\1_terrminal_components\TerminalScreenV04.cs" />
