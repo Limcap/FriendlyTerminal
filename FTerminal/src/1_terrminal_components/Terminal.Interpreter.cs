@@ -104,6 +104,7 @@ namespace Limcap.FTerminal {
 				return null;
 			}
 
+			_assistant.TryAdvanceTerminator();
 			var cmd = _assistant.ParsedCommand;
 			if (cmd == null) {
 				// If the command does not exist and thus won't be executed, we need to clean old info in the assistant,

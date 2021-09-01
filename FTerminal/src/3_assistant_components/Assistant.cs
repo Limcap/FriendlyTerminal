@@ -145,6 +145,17 @@ namespace Limcap.FTerminal {
 
 
 
+		internal void TryAdvanceTerminator() {
+			_cmdParser.TryAdvanceTerminator( _locale );
+		}
+
+
+
+
+
+
+
+
 		#region AUTOCOMPLETE
 		#endregion
 
