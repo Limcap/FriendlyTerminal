@@ -42,9 +42,11 @@ namespace Limcap.FTerminal {
 
 
 		private void Handle2_AddToBuffer( KeyEventArgs e ) {
-			var c = KeyGrabber.GetCharFromKey( e.Key );
-			if (c != 0)
-				_screen.AppendText( c.ToString() );
+			if (e.Key != Key.Escape) {
+				var c = KeyGrabber.GetCharFromKey( e.Key );
+				if (c != 0)
+					_screen.AppendText( c.ToString() );
+			}
 			Handle3_TextChanged();
 		}
 
