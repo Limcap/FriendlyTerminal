@@ -21,7 +21,7 @@ namespace Limcap.FTerminal {
 
 		public const string NEW_LINE_STRING = "\n";
 		public const char NEW_LINE_CHAR = '\n';
-		public const string PROMPT_STRING = "» ";//›»
+		//public const string PROMPT_STRING = "» ";//›»
 		public readonly Thickness marginThickness = new Thickness( 5 );
 
 

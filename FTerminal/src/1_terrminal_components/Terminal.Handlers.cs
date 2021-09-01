@@ -123,10 +123,11 @@ namespace Limcap.FTerminal {
 				IsAutocompleting = false;
 				_assistant.ProcessInput( input );
 			}
-			if (input.Trim().Length == 0) {
+			if (((PString)input).Trim().len == 0) {
 				e.Handled = true;
 				// pede um novo prompt somente se não existir um input handler.
-				StartNewPrompt( usePrompt: _customInterpreter is null );
+				// cria um novo prompt sem criar um novo paragrafo.
+				NewPrompt( false );
 			}
 			else {
 				_cmdHistory.Add( input );
@@ -138,7 +139,8 @@ namespace Limcap.FTerminal {
 				_screen.NewBlock( ColorF2 );
 				var output = interpreter( input );
 				if (output != null) {
-					if (output.Length > 200001) {
+					if (output.Length > 100001) {
+						
 						var w = new Window();
 						var f = new FlowDocument();
 						w.Content = f;
@@ -149,13 +151,11 @@ namespace Limcap.FTerminal {
 						_screen.AppendText( output );
 						_statusArea.Text = $"Saída: {output.Length} caracteres";
 					}
-					//AppendWithSpace( output, ColorF2 );
 					ScrollToEnd();
-					//_statusArea.Text = $"Saída: {output.Length} caracteres";
 				}
 				// pede um novo prompt somente se não existir um input handler.
 				//StartNewPrompt( usePrompt: _customInterpreter is null );
-				if(_customInterpreter is null) StartNewPrompt();
+				if(_customInterpreter is null) NewPrompt();
 				if (output?.Length > 500) ScrollToEnd();
 				Handle3_TextChanged();
 			}
@@ -180,27 +180,22 @@ namespace Limcap.FTerminal {
 				var interpreter = _customInterpreter is null ? CommandInterpreter : _customInterpreter;
 				_customInterpreter = null;
 				var input = _passwordInput.ToString();
-				//_screen.NewBlock( ColorF2 );
-				//TypeText( NEW_LINE );
 				var output = interpreter( input );
 				_passwordInput.Clear();
 				_usePasswordMask = false;
 				if (output != null) {
-					//if (!LastRun.Text.EndsWith( NEW_LINE )) AppendText( NEW_LINE );
-					//AppendText( output, ColorF2 );
 					_screen.AppendText( NEW_LINE + output );
 					_statusArea.Text = $"Saída: {output.Length} caracteres";
 					if (output.Length > 500) ScrollToEnd();
 				}
 				// pede um novo prompt somente se não existir um input handler.
-				StartNewPrompt( usePrompt: _customInterpreter is null );
+				NewPrompt();
 				Handle3_TextChanged();
 			}
 			else {
 				var c = e.Key.ToPasswordAllowedChar();
 				if (c.HasValue) {
 					_screen.AppendText( "*" );
-					//TypeText( "*" );
 					_passwordInput.Append( c );
 				}
 				e.Handled = true;

@@ -121,7 +121,7 @@ namespace Limcap.FTerminal {
 		public void Start() {
 			_assistant = new Assistant( _cmdList, Locale );
 			_screen.AppendText( _introText );
-			StartNewPrompt();
+			NewPrompt();
 			_assistantArea.Text = _assistant.GetPredictions( string.Empty ).ToString();
 			_screen.Focus();
 		}
