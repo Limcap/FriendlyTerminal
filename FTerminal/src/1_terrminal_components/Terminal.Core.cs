@@ -202,7 +202,7 @@ namespace Limcap.FTerminal {
 
 
 		private ITerminalScreen BuildTextScreen() {
-			var screen = new TerminalScreenV03();
+			var screen = new TerminalScreenV05();
 			screen.OnPreviewKeyDown += Handle_KeyboardInput;
 			return screen;
 		}
