@@ -72,6 +72,7 @@
     <Compile Include="src\4_generic_components\PArray.cs" />
     <Compile Include="src\4_generic_components\SlicedChan.cs" />
     <Compile Include="src\3_assistant_components\HistoryNavigator.cs" />
+    <Compile Include="src\5_util\NotepadRunner.cs" />
     <Compile Include="src\6_implemented_commands\customization\ChangeTheme.cs" />
     <Compile Include="src\6_implemented_commands\dev\MemUsage.cs" />
     <Compile Include="src\6_implemented_commands\basic\Help.cs" />

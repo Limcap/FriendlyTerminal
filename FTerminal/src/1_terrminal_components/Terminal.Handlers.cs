@@ -139,13 +139,8 @@ namespace Limcap.FTerminal {
 				_screen.NewBlock( ColorF2 );
 				var output = interpreter( input );
 				if (output != null) {
-					if (output.Length > 100001) {
-						
-						var w = new Window();
-						var f = new FlowDocument();
-						w.Content = f;
-						f.ContentStart.InsertTextInRun( output );
-						w.Show();
+					if (output.Length > 100000) {
+						NotepadRunner.Show( output );
 					}
 					else {
 						_screen.AppendText( output );
