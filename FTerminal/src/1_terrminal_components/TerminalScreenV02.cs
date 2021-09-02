@@ -289,5 +289,13 @@ namespace Limcap.FTerminal {
 			Append( text );
 			return this;
 		}
+
+		public bool CurrentBlockIsEmpty() {
+			throw new NotImplementedException();
+		}
+
+		public void ResetCurrentBlockFormatting() {
+			throw new NotImplementedException();
+		}
 	}
 }

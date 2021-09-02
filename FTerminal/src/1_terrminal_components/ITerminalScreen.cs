@@ -28,5 +28,7 @@ namespace Limcap.FTerminal {
 		void Clear();
 		void Focus();
 		void ScrollToEnd();
+		bool CurrentBlockIsEmpty();
+		void ResetCurrentBlockFormatting();
 	}
 }

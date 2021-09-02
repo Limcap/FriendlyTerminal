@@ -94,10 +94,11 @@ namespace Limcap.FTerminal {
 
 
 		public ITerminalScreen NewBlock( Brush color = null ) {
-			if(UseSpaceBetweenBlocks) AddBlockFinalSpacing();		
-			color = color ?? DefaultFontColor;
+			if (UseSpaceBetweenBlocks) AddBlockFinalSpacing();
+			//color = color ?? DefaultFontColor;
 			_CurrentBlock?.Inlines.Remove( _caretRun );
-			var p = new Paragraph() { Margin = new Thickness( 0 ), Foreground = color };
+			var p = new Paragraph() { Margin = new Thickness( 0 ) };
+			if (color != null) p.Foreground = color;
 			var r = new Run();
 			p.Inlines.Add( r );
 			p.Inlines.Add( _caretRun );
@@ -309,6 +310,31 @@ namespace Limcap.FTerminal {
 		public event KeyEventHandler OnPreviewKeyDown {
 			add => _view.PreviewKeyDown += value;
 			remove => _view.PreviewKeyDown -= value;
+		}
+
+
+
+
+
+
+
+
+		public bool CurrentBlockIsEmpty() {
+			return (_CurrentBlock.Inlines.Count == 2 && _BufferRun.Text.Length == 0);
+		}
+
+
+
+
+
+
+
+
+		public void ResetCurrentBlockFormatting() {
+			var b = _CurrentBlock;
+			if (b == null) return;
+			b.SetValue( TextElement.FontSizeProperty, DependencyProperty.UnsetValue );
+			b.SetValue( TextElement.ForegroundProperty, DependencyProperty.UnsetValue );
 		}
 	}
 }

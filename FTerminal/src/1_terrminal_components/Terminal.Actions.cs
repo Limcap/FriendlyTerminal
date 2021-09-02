@@ -60,18 +60,15 @@ namespace Limcap.FTerminal {
 
 
 		public void NewPrompt( bool newBlock = true ) {
-			if (!newBlock) _screen.AppendText( NEW_LINE );
-			else if (!_screen.IsEmpty ) _screen.NewBlock( ColorF1 );
-				_screen.AppendText( PROMPT_STRING );
+			if (_screen.CurrentBlockIsEmpty())
+				_screen.ResetCurrentBlockFormatting();
+			else if (!newBlock)
+				_screen.AppendText( NEW_LINE );
+			else if (!_screen.IsEmpty)
+				_screen.NewBlock();
+			_screen.AppendText( PROMPT_STRING );
 			_screen.NewBuffer();
 		}
-		//public void StartNewPrompt( bool usePrompt = true ) {
-		//	if (usePrompt) {
-		//		if (!_screen.IsEmpty) _screen.NewBlock();
-		//		_screen.Append( PROMPT_STRING );
-		//		_screen.NewBuffer( ColorF1 );
-		//	}
-		//}
 
 
 

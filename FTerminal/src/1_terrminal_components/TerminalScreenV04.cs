@@ -271,5 +271,20 @@ namespace Limcap.FTerminal {
 			add => _view.PreviewKeyDown += value;
 			remove => _view.PreviewKeyDown -= value;
 		}
+
+
+
+
+
+
+
+
+		public bool CurrentBlockIsEmpty() {
+			throw new NotImplementedException();
+		}
+
+		public void ResetCurrentBlockFormatting() {
+			throw new NotImplementedException();
+		}
 	}
 }
