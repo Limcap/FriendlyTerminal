@@ -84,37 +84,20 @@ namespace Limcap.FTerminal {
 
 
 		public string CommandInterpreter( string input ) {
-			var (ok, result) = TryRunningNativeCommand( input );
+			var (ok, result) = TryNativeCommand( input );
 			if (ok) return result;
 
+			// try parsing commands if input does not end with terminator.
 			bool endsWithTerminator = Assistant.SplitInput( input ).inpCmd.EndsWith( CmdParser.CMD_TERMINATOR );
 			if (!endsWithTerminator) {
 				_screen.AppendText( CmdParser.CMD_TERMINATOR_AS_STRING );
-				//if (_assistant.ParsedCommand == null)
 				_assistant.TryAdvanceTerminator();
 			}
 
 			var cmd = _assistant.ParsedCommand;
-			if (cmd == null) {
-				// If the command does not exist and thus won't be executed, we need to clean old info in the assistant,
-				// so that if user press tab right away, there wont be any confirmed nodes in the CmdParser.
-				_assistant.Reset();
-				return "Comando não reconhecido.";
-			}
+			if (TrySpecialCases( cmd )) return null;
 
-			var args = _assistant.RawArgs;
-			if (args == "?") {
-				_assistant.Reset();
-				return cmd.Info;
-			}
-
-			Type cmdType = cmd.GetType();
-			int requiredPrivilege = (int)(cmdType.GetConst( "REQUIRED_PRIVILEGE" ) ?? 0);
-			if (CurrentPrivilege < requiredPrivilege) {
-				_assistant.Reset();
-				return INSUFICIENT_PRIVILEGE_MESSAGE;
-			}
-
+			// defines the special parameter cases
 			var thereAreNoParams = Extensions.IsNullOrEmpty( _assistant.ParsedCommand.Parameters );
 			var allMandatoryParametersAreFilled = IsParametersComplete( cmd, _assistant.ParsedArgs );
 			var allParametersAreOptionalAndNoArgWasDefined =
@@ -137,7 +120,40 @@ namespace Limcap.FTerminal {
 
 
 
-		private (bool ok, string result) TryRunningNativeCommand( string input ) {
+		private bool TrySpecialCases(ACommand cmd) {
+			if (cmd == null) {
+				// If the command does not exist and thus won't be executed, we need to clean old info in the assistant,
+				// so that if user press tab right away, there wont be any confirmed nodes in the CmdParser.
+				_assistant.Reset();
+				_screen.NewBlock( FadedFontColor ).AppendText( "Comando não reconhecido." );
+				return true;
+			}
+
+			var args = _assistant.RawArgs;
+			if (args == "?") {
+				_assistant.Reset();
+				_screen.NewBlock( FadedFontColor ).AppendText( cmd.Info );
+				return true;
+			}
+
+			Type cmdType = cmd.GetType();
+			int requiredPrivilege = (int)(cmdType.GetConst( "REQUIRED_PRIVILEGE" ) ?? 0);
+			if (CurrentPrivilege < requiredPrivilege) {
+				_assistant.Reset();
+				_screen.NewBlock( FadedFontColor ).AppendText( INSUFICIENT_PRIVILEGE_MESSAGE );
+				return true;
+			}
+			return false;
+		}
+
+
+
+
+
+
+
+
+		private (bool ok, string result) TryNativeCommand( string input ) {
 			if (input == "exit") {
 				Clear();
 				onExit?.Invoke();
@@ -167,15 +183,15 @@ namespace Limcap.FTerminal {
 
 
 
-		public string GetCommandInfo( Type t ) {
-			if (t.IsSubclassOf( typeof( ACommand ) )) {
-				var instance = Activator.CreateInstance( t, Locale ) as ACommand;
-				return instance.Info;
-			}
-			else if (t.IsAssignableFrom( typeof( ICommand ) ))
-				return t.GetConst( "HELP_INFO" ) as string ?? "Este comando não possui informação de ajuda.";
-			return null;
-		}
+		//public string GetCommandInfo( Type t ) {
+		//	if (t.IsSubclassOf( typeof( ACommand ) )) {
+		//		var instance = Activator.CreateInstance( t, Locale ) as ACommand;
+		//		return instance.Info;
+		//	}
+		//	else if (t.IsAssignableFrom( typeof( ICommand ) ))
+		//		return t.GetConst( "HELP_INFO" ) as string ?? "Este comando não possui informação de ajuda.";
+		//	return null;
+		//}
 
 
 
