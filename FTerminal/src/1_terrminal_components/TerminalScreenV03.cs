@@ -53,8 +53,8 @@ namespace Limcap.FTerminal {
 		public static implicit operator Control( TerminalScreenV03 screen ) => screen.UIControlHook;
 		public Control UIControlHook => _view;
 		public Brush DefaultFontColor { get; set; } = new SolidColorBrush( Color.FromRgb( 171, 255, 46 ) );
-		public Brush Background { get; set; } = new SolidColorBrush( Color.FromArgb( 200, 25, 27, 27 ) );
-		public double FontSize { get => _view.Document.FontSize; set => _view.Document.FontSize = value; }
+		public Brush BackgroundColor { get; set; } = new SolidColorBrush( Color.FromArgb( 200, 25, 27, 27 ) );
+		public double DefaultFontSize { get => _view.Document.FontSize; set => _view.Document.FontSize = value; }
 
 
 
@@ -74,7 +74,7 @@ namespace Limcap.FTerminal {
 				Margin = new Thickness( 0 ),
 			};
 			var doc = new FlowDocument() {
-				Background = Background,
+				Background = BackgroundColor,
 				Foreground = DefaultFontColor,
 				FontFamily = new FontFamily( "Consolas" ),
 				FontSize = 14,
@@ -260,6 +260,10 @@ namespace Limcap.FTerminal {
 		}
 
 		public void ResetCurrentBlockFormatting() {
+			throw new NotImplementedException();
+		}
+
+		public void SwapFontColor( SolidColorBrush oldColor, SolidColorBrush newColor ) {
 			throw new NotImplementedException();
 		}
 	}

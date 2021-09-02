@@ -36,7 +36,7 @@ namespace Limcap.FTerminal {
 
 		private readonly TextBlock _assistantArea;
 		private readonly TextBlock _statusArea;
-		private readonly HistoryNavigator _cmdHistory = new HistoryNavigator(15);
+		private readonly HistoryNavigator _cmdHistory = new HistoryNavigator( 15 );
 		public Assistant _assistant;
 		private bool _allowAssistant = true;
 
@@ -49,9 +49,9 @@ namespace Limcap.FTerminal {
 		private readonly StringBuilder _passwordInput = new StringBuilder();
 
 
-		public Brush ColorF1 { get; set; }
-		public Brush ColorF2 { get; set; }
-		public Brush ColorB1 { get; set; }
+		public Brush DefaultMainFontColor { get; set; } = new SolidColorBrush( Color.FromRgb( 171, 255, 46 ) );
+		//public Brush ColorF2 { get; set; } = new SolidColorBrush( Color.FromArgb( 100, 171, 255, 46 ) ); //120,179,32
+		public Brush DefaultBackColor { get; set; } = new SolidColorBrush( Color.FromArgb( 255, 20, 22, 22 ) ); //25,27,27 
 
 		public string Text => _screen.ToString();
 
@@ -65,9 +65,21 @@ namespace Limcap.FTerminal {
 
 
 
-		public Brush FontColor { get => _screen.BufferFontColor; set => _screen.BufferFontColor = value; }
-		public Brush BackColor { get => _screen.Background; set => _screen.Background = value; }
-		public double FontSize { get => _screen.FontSize; set => _screen.FontSize = value; }
+		//public Brush FontColor { get => _screen.BufferFontColor; set => (_screen as TerminalScreenV05).SetFontColor(value); }
+		//public int FontSize { get => (int)_screen.DefaultFontSize; set => (_screen as TerminalScreenV05).SetFontSize(value); }
+		public double FontSize { get => _screen.DefaultFontSize; set => _screen.DefaultFontSize = value; }
+		public Brush BackColor { get => _screen.BackgroundColor; set => _screen.BackgroundColor = value; }
+		public Brush FontColor {
+			get => _screen.DefaultFontColor;
+			set {
+				var c = ((SolidColorBrush)value).Color;
+				var newFaded = new SolidColorBrush( Color.FromArgb( 100, c.R, c.G, c.B ) );
+				_screen.SwapFontColor( FadedFontColor, newFaded );
+				_screen.DefaultFontColor = value;
+				FadedFontColor = newFaded;
+			}
+		}
+		public SolidColorBrush FadedFontColor { get; private set; }
 
 
 
@@ -77,9 +89,9 @@ namespace Limcap.FTerminal {
 
 
 		public Terminal( string introText, Action onExit = null ) {
-			ColorF1 = new SolidColorBrush( Color.FromRgb( 171, 255, 46 ) );
-			ColorF2 = new SolidColorBrush( Color.FromRgb( 120, 179, 32 ) );
-			ColorB1 = new SolidColorBrush( Color.FromArgb( 200, 25, 27, 27 ) );
+			//ColorF1 = new SolidColorBrush( Color.FromRgb( 171, 255, 46 ) );
+			//ColorF2 = new SolidColorBrush( Color.FromRgb( 120, 179, 32 ) );
+			//ColorB1 = new SolidColorBrush( Color.FromArgb( 200, 25, 27, 27 ) );
 			//InputBufferRun = new Run( String.Empty );
 
 			_introText = introText ?? _introText;
@@ -102,6 +114,8 @@ namespace Limcap.FTerminal {
 			Panel.Children.Add( _screen.UIControlHook );
 			DockPanel.SetDock( _screen.UIControlHook, Dock.Top );
 			//_screen.View.GotFocus += ( o, a ) => _screen.Doc.Focus();
+
+			FontColor = DefaultMainFontColor;
 
 			//Binding myBinding = new Binding {
 			//	Source = this,
@@ -203,7 +217,11 @@ namespace Limcap.FTerminal {
 
 
 		private ITerminalScreen BuildTextScreen() {
-			var screen = new TerminalScreenV05();
+			var screen = new TerminalScreenV05() {
+				BackgroundColor = DefaultBackColor,
+				DefaultFontColor = DefaultMainFontColor,
+				DefaultFontSize = 14,
+			};
 			screen.OnPreviewKeyDown += Handle_KeyboardInput;
 			return screen;
 		}

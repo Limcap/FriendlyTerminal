@@ -70,6 +70,9 @@ namespace Limcap.FTerminal {
 		public static int MinMax( this int num, int min, int max ) {
 			return num < min ? min : num > max ? max : num;
 		}
+		public static double MinMax( this double num, double min, double max ) {
+			return num < min ? min : num > max ? max : num;
+		}
 
 		public static bool IsInBetween( this int num, int min, int max ) {
 			return num >= min && num <= max;

@@ -116,7 +116,7 @@ namespace Limcap.FTerminal {
 			if (IsParametersComplete( cmd, _assistant.ParsedArgs ))
 				return RunCommand( cmd, _assistant.ParsedArgs );
 			else {
-				TypeText( " (Forneça os parâmetros)" );
+				TypeText( " (Forneça os parâmetros)", FadedFontColor );
 				return CommandRunnerHelper( cmd, _assistant.ParsedArgs );
 			}
 		}
@@ -217,11 +217,11 @@ namespace Limcap.FTerminal {
 				foreach (var p in cmd.Parameters) {//.Where( p => !p.optional )
 					if (newArgs.FindIndex( a => a.name == p.name ) == -1) {
 						// Start a new input line for the input of parameters
-						_screen.NewBuffer( ColorF1 ).AppendText( NEW_LINE );
+						_screen.NewBuffer().AppendText( NEW_LINE );
 						_customInterpreter = ( input ) => CommandRunnerHelper( cmd, args, newArgs, p, input );
-						TypeText( $"  {p.name} = ", ColorF1 );
+						TypeText( $"  {p.name} = " );
 						_statusArea.Text = $"Parameter '{p.name}': {p.description}";
-						_screen.NewBuffer( ColorF1 );
+						_screen.NewBuffer();
 						throw new ParameterFillingInProgress();
 					}
 				}
@@ -239,7 +239,7 @@ namespace Limcap.FTerminal {
 
 		private string RunCommand( ACommand cmd, Arg[] args ) {
 			// Start a new block for the text printed by the command.
-			_screen.NewBlock( ColorF2 );
+			_screen.NewBlock( FadedFontColor );
 			var result = cmd.MainFunction( this, args );
 			_assistant.Reset();
 			GC.Collect();

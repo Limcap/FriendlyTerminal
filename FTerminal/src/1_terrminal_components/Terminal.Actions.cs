@@ -25,7 +25,7 @@ namespace Limcap.FTerminal {
 
 
 		public void TypeText( string text, Brush color = null ) {
-			_screen.NewColor( color ?? ColorF2 ).AppendText( text );
+			_screen.NewColor( color ).AppendText( text );
 			ScrollToEnd();
 		}
 

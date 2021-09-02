@@ -4,11 +4,11 @@ using System.Windows.Media;
 
 namespace Limcap.FTerminal {
 	public interface ITerminalScreen {
-		Brush Background { get; set; }
-		string Buffer { get; set; }
-		double FontSize { get; set; }
-		Brush BufferFontColor { get; set; }
+		Brush BackgroundColor { get; set; }
 		Brush DefaultFontColor { get; set; }
+		Brush BufferFontColor { get; set; }
+		double DefaultFontSize { get; set; }
+		string Buffer { get; set; }
 		bool IsEmpty { get; }
 		Control UIControlHook { get; }
 
@@ -30,5 +30,8 @@ namespace Limcap.FTerminal {
 		void ScrollToEnd();
 		bool CurrentBlockIsEmpty();
 		void ResetCurrentBlockFormatting();
+		void SwapFontColor( SolidColorBrush oldColor, SolidColorBrush newColor );
+		//void SetFontSize( int size );
+		//void SetFontColor( Brush brush );
 	}
 }

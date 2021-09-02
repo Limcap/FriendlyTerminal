@@ -35,7 +35,6 @@ namespace Limcap.FTerminal {
 
 		public bool UseSpaceBetweenBlocks { get; set; } = true;
 		public string Buffer { get => _BufferRun.Text; set => _BufferRun.Text = value; }
-		public Brush BufferFontColor { get => _BufferRun.Foreground; set => _BufferRun.Foreground = value; }
 
 
 
@@ -53,9 +52,32 @@ namespace Limcap.FTerminal {
 
 		public static implicit operator Control( TerminalScreenV05 screen ) => screen.UIControlHook;
 		public Control UIControlHook => _view;
-		public Brush DefaultFontColor { get; set; } = new SolidColorBrush( Color.FromRgb( 171, 255, 46 ) );
-		public Brush Background { get; set; } = new SolidColorBrush( Color.FromArgb( 200, 25, 27, 27 ) );
-		public double FontSize { get => _view.Document.FontSize; set => _view.Document.FontSize = value; }
+
+
+
+		private Brush _defaultBackgroundColor = new SolidColorBrush( Color.FromArgb( 200, 25, 27, 27 ) );
+		private Brush _defaultFontColor = new SolidColorBrush( Color.FromRgb( 171, 255, 46 ) );
+		private double _defaultFontSize = 14;
+
+
+
+
+		public Brush BackgroundColor {
+			get => _view.Document.Background;
+			set => _view.Document.SetValue( TextElement.BackgroundProperty, value ?? DependencyProperty.UnsetValue );
+		}
+		public Brush DefaultFontColor {
+			get => _view.Document.Foreground;
+			set => _view.Document.SetValue( TextElement.ForegroundProperty, value ?? DependencyProperty.UnsetValue );
+		}
+		public Brush BufferFontColor {
+			get => _BufferRun.Foreground;
+			set => _BufferRun.SetValue( TextElement.ForegroundProperty, value ?? DependencyProperty.UnsetValue );
+		}
+		public double DefaultFontSize {
+			get => _view.Document.FontSize;
+			set => _view.Document.FontSize = value.MinMax( 10, 28 );
+		}
 
 
 
@@ -75,14 +97,15 @@ namespace Limcap.FTerminal {
 				Margin = new Thickness( 0 ),
 			};
 			var doc = new FlowDocument() {
-				Background = Background,
-				Foreground = DefaultFontColor,
+				Background = _defaultBackgroundColor,
+				Foreground = _defaultFontColor,
+				FontSize = _defaultFontSize,
 				FontFamily = new FontFamily( "Consolas" ),
-				FontSize = 14,
 				PagePadding = marginThickness,
 				Focusable = false,
 			};
 			_view.Document = doc;
+
 			NewBlock();
 		}
 
@@ -154,8 +177,10 @@ namespace Limcap.FTerminal {
 
 
 		public ITerminalScreen NewColor( Brush color ) {
-			if (color == null || color == _BufferRun.Foreground) { }
-			else NewBuffer( color );
+			if (color == null && _BufferRun.Foreground.GetValue( TextElement.ForegroundProperty ) != DependencyProperty.UnsetValue)
+				NewBuffer();
+			else if (color != _BufferRun.Foreground)
+				NewBuffer( color );
 			return this;
 		}
 
@@ -319,6 +344,41 @@ namespace Limcap.FTerminal {
 
 
 
+		//public void SetFontColor( Brush brush ) {
+		//	_view.Document.Foreground = brush;
+
+		//	//foreach (Paragraph p in _view.Document.Blocks)
+		//	//	if (p.Foreground == DefaultFontColor) p.Foreground = brush;
+		//	//DefaultFontColor = brush;
+
+		//	//	foreach (Run r in p.Inlines)
+		//	//		if (r.Foreground == BufferFontColor) r.Foreground = brush;
+		//	//BufferFontColor = brush;
+		//}
+
+
+
+
+
+
+
+
+		//public void SetFontSize( int size ) {
+		//	_view.Document.FontSize = size.MinMax( 10, 28 );
+
+		//	//FontSize = size;
+		//	//foreach (Paragraph p in _view.Document.Blocks)
+		//	//	foreach (Run r in p.Inlines)
+		//	//		r.FontSize = size.MinMax( 10, 28 );
+		//}
+
+
+
+
+
+
+
+
 		public bool CurrentBlockIsEmpty() {
 			return (_CurrentBlock.Inlines.Count == 2 && _BufferRun.Text.Length == 0);
 		}
@@ -335,6 +395,22 @@ namespace Limcap.FTerminal {
 			if (b == null) return;
 			b.SetValue( TextElement.FontSizeProperty, DependencyProperty.UnsetValue );
 			b.SetValue( TextElement.ForegroundProperty, DependencyProperty.UnsetValue );
+		}
+
+
+
+
+
+
+
+
+		public void SwapFontColor( SolidColorBrush oldColor, SolidColorBrush newColor ) {
+			foreach (Paragraph p in _view.Document.Blocks) {
+				if (p.Foreground == oldColor) p.Foreground = newColor;
+				foreach (Run r in p.Inlines)
+					if (r.Foreground == oldColor) r.Foreground = newColor;
+			}
+
 		}
 	}
 }
