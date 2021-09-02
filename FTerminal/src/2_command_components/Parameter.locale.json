@@ -1,4 +1,8 @@
 {
+	"TITLE": {
+		"enus": "COMMAND HELP:",
+		"ptbr": "AJUDA DO COMANDO:"
+	},
 	"DESCRIPTION": {
 		"ptbr": "DESCRIÇÃO"
 	},

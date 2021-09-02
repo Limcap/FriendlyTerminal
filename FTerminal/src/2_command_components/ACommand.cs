@@ -52,15 +52,18 @@ namespace Limcap.FTerminal {
 		public string Info {
 			get {
 				var t = Translator.LoadTranslator( typeof(Parameter), Locale );
+				var title = t.Translate( "TITLE" );
 				var word_description = t.Translate( "DESCRIPTION" );
 				var word_parameters = t.Translate( "PARAMETERS" );
 				var word_optional = t.Translate( "OPTIONAL" );
 				var word_type = t.Translate( "TYPE" );
-				string output = $"\n{word_description}\n{Description}\n\n";
+				var lines = new List<string>( Parameters?.Length??0 );
+				string output = $"{title}\n\n{word_description}\n{Description}";
 				if (Parameters != null && Parameters.Length > 0) {
-					output += word_parameters + "\n";
+					output += "\n\n" + word_parameters + "\n";
 					foreach (var param in Parameters)
-						output += $"{param.name}{(param.optional ? $" ({word_optional}) " : " ")}: {param.description} - {word_type}: {param.type};\n";
+						lines.Add( $"{param.name}{(param.optional ? $" ({word_optional}) " : " ")}: {param.description} - {word_type}: {param.type};" );
+					output += string.Join( NEW_LINE, lines );
 				}
 				return output;
 			}
