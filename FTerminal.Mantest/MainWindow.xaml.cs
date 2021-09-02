@@ -23,12 +23,12 @@ namespace Limcap.FriendlyTerminal.Mantest {
 		public MainWindow() {
 			InitializeComponent();
 
-			var t = new Terminal( null, Close ) { Locale = "ptbr" };
+			var t = new Terminal( "TESTE do terminal\nLinha 2", Close ) { Locale = "ptbr" };
 			t.RegisterCommandsInNamespaces(
-				"Limcap.FTerminal.Cmds.AccessControl",
-				"Limcap.FTerminal.Cmds.Basic",
-				"Limcap.FTerminal.Cmds.Customization",
-				"Limcap.FTerminal.Cmds.Dev"
+				"Limcap.FriendlyTerminal.Cmds.AccessControl",
+				"Limcap.FriendlyTerminal.Cmds.Basic",
+				"Limcap.FriendlyTerminal.Cmds.Customization",
+				"Limcap.FriendlyTerminal.Cmds.Dev"
 			);
 			MainPanel.Children.Add( t.Panel );
 			t.Start();
