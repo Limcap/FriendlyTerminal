@@ -87,10 +87,12 @@ namespace Limcap.FTerminal {
 			var (ok, result) = TryRunningNativeCommand( input );
 			if (ok) return result;
 
-			if (!Assistant.SplitInput( input ).inpCmd.EndsWith( CmdParser.CMD_TERMINATOR ))
+			bool endsWithTerminator = Assistant.SplitInput( input ).inpCmd.EndsWith( CmdParser.CMD_TERMINATOR );
+			if (!endsWithTerminator) {
 				_screen.AppendText( CmdParser.CMD_TERMINATOR_AS_STRING );
-			if (_assistant.ParsedCommand == null)
+				//if (_assistant.ParsedCommand == null)
 				_assistant.TryAdvanceTerminator();
+			}
 
 			var cmd = _assistant.ParsedCommand;
 			if (cmd == null) {
@@ -116,8 +118,8 @@ namespace Limcap.FTerminal {
 			if (IsParametersComplete( cmd, _assistant.ParsedArgs ))
 				return RunCommand( cmd, _assistant.ParsedArgs );
 			else {
-				TypeText( " (Forneça os parâmetros)", FadedFontColor );
-				return CommandRunnerHelper( cmd, _assistant.ParsedArgs );
+				//TypeText( " (Forneça os parâmetros)", FadedFontColor );
+				return CommandRunnerHelper( cmd, _assistant.ParsedArgs.ToList(), !endsWithTerminator );
 			}
 		}
 
@@ -185,11 +187,12 @@ namespace Limcap.FTerminal {
 
 
 
-		private string CommandRunnerHelper( ACommand cmd, Arg[] args, List<Arg> newArgs = null, Parameter missingArg = null, string inputValue = null ) {
+		private string CommandRunnerHelper( ACommand cmd, List<Arg> args, bool includeOptional, Parameter missingArg = null, string inputValue = null ) {
 			try {
-				AssistParameterFilling( cmd, args, newArgs, missingArg, inputValue );
-				_cmdHistory.Add( AssembleFullInvokeString(cmd, newArgs) );
-				return RunCommand( cmd, newArgs.ToArray() );
+				AssistParameterFilling( cmd, args, includeOptional, missingArg, inputValue );
+				var fullStr = AssembleFullInvokeString( cmd, args );
+				if( fullStr != null ) _cmdHistory.Add( fullStr );
+				return RunCommand( cmd, args.ToArray() );
 			}
 			catch (ParameterFillingInProgress) {
 				return null;
@@ -207,10 +210,13 @@ namespace Limcap.FTerminal {
 
 
 		private string AssembleFullInvokeString( ACommand cmd, List<Arg> args ) {
-			var temp0 = cmd.GetType().GetConst( "INVOKE_TEXT" ) + ": ";
-			var temp1 = args.Select( arg => $"{arg.name}={arg.value}" );
-			var temp2 = string.Join( ", ", temp1 );
-			return temp0 + temp2;
+			var cmdStr = cmd.GetType().GetConst( "INVOKE_TEXT" ) + ": ";
+			var argList = args.Where( a => cmd.Parameters.ToList()
+				.FindIndex( p => a.name == p.name && (!a.ValueIsEmpty || !p.optional) ) > -1 )
+				.Select( arg => $"{arg.name}={arg.value}" );
+			if (argList.Count() == 0) return null;
+			var argStr = string.Join( ", ", argList );
+			return cmdStr + argStr;
 		}
 
 
@@ -220,28 +226,28 @@ namespace Limcap.FTerminal {
 
 
 
-		private void AssistParameterFilling( ACommand cmd, Arg[] args, List<Arg> newArgs = null, Parameter missingArg = null, string inputValue = null ) {
-			if (cmd.Parameters != null) {
-				if (newArgs is null) {
-					newArgs = new List<Arg>( cmd.Parameters.Length + args.Length );
-					newArgs.AddRange( args );
-				}
-				else
-					newArgs.Add( new Arg() { name = missingArg.name, value = inputValue, parameter = missingArg } );
+		private void AssistParameterFilling( ACommand cmd, List<Arg> args, bool includeOptional, Parameter missingArg = null, string inputValue = null ) {
+			if (args.Capacity < cmd.Parameters.Length) args.Capacity = cmd.Parameters.Length;
 
-				foreach (var p in cmd.Parameters) {//.Where( p => !p.optional )
-					if (newArgs.FindIndex( a => a.name == p.name ) == -1) {
+			if (cmd.Parameters != null) {
+				if (missingArg != null)
+					args.Add( new Arg() { name = missingArg.name, value = inputValue, parameter = missingArg } );
+
+				foreach (var p in cmd.Parameters.Where( p => !p.optional )) RequireParam( p, false );
+				if (includeOptional) foreach (var p in cmd.Parameters.Where( p => p.optional )) RequireParam( p, true );
+				void RequireParam( Parameter p, bool optional ) {
+					if (args.FindIndex( a => a.name == p.name ) == -1) {
 						// Start a new input line for the input of parameters
 						_screen.NewBuffer().AppendText( NEW_LINE );
-						_customInterpreter = ( input ) => CommandRunnerHelper( cmd, args, newArgs, p, input );
-						TypeText( $"  {p.name} = " );
-						_statusArea.Text = $"Parameter '{p.name}': {p.description}";
+						_customInterpreter = ( input ) => CommandRunnerHelper( cmd, args, includeOptional, p, input );
+						if (optional) TypeText( $"  [{p.name}] = " );
+						else TypeText( $"  {p.name} = " );
+						_statusArea.Text = $"{(optional ? "Optional parameter" : "Parameter")} '{p.name}': {p.description}";
+						_assistantArea.Text = "Value: " + p.type.ToString();
 						_screen.NewBuffer();
 						throw new ParameterFillingInProgress();
 					}
 				}
-				args = newArgs.ToArray();
-				//return "Preencha todos os parâmetros obrigatórios.";
 			}
 		}
 
