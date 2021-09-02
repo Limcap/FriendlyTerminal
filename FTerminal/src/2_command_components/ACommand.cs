@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Limcap.FTerminal {
+namespace Limcap.FriendlyTerminal {
 	public abstract partial class ACommand : ICommand {
 
 		public const string NEW_LINE = Terminal.NEW_LINE;

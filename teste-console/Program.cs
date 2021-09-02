@@ -1,4 +1,4 @@
-﻿using Limcap.FTerminal;
+﻿using Limcap.FriendlyTerminal;
 using System;
 using System.Collections.Generic;
 using System.Linq;

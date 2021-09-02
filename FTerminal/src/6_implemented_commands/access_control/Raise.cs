@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Media;
 
-namespace Limcap.FTerminal.Cmds.AccessControl {
+namespace Limcap.FriendlyTerminal.Cmds.AccessControl {
 
 	public class Raise : ACommand {
 		public Raise( string locale ) : base( locale ) { }

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Limcap.FTerminal {
+namespace Limcap.FriendlyTerminal {
 	public unsafe partial struct PString {
 		public ref struct Slicer {
 			public int curSeparatorIndex;

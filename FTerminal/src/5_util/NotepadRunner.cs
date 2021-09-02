@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Limcap.FTerminal {
+namespace Limcap.FriendlyTerminal {
 	using System;
 	using System.Diagnostics;
 	using System.Runtime.InteropServices;

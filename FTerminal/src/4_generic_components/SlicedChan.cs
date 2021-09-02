@@ -1,7 +1,7 @@
 ﻿using System;
 using Stan = System.ReadOnlySpan<char>;
 
-namespace Limcap.FTerminal {
+namespace Limcap.FriendlyTerminal {
 	public unsafe struct SlicedChan {
 		private char _sliceChar;
 		private char* _txtPtr;

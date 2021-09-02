@@ -10,7 +10,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace Limcap.FTerminal {
+namespace Limcap.FriendlyTerminal {
 
 	/// <summary>
 	/// UI Control that works as a Terminal Screen. <see cref="ITerminalScreen"/>

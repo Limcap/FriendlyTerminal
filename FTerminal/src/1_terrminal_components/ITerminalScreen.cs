@@ -2,7 +2,7 @@
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace Limcap.FTerminal {
+namespace Limcap.FriendlyTerminal {
 	public interface ITerminalScreen {
 		Brush BackgroundColor { get; set; }
 		Brush DefaultFontColor { get; set; }

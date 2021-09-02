@@ -3,7 +3,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Limcap.FTerminal {
+namespace Limcap.FriendlyTerminal {
 
 	/// <summary>
 	/// Interface for commands to be registered withing a Terminal.

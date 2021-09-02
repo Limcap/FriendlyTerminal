@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace Limcap.FTerminal.Cmds.Dev {
+namespace Limcap.FriendlyTerminal.Cmds.Dev {
 	public class MemUsage : ACommand {
 
 		public MemUsage( string locale ) : base( locale ) { }

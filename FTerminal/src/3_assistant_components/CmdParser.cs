@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Limcap.FTerminal {
+namespace Limcap.FriendlyTerminal {
 	public partial class CmdParser {
 
 		public const char CMD_WORD_SEPARATOR = ' ';

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Limcap.FTerminal {
+namespace Limcap.FriendlyTerminal {
 	public class Parameter {
 		public Parameter( string name, Type type, bool optional, string description ) {
 			this.name = name;

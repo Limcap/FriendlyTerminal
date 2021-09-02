@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace Limcap.FTerminal {
+namespace Limcap.FriendlyTerminal {
 	public class Translator {
 
 		#region Static members

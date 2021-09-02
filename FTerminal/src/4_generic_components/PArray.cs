@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
 
-namespace Limcap.FTerminal {
+namespace Limcap.FriendlyTerminal {
 
 	[DebuggerDisplay( "{len} elements <{typeof(T).Name,nq}>" )]
 	public unsafe struct PArray<T> { // where T : struct 

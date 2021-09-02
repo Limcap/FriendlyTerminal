@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace Limcap.FTerminal {
+namespace Limcap.FriendlyTerminal {
 	//public partial class ArgParser {
 
 	[DebuggerDisplay( "{Preview(), nq}" )]

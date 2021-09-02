@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 
-namespace Limcap.FTerminal.Cmds.Customization {
+namespace Limcap.FriendlyTerminal.Cmds.Customization {
 
 	public class ChangeTheme : ACommand {
 		public ChangeTheme( string locale ) : base( locale ) { }

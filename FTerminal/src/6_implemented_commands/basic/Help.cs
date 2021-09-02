@@ -1,5 +1,5 @@
 ﻿using Limcap.Dux;
-using Limcap.FTerminal;
+using Limcap.FriendlyTerminal;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace Limcap.FTerminal.Cmds.Basic {
+namespace Limcap.FriendlyTerminal.Cmds.Basic {
 	public class Help : ACommand {
 
 		public Help( string locale ) : base( locale ) { }

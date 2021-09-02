@@ -15,7 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Limcap.FTerminal.Mantest {
+namespace Limcap.FriendlyTerminal.Mantest {
 	/// <summary>
 	/// Interaction logic for MainWindow.xaml
 	/// </summary>

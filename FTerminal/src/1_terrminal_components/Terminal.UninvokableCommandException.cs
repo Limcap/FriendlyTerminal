@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Limcap.FTerminal {
+namespace Limcap.FriendlyTerminal {
 
 	public partial class Terminal {
 		public class UninvokableCommandException : Exception {

@@ -3,7 +3,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 
-namespace Limcap.FTerminal.Cmds.Dev {
+namespace Limcap.FriendlyTerminal.Cmds.Dev {
 	public class Print_a_lot : ACommand {
 
 		public const string INVOKE_TEXT = "dev, print-a-lot";

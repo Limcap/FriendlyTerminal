@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
-namespace Limcap.FTerminal {
+namespace Limcap.FriendlyTerminal {
 
 	[DebuggerDisplay( "{Length, nq} Arguments" )]
 	public unsafe partial class ArgParser {

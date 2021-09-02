@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-namespace Limcap.FTerminal {
+namespace Limcap.FriendlyTerminal {
 
 	[Serializable]
 	[DebuggerDisplay( "{Preview(),nq}" )]

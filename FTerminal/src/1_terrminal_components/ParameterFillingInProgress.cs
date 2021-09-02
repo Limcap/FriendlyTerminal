@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace Limcap.FTerminal {
+namespace Limcap.FriendlyTerminal {
 	[Serializable]
 	internal class ParameterFillingInProgress : Exception {
 		public ParameterFillingInProgress() {

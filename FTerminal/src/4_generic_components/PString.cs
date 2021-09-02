@@ -3,7 +3,7 @@ using System.Buffers;
 using System.Diagnostics;
 using System.Text;
 
-namespace Limcap.FTerminal {
+namespace Limcap.FriendlyTerminal {
 
 	[DebuggerDisplay( "{ToString()}" )]
 	public unsafe partial struct PString {

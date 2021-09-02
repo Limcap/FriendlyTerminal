@@ -11,9 +11,9 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using Cmds = Limcap.FTerminal.Cmds;
+using Cmds = Limcap.FriendlyTerminal.Cmds;
 
-namespace Limcap.FTerminal {
+namespace Limcap.FriendlyTerminal {
 
 	public partial class Terminal : INotifyPropertyChanged {
 

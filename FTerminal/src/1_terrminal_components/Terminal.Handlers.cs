@@ -10,7 +10,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace Limcap.FTerminal {
+namespace Limcap.FriendlyTerminal {
 	public partial class Terminal {
 
 		public bool IsAutocompleting { get; private set; }
