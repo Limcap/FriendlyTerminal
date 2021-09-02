@@ -188,7 +188,7 @@ namespace Limcap.FTerminal {
 		private string CommandRunnerHelper( ACommand cmd, Arg[] args, List<Arg> newArgs = null, Parameter missingArg = null, string inputValue = null ) {
 			try {
 				AssistParameterFilling( cmd, args, newArgs, missingArg, inputValue );
-				_cmdHistory.Add( AssembleFullInvokeString(cmd, newArgs);
+				_cmdHistory.Add( AssembleFullInvokeString(cmd, newArgs) );
 				return RunCommand( cmd, newArgs.ToArray() );
 			}
 			catch (ParameterFillingInProgress) {
