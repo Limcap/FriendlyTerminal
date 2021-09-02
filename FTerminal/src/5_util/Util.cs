@@ -118,5 +118,9 @@ namespace Limcap.FTerminal {
 		public static bool IsNullOrEmpty<T>( this IEnumerable<T> collection ) {
 			return collection is null || collection.Count() == 0;
 		}
+
+		public static string JoinStrings( this IEnumerable<string> list, string separator ) {
+			return string.Join( separator, list );
+		}
 	}
 }
