@@ -130,7 +130,7 @@ namespace Limcap.FTerminal {
 
 
 
-		protected (PString inpCmd, PString inpArgs) SplitInput( string input ) {
+		public static (PString inpCmd, PString inpArgs) SplitInput( string input ) {
 			var slicer = ((PString)input).GetSlicer( CmdParser.CMD_TERMINATOR, PString.Slicer.Mode.IncludeSeparatorAtEnd );
 			var inpCmd = slicer.Next();
 			var inpArgs = slicer.Remaining();
@@ -145,8 +145,8 @@ namespace Limcap.FTerminal {
 
 
 
-		internal void TryAdvanceTerminator() {
-			_cmdParser.TryAdvanceTerminator( _locale );
+		internal bool TryAdvanceTerminator() {
+			return _cmdParser.TryAdvanceTerminator( _locale );
 		}
 
 

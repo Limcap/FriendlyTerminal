@@ -58,10 +58,13 @@ namespace Limcap.FTerminal {
 
 		//public void ConstructParsedCmd( string locale )
 		//	=>ConstructCommand( confirmedNode, locale, ref parsedCmd );
-		public void TryAdvanceTerminator( string locale ) {
+		public bool TryAdvanceTerminator( string locale ) {
 			var input = (PString)CMD_TERMINATOR_AS_STRING;
-			confirmedNode = confirmedNode.Traverse( ref input );
+			var newConfirmedNode = confirmedNode.Traverse( ref input );
+			var hasFoundCommand = newConfirmedNode.word == CMD_TERMINATOR_AS_STRING && newConfirmedNode != confirmedNode;
+			confirmedNode = newConfirmedNode;
 			ConstructCommand( confirmedNode, locale, ref parsedCmd );
+			return hasFoundCommand;
 		}
 
 		public void GetPredictionPossibilitiesText( StringBuilder res_string )

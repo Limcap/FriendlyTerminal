@@ -84,27 +84,14 @@ namespace Limcap.FTerminal {
 
 
 		public string CommandInterpreter( string input ) {
-			if (input == "exit") {
-				Clear();
-				onExit?.Invoke();
-				return string.Empty;
-			}
-			if (input == "clear") {
-				Clear();
-				GC.Collect();
-				return null;
-			}
-			if (input == "reset") {
-				_screen = BuildTextScreen();
-				_screen.Focus();
-				DockPanel.SetDock( _screen.UIControlHook, Dock.Top );
-				GC.Collect();
-				GC.WaitForPendingFinalizers();
-				GC.Collect();
-				return null;
-			}
+			var (ok, result) = TryRunningNativeCommand( input );
+			if (ok) return result;
 
-			_assistant.TryAdvanceTerminator();
+			if (!Assistant.SplitInput( input ).inpCmd.EndsWith( CmdParser.CMD_TERMINATOR ))
+				_screen.AppendText( CmdParser.CMD_TERMINATOR_AS_STRING );
+			if (_assistant.ParsedCommand == null)
+				_assistant.TryAdvanceTerminator();
+
 			var cmd = _assistant.ParsedCommand;
 			if (cmd == null) {
 				// If the command does not exist and thus won't be executed, we need to clean old info in the assistant,
@@ -129,25 +116,39 @@ namespace Limcap.FTerminal {
 			if (IsParametersComplete( cmd, _assistant.ParsedArgs ))
 				return RunCommand( cmd, _assistant.ParsedArgs );
 			else {
-				TypeText( "Forneça os argumentos obrigatórios do comando:" );
+				TypeText( " (Forneça os parâmetros)" );
 				return CommandRunnerHelper( cmd, _assistant.ParsedArgs );
 			}
+		}
 
-			//try {
-			//	var result = cmd.MainFunction( this, _assistant.ParsedArgs );
-			//	// Clean up the data in the assistant.
-			//	_assistant.Reset();
-			//	GC.Collect();
-			//	GC.WaitForPendingFinalizers();
-			//	GC.Collect();
-			//	return result;
-			//}
-			//catch (ParameterFillingInProgress) {
-			//	return null;
-			//}
-			//catch (Exception ex) {
-			//	return ex.ToString();
-			//}
+
+
+
+
+
+
+
+		private (bool ok, string result) TryRunningNativeCommand( string input ) {
+			if (input == "exit") {
+				Clear();
+				onExit?.Invoke();
+				return (true, string.Empty);
+			}
+			if (input == "clear") {
+				Clear();
+				GC.Collect();
+				return (true, null);
+			}
+			if (input == "reset") {
+				_screen = BuildTextScreen();
+				_screen.Focus();
+				DockPanel.SetDock( _screen.UIControlHook, Dock.Top );
+				GC.Collect();
+				GC.WaitForPendingFinalizers();
+				GC.Collect();
+				return (true, null);
+			}
+			return (false, null);
 		}
 
 
@@ -174,7 +175,7 @@ namespace Limcap.FTerminal {
 
 
 		private bool IsParametersComplete( ACommand cmd, Arg[] args ) {
-			return cmd.Parameters.All( p => args.Where( a => a.name == p.name ).Count() > 0 );
+			return cmd.Parameters?.All( p => args.Where( a => a.name == p.name ).Count() > 0 ) ?? true;
 		}
 
 
@@ -213,21 +214,18 @@ namespace Limcap.FTerminal {
 				else
 					newArgs.Add( new Arg() { name = missingArg.name, value = inputValue, parameter = missingArg } );
 
-				bool needsFilling = true;
 				foreach (var p in cmd.Parameters) {//.Where( p => !p.optional )
-					foreach (var a in newArgs) {
-						if (a.name == p.name) { needsFilling = false; break; }
-					}
-					if (needsFilling) {
+					if (newArgs.FindIndex( a => a.name == p.name ) == -1) {
+						// Start a new input line for the input of parameters
+						_screen.NewBuffer( ColorF1 ).AppendText( NEW_LINE );
 						_customInterpreter = ( input ) => CommandRunnerHelper( cmd, args, newArgs, p, input );
-						TypeText( $"\n{p.name}: " );
+						TypeText( $"  {p.name} = ", ColorF1 );
 						_statusArea.Text = $"Parameter '{p.name}': {p.description}";
 						_screen.NewBuffer( ColorF1 );
+						throw new ParameterFillingInProgress();
 					}
 				}
-
-				if (needsFilling) throw new ParameterFillingInProgress();
-				else args = newArgs.ToArray();
+				args = newArgs.ToArray();
 				//return "Preencha todos os parâmetros obrigatórios.";
 			}
 		}
@@ -240,6 +238,8 @@ namespace Limcap.FTerminal {
 
 
 		private string RunCommand( ACommand cmd, Arg[] args ) {
+			// Start a new block for the text printed by the command.
+			_screen.NewBlock( ColorF2 );
 			var result = cmd.MainFunction( this, args );
 			_assistant.Reset();
 			GC.Collect();
