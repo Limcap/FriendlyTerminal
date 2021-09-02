@@ -3,10 +3,10 @@
 ! assistente de preenchimento de parametros: pedir somente obrigatórios se o buffer terminar com o terminador, senao pede todos.
 ! comando nao reconhecido e ajuda: mudar de linha;
 ! status 'comando executado' não esta sendo exibido;
+! ajuda de comando colocar o titulo e remover linha extra no final;
+! ao completar o buffer com o terminador, fazer trim antes de colocá-lo;
+! output do comando deve ser mostrado na barra de status;
 + nao mudar de paragrafo quando confirmar um comando;
-+ output do comando deve ser mostrado na barra de status;
-
-+ ao completar o buffer com o terminador, fazer trim antes de colocá-lo;
 
 + cmdsParser -> staticify methods
 + argsParser - staticiy  methods

@@ -184,13 +184,14 @@ namespace Limcap.FTerminal {
 		private void Handle4_InterpreterResult( string output ) {
 			if (_customInterpreter is null) {
 				if (!Ext.IsNullOrEmpty( output )) {
-					if (output.Length > 100000) {
-						NotepadRunner.Show( output );
-					}
-					else {
-						_screen.AppendText( output );
-						_statusArea.Text = $"Saída: {output.Length} caracteres";
-					}
+					_statusArea.Text = output.Substring( 0, Math.Min( 100, output.Length ) );
+					//if (output.Length > 100000) {
+					//	NotepadRunner.Show( output );
+					//}
+					//else {
+					//	_screen.AppendText( output );
+					//	_statusArea.Text = $"Saída: {output.Length} caracteres";
+					//}
 				}
 				else
 					_statusArea.Text = $"Comando executado";
