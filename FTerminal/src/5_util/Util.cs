@@ -20,6 +20,12 @@ namespace Limcap.FTerminal {
 			alloc.Free();
 			return ptr;
 		}
+
+		public static void CallGarbageCollector() {
+			GC.Collect();
+			GC.WaitForPendingFinalizers();
+			GC.Collect();
+		}
 	}
 
 

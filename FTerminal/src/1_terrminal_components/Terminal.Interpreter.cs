@@ -161,16 +161,14 @@ namespace Limcap.FTerminal {
 			}
 			if (input == "clear") {
 				Clear();
-				GC.Collect();
+				Util.CallGarbageCollector();
 				return (true, null);
 			}
 			if (input == "reset") {
 				_screen = BuildTextScreen();
 				_screen.Focus();
 				DockPanel.SetDock( _screen.UIControlHook, Dock.Top );
-				GC.Collect();
-				GC.WaitForPendingFinalizers();
-				GC.Collect();
+				Util.CallGarbageCollector();
 				return (true, null);
 			}
 			return (false, null);
@@ -286,9 +284,7 @@ namespace Limcap.FTerminal {
 			_screen.NewBlock( FadedFontColor );
 			var result = cmd.MainFunction( this, args );
 			_assistant.Reset();
-			GC.Collect();
-			GC.WaitForPendingFinalizers();
-			GC.Collect();
+			Util.CallGarbageCollector();
 			return result;
 		}
 	}
