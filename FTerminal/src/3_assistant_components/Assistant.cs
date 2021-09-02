@@ -25,7 +25,7 @@ namespace Limcap.FTerminal {
 
 		public ACommand ParsedCommand { get => _cmdParser?.parsedCmd; }
 		public PString RawArgs { get; protected set; }
-		public Arg[] ParsedArgs { get => _argsParser.Elements; }
+		public List<Arg> ParsedArgs { get => _argsParser.Elements; }
 
 
 
@@ -86,6 +86,9 @@ namespace Limcap.FTerminal {
 			// Resets the autocomplete index, because new prediction options have been generated.
 			Index = -1;
 		}
+		//internal void UpdateArgs( Parameter[] parameters, List<Arg> args ) {
+		//	_argsParser.Parse( args, parameters );
+		//}
 
 
 
@@ -179,7 +182,7 @@ namespace Limcap.FTerminal {
 			else {
 				if (Index >= _argsParser.possible.Count) Index = -1;
 				_cmdParser.GetConfirmedText( _autocompleteResult );
-				_argsParser.GetConfirmed( _autocompleteResult );
+				_argsParser.GetConfirmedText( _autocompleteResult );
 				_argsParser.GetSelected( Index, _autocompleteResult );
 			}
 
@@ -192,10 +195,31 @@ namespace Limcap.FTerminal {
 
 
 
+		#region MISC
+		#endregion
+
+
 		public void Reset() {
 			RawArgs = null;
 			_cmdParser.Reset();
 			_argsParser.Reset();
+		}
+
+
+		public string GetFullCmmdString() {
+			return _cmdParser.GetFullString();
+			//return _cmdParser.GetConfirmedText().ToString();
+		}
+
+
+		//public string GetFullArgsString( List<Arg> args, Parameter[] parameters, bool excludeEmptyOptional ) {
+		//	return ArgParser.GetFullString( args, parameters, excludeEmptyOptional );
+		//}
+		//public string GetFullArgsString( Parameter[] parameters ) {
+		//	return _argsParser.GetFullString( parameters );
+		//}
+		public string GetFullArgsString() {
+			return _argsParser.GetFullString();
 		}
 	}
 }

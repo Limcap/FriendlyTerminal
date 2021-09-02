@@ -35,6 +35,10 @@ namespace Limcap.FTerminal {
 
 		#region INFORMATION
 		#endregion
+		
+		
+		
+		
 		private Parameter[] _parameters;
 		protected abstract Parameter[] ParametersBuilder();
 		public Parameter[] Parameters { get { _parameters = _parameters ?? ParametersBuilder(); return _parameters; } }
@@ -65,8 +69,16 @@ namespace Limcap.FTerminal {
 
 
 
+
+
+
+
 		#region TRANSLATION
 		#endregion
+
+
+
+
 		private Translator _translator;
 		public string Locale { get; private set; }
 		protected virtual TextSource DefaultTextSource { get; set; }
@@ -76,7 +88,9 @@ namespace Limcap.FTerminal {
 			//if( _defaultLocale is null || _defaultLocale == Locale && DefaultTextLibrary != null )
 			//	txt = DefaultTextLibrary[key];
 			txt = _translator.TranslateOrNull( key )
-				?? (DefaultTextSource.ContainsKey( key ) ? DefaultTextSource[key] : null)
+				?? (DefaultTextSource is null
+					? null : ( DefaultTextSource.ContainsKey( key )
+						? DefaultTextSource[key] : null))
 				?? fallback
 				?? $"[missing_text:{key}]";
 			return txt;
@@ -85,15 +99,42 @@ namespace Limcap.FTerminal {
 
 
 
+		public string InvokeText {
+			get {
+				var invokeText = GetType().GetConst( "INVOKE_TEXT" ) as string;
+				var translated = Txt( "INVOKE_TEXT", invokeText );
+				return translated;
+			}
+		}
+		
+
+
+
+
+
+
+
 		#region EXECUTION
 		#endregion
+
+
+
+
 		public abstract string MainFunction( Terminal t, Arg[] args );
+
+
+
+
 
 
 
 
 		#region SUB-TYPES
 		#endregion
+
+
+
+
 		public class TextSource : Dictionary<string, string> { }
 
 		//public static Translator commonTranslator = Translator.LoadTranslator(typeof(ACommand),)

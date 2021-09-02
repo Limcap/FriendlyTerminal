@@ -54,7 +54,7 @@ namespace Limcap.FTerminal {
 
 
 		[DebuggerBrowsable( DebuggerBrowsableState.RootHidden )]
-		public Arg[] Elements => list.ToArray();
+		public List<Arg> Elements => list;
 		public int Length => list.Count;
 		public bool IsNull => list == null;
 		public Arg Last => IsNull ? new Arg( null ) : this[Length - 1];
@@ -70,10 +70,18 @@ namespace Limcap.FTerminal {
 
 		public void Parse( PString input, Parameter[] parameters ) {
 			if (parameters?.IsNullOrEmpty() ?? true || input.IsNull) return;
+			_parameters = parameters;
 			Expand( input );
-			MatchParameters( parameters );
-			CollectPossibilities( parameters );
+			MatchParameters();
+			CollectPossibilities();
 		}
+		//public void Parse( List<Arg> args, Parameter[] parameters ) {
+		//	list.Clear();
+		//	list.AddRange( args );
+		//	_parameters = parameters;
+		//	MatchParameters();
+		//	CollectPossibilities();
+		//}
 
 
 
@@ -98,12 +106,12 @@ namespace Limcap.FTerminal {
 
 
 
-		public void MatchParameters( Parameter[] parameters ) {
+		public void MatchParameters() {
 			for (int i = 0; i < Length; i++) {
 				var arg = list[i];
 				if (arg.NameIsComplete) {
-					var paramIndex = parameters.GetIndexByName( this[i].name );
-					var p = paramIndex > -1 ? parameters[paramIndex] : null;
+					var paramIndex = _parameters.GetIndexByName( this[i].name );
+					var p = paramIndex > -1 ? _parameters[paramIndex] : null;
 					if (p != null) {
 						arg.parameter = p;
 						list[i] = arg;
@@ -119,16 +127,15 @@ namespace Limcap.FTerminal {
 
 
 
-		public void CollectPossibilities( Parameter[] parameters ) {
+		public void CollectPossibilities() {
 			possible.Clear();
-			_parameters = parameters;
 
 			if (list.Count == 0) return;
 			var arg = list[list.Count - 1];
 			int index = 0;
 			if (!arg.NameIsComplete) {
-				while ((index = parameters.GetIndexByNamePrefix( arg.name, index )) > -1) {
-					var p = parameters[index];
+				while ((index = _parameters.GetIndexByNamePrefix( arg.name, index )) > -1) {
+					var p = _parameters[index];
 					if (!IsAlreadyMatched( p )) possible.Add( p );
 					index++;
 				}
@@ -202,8 +209,9 @@ namespace Limcap.FTerminal {
 
 
 
-		public void GetConfirmed( StringBuilder res_text ) {
-			if (Length == 0) return;
+		public StringBuilder GetConfirmedText( StringBuilder res_text = null ) {
+			if (Length == 0) return null;
+			if (res_text is null) res_text = new StringBuilder();
 			Arg a;
 			for (int i = 0; i < Length - 1; i++) {
 				a = this[i];
@@ -222,6 +230,7 @@ namespace Limcap.FTerminal {
 			//// Append the predicted parameter
 			//else if (index != -1)
 			//	res_text.Append( possible?[index].name ).Append( ARG_VALUE_SEPARATOR );
+			return res_text;
 		}
 
 
@@ -247,5 +256,35 @@ namespace Limcap.FTerminal {
 			list.Clear();
 			possible.Clear();
 		}
+
+
+
+
+
+
+
+
+		public string GetFullString() {
+			//return GetFullString( list, parameters ?? _parameters, true );
+			var str = list
+				.Where( a => a.NameIsComplete && !(a.parameter.optional && a.ValueIsEmpty) )
+				.Select( a => $"{a.name}={a.value}" ).JoinStrings( ", " );
+			return str;
+		}
+
+		//public static string GetFullString( List<Arg> args, Parameter[] parameters, bool excludeEmptyOptional = false ) {
+		//	var list = parameters
+		//		.Select( p => args
+		//			.FindIndex( a => a.name == p.name && (!p.optional || excludeEmptyOptional && !a.ValueIsEmpty) )
+		//			.As( i => i > -1 ? $"{p.name}={args[i].value}" : null )
+		//		).Where( item => item != null );
+		//	return string.Join( ", ", list );
+
+		//	//var argList = args.Where( a => parameters.ToList()
+		//	//.FindIndex( p => a.name == p.name && (excludeEmptyOptional ? !p.optional || !a.ValueIsEmpty : true) ) > -1 )
+		//	//.Select( a2 => $"{a2.name}={a2.value}" );
+		//	//if (argList.Count() == 0) return null;
+		//	//return  string.Join( ", ", argList );
+		//}
 	}
 }

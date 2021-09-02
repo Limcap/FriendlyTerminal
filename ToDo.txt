@@ -1,8 +1,14 @@
 ! assistente com mais de um parametro da errado;
 ! add no historico o comando completado pelo ajudante, mas sem incluir parametros opcionais vazios;
-+ assistente de preenchimento de parametros: pedir somente obrigatórios se o buffer terminar com o terminador, senao pede todos.
-+ nao mudar de paragrafo quando confirmar um comando;
+! assistente de preenchimento de parametros: pedir somente obrigatórios se o buffer terminar com o terminador, senao pede todos.
 + comando nao reconhecido e ajuda: mudar de linha;
-+ output do comando deve ser mostrado na barra de status;
 + status 'comando executado' não esta sendo exibido;
++ nao mudar de paragrafo quando confirmar um comando;
++ output do comando deve ser mostrado na barra de status;
+
 + ao completar o buffer com o terminador, fazer trim antes de colocá-lo;
+
++ cmdsParser -> staticify methods
++ argsParser - staticiy  methods
+
++ fazer a classe ACommand receber parametro generico, em vez de ser restrito à classe Terminal.

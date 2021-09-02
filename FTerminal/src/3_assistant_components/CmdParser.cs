@@ -70,8 +70,8 @@ namespace Limcap.FTerminal {
 		public void GetPredictionPossibilitiesText( StringBuilder res_string )
 			=> GetPossibilities( predictedNodes, res_string );
 
-		public void GetConfirmedText( StringBuilder res_string )
-			=> GetConfirmed( _startNode, res_string );
+		public StringBuilder GetConfirmedText( StringBuilder res_string = null )
+			=> GetConfirmedText( _startNode, res_string );
 
 		public void GetPredictionText( int indexOfPrediction, StringBuilder res_string )
 			=> GetSelected( predictedNodes, indexOfPrediction, res_string );
@@ -213,14 +213,17 @@ namespace Limcap.FTerminal {
 
 
 
-		public static void GetConfirmed( Node startNode, StringBuilder result ) {
+		public static StringBuilder GetConfirmedText( Node startNode, StringBuilder result = null ) {
+			if (result is null) result = new StringBuilder( 30 );
 			var node = startNode;
 			while (node.next != null) {
 				result.Append( node.next.word );
 				node = node.next;
-				if (node.IsLeafNode) result.Append( ' ' );// .word == CMD_TERMINATOR_AS_STRING )
+				if (node.IsLeafNode) result.Append( CMD_WORD_SEPARATOR );// .word == CMD_TERMINATOR_AS_STRING )
 			}
+			return result;
 		}
+
 
 
 
@@ -232,5 +235,27 @@ namespace Limcap.FTerminal {
 			if (predictionIndex == -1) return;
 			res_text.Append( ((PString)predictedNodes[predictionIndex].word).Trim() );
 		}
+
+
+
+
+
+
+
+		public string GetFullString() {
+			if (confirmedNode.IsLeafNode) return GetConfirmedText().ToString();
+			else return null;
+		}
+		//public static string GetFullString( Node node ) {
+		//	var list = new List<string>( 10 );
+		//	do {
+		//		list.Add( node.word );
+		//		node = node.prev;
+		//	}
+		//	while (node.prev != null);
+		//	list.Reverse();
+		//	var separator = CMD_WORD_SEPARATOR.ToString();
+		//	return string.Join( separator, list );
+		//}
 	}
 }
