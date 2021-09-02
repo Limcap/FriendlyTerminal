@@ -192,8 +192,8 @@ namespace Limcap.FTerminal {
 						_screen.AppendText( output );
 						_statusArea.Text = $"Saída: {output.Length} caracteres";
 					}
-					ScrollToEnd();
 				}
+				ScrollToEnd();
 				// pede um novo prompt somente se não existir um input handler.
 				//StartNewPrompt( usePrompt: _customInterpreter is null );
 				_customInterpreterIsActive = false;
