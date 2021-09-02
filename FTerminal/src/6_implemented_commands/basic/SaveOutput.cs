@@ -41,15 +41,17 @@ namespace Limcap.FTerminal.Cmds.Basic {
 
 		public override string MainFunction( Terminal t, Arg[] args ) {
 			var filename = args.Get(Parameters[0]);
-			if (args.Length == 0)
-				return Info;
+			if (args.Length == 0) {
+				t.TypeText( Info );
+			}
 			else if (!filename.All( c => char.IsLetterOrDigit( c ) || c == '_' || c == '.' )) {
-				return Txt("invalid");
+				t.TypeText( Txt( "invalid" ) );
 			}
 			else {
 				File.WriteAllText( filename + ".txt", t.Text );
-				return Txt("success") + filename + ".txt";
+				return Txt( "success" ) + filename + ".txt";
 			}
+			return null;
 		}
 
 

@@ -31,7 +31,11 @@ namespace Limcap.FTerminal.Cmds.Customization {
 		//);
 
 		protected override string DescriptionBuilder() { return Txt("desc"); }
-		protected override Parameter[] ParametersBuilder() { return null; }
+		protected override Parameter[] ParametersBuilder() {
+			return new[] {
+				new Parameter( Txt( "param1" ), Parameter.Type.BOOLEAN, true, Txt( "param1desc" ) )
+			};
+		}
 
 
 		public override string MainFunction( Terminal t, Arg[] args ) {
@@ -39,7 +43,7 @@ namespace Limcap.FTerminal.Cmds.Customization {
 			if (arg == Txt("on") ) t.ShowAssistBar = true;
 			else if (arg == Txt("off") ) t.ShowAssistBar = false;
 			else if (args?.Length == 0) t.ShowAssistBar = !t.ShowAssistBar;
-			else return Info;
+			else t.TypeText( Info );
 			return null;
 		}
 

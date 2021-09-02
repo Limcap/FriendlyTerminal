@@ -58,7 +58,7 @@ namespace Limcap.FTerminal.Cmds.Customization {
 			arg_fontcolor.SafeParseBrush()?.As( b => t.FontColor = b );
 			arg_backcolor.SafeParseBrush()?.As( b => t.BackColor = b );
 
-			return string.Empty;
+			return null;
 		}
 
 

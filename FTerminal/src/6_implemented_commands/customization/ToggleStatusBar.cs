@@ -36,7 +36,7 @@ namespace Limcap.FTerminal.Cmds.Customization {
 			if (arg == Txt("on")) t.ShowStatusBar = true;
 			else if (arg == Txt("off")) t.ShowStatusBar = false;
 			else if (args?.Length == 0) t.ShowStatusBar = !t.ShowStatusBar;
-			else return Info;
+			else t.TypeText( Info );
 			return null;
 		}
 

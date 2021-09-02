@@ -50,7 +50,8 @@ namespace Limcap.FTerminal.Cmds.Basic {
 			string output = NEW_LINE + Txt( "intro" );
 			var cmds = string.Join( NEW_LINE + " • ", t.AvailableCommands.OrderBy( c => c ) );
 			output += cmds.Length == 0 ? Txt( "no-cmds" ) : (" • " + cmds);
-			return output;
+			t.TypeText( output );
+			return null;
 		}
 
 
