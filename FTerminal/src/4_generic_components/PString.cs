@@ -7,39 +7,49 @@ namespace Limcap.FriendlyTerminal {
 
 	[DebuggerDisplay( "{ToString()}" )]
 	public unsafe partial struct PString {
-		public char* ptr;
+		public string str;
+		public int ini;
 		public int len;
+		//public char* ptr;
 
 
 
 
-		public PString( ReadOnlySpan<char> text ) {
-			ptr = Util.GetPointer( text );
-			len = text.Length;
+		public PString( ReadOnlySpan<char> span ) {
+			//ptr = Util.GetPointer( text );
+			len = span.Length;
+			ini = 0;
+			str = span.ToString();
 		}
 
 
 
 
-		public PString( Span<char> text ) {
-			ptr = Util.GetPointer( text );
-			len = text.Length;
+		public PString( Span<char> span ) {
+			//ptr = Util.GetPointer( text );
+			len = span.Length;
+			ini = 0;
+			str = span.ToString();
 		}
 
 
 
 
 		public PString( char* ptr, int len ) {
-			this.ptr = ptr;
+			//this.ptr = ptr;
 			this.len = len;
+			ini = 0;
+			str = new string( ptr, ini, len );
 		}
 
 
 
 
 		public PString( string text ) {
-			ptr = Util.GetPointer( text );
-			len = text?.Length??-1;
+			str = text;
+			//ptr = Util.GetPointer( text );
+			len = text?.Length ?? -1;
+			ini = 0;
 		}
 
 
@@ -76,9 +86,9 @@ namespace Limcap.FriendlyTerminal {
 
 
 		public PString TrimStart( char c = ' ' ) {
-			if (ptr == null || len < 1) return this;
-			while (ptr[0] == c) {
-				ptr++;
+			if (len <= 0) return this;
+			while (len > 0 && str[ini] == c) {
+				ini++;
 				len--;
 			}
 			return this;
@@ -88,8 +98,8 @@ namespace Limcap.FriendlyTerminal {
 
 
 		public PString TrimEnd( char c = ' ' ) {
-			if (ptr == null || len < 1) return this;
-			while (len > 0 && ptr[len - 1] == c)
+			if (len <= 0) return this;
+			while (len > 0 && str[ini + len - 1] == c)
 				len--;
 			return this;
 		}
@@ -100,17 +110,17 @@ namespace Limcap.FriendlyTerminal {
 		public int IndexOf( char searchedChar, int startIndex = 0 ) {
 			startIndex = startIndex < 0 ? 0 : startIndex;
 			for (int i = startIndex; i < len; i++)
-				if (ptr[i] == searchedChar) return i;
+				if (str[ini + i] == searchedChar) return i;
 			return -1;
 		}
 
 
 
 
-		public PString Slice( int startIndex, int length=int.MaxValue ) {
+		public PString Slice( int startIndex, int length = int.MaxValue ) {
 			if (length > len) length = len - startIndex;
 			//if (startIndex > len - 1) throw new IndexOutOfRangeException( "Slice start index is out of bounds" );
-			return new PString() { ptr = ptr + startIndex, len = length };
+			return new PString() { str = str, ini = ini + startIndex, len = length };
 		}
 
 
@@ -128,7 +138,7 @@ namespace Limcap.FriendlyTerminal {
 
 		public int Count( char c ) {
 			int num = len > 0 ? 1 : 0;
-			for (int i = 0; i < len; i++) if (ptr[i] == c) num++;
+			for (int i = 0; i < len; i++) if (str[ini + i] == c) num++;
 			return num;
 		}
 
@@ -146,7 +156,7 @@ namespace Limcap.FriendlyTerminal {
 
 		public bool EndsWith( PString suffix ) {
 			if (len < suffix.len) return false;
-			for (int i = suffix.len-1; i >= 0; i--) if (this[i] != suffix[i]) return false;
+			for (int i = suffix.len - 1; i >= 0; i--) if (this[i] != suffix[i]) return false;
 			return true;
 		}
 		public bool EndsWith( char suffix ) {
@@ -158,7 +168,7 @@ namespace Limcap.FriendlyTerminal {
 
 		public void ShiftStart( int amount ) {
 			if (amount > len) throw new IndexOutOfRangeException();
-			ptr += amount;
+			ini += amount;
 			len -= amount;
 		}
 
@@ -180,7 +190,7 @@ namespace Limcap.FriendlyTerminal {
 		#endregion
 
 		public static PString Null => new PString() { len = -1 };
-		public static PString Empty => new PString();
+		public static PString Empty => new PString( string.Empty );
 
 
 
@@ -193,8 +203,8 @@ namespace Limcap.FriendlyTerminal {
 		#endregion
 
 		public char this[int i] {
-			get => ptr[i];
-			set => ptr[i] = value;
+			get => str[ini + i];
+			set { fixed (char* p = str) { p[i] = value; } }
 		}
 
 
@@ -244,11 +254,11 @@ namespace Limcap.FriendlyTerminal {
 		public static implicit operator PString( string txt ) => new PString( txt );
 		public static implicit operator PString( Span<char> txt ) => new PString( txt );
 		public static implicit operator PString( ReadOnlySpan<char> txt ) => new PString( txt );// { ptr = Util.GetPointer( txt ), len = txt.Length };
-		//public static implicit operator PString( Memory<char> txt ) => new PString() { ptr = Util.GetPointer( txt ), len = txt.Length };
-		//public static implicit operator PString( ReadOnlyMemory<char> txt ) => new PString() { ptr = Util.GetPointer( txt ), len = txt.Length };
+																															 //public static implicit operator PString( Memory<char> txt ) => new PString() { ptr = Util.GetPointer( txt ), len = txt.Length };
+																															 //public static implicit operator PString( ReadOnlyMemory<char> txt ) => new PString() { ptr = Util.GetPointer( txt ), len = txt.Length };
 
-		public Span<char> AsSpan => IsNull ? null : new Span<char>( ptr, len );
-		public string AsString => IsNull ? null : new string( ptr, 0, len );
+		//public Span<char> AsSpan => IsNull ? null : new Span<char>( ptr, len );
+		public string AsString => IsNull ? null : str.Substring( ini, len );
 		public override string ToString() => AsString;
 
 
@@ -261,7 +271,7 @@ namespace Limcap.FriendlyTerminal {
 		public override bool Equals( object obj ) {
 			if (obj is null && this.IsNull) return true;
 			if (obj is string other) return this == other;
-			if (obj is PString other1 ) return this == other1;
+			if (obj is PString other1) return this == other1;
 			return obj.ToString() == this;
 			//return base.Equals( obj );
 		}
@@ -278,7 +288,7 @@ namespace Limcap.FriendlyTerminal {
 
 	public static partial class Ext {
 		public static bool StartsWith( this string str, PString txt ) {
-			if (txt.len > str.Length || txt.IsNull ) return false;
+			if (txt.len > str.Length || txt.IsNull) return false;
 			for (int i = 0; i < txt.len; i++) if (str[i] != txt[i]) return false;
 			return true;
 		}
@@ -302,7 +312,9 @@ namespace Limcap.FriendlyTerminal {
 
 
 		public unsafe static StringBuilder Append( this StringBuilder sb, PString pstr ) {
-			return sb.Append( pstr.ptr, pstr.len );
+			fixed (char* p = pstr.str) {
+				return sb.Append( p, pstr.len );
+			}
 		}
 	}
 

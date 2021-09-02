@@ -96,7 +96,8 @@ namespace Limcap.FriendlyTerminal {
 				if (curSeparatorIndex == 0) return text;
 				if (curSeparatorIndex > text.len) return Null;
 				var slice = text.Slice( curSeparatorIndex, text.len - curSeparatorIndex );
-				if (option == Mode.IncludeSeparatorAtStart && *(slice.ptr - 1) == sliceAt) slice.ptr--;
+				//if (option == Mode.IncludeSeparatorAtStart && *(slice.ptr - 1) == sliceAt) slice.ptr--;
+				if (option == Mode.IncludeSeparatorAtStart && slice.ini>0 && slice.str[slice.ini-1] == sliceAt) slice.ini--;
 				return slice;
 			}
 

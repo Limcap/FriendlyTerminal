@@ -145,7 +145,7 @@ namespace Limcap.FriendlyTerminal {
 				while (keys.HasNext) {
 					var word = keys.Next();
 					if (word.len == 0) continue;
-					node = node.AddIfNotPresent( new string( word.ptr, 0, word.len ) );
+					node = node.AddIfNotPresent( word.AsString );
 					if (!keys.HasNext) node.AddIfNotPresent( terminator, term.Value );
 				}
 			}

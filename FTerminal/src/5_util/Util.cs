@@ -20,6 +20,11 @@ namespace Limcap.FriendlyTerminal {
 			alloc.Free();
 			return ptr;
 		}
+		public static unsafe char* Pin( string text, out GCHandle alloc ) {
+			alloc = GCHandle.Alloc( text, GCHandleType.Pinned );
+			char* ptr = (char*)alloc.AddrOfPinnedObject();
+			return ptr;
+		}
 
 		public static void CallGarbageCollector() {
 			GC.Collect();
