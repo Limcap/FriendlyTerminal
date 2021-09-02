@@ -90,6 +90,7 @@ namespace Limcap.FTerminal {
 			// try parsing commands if input does not end with terminator.
 			bool endsWithTerminator = Assistant.SplitInput( input ).inpCmd.EndsWith( CmdParser.CMD_TERMINATOR );
 			if (!endsWithTerminator) {
+				_screen.Buffer = _screen.Buffer.TrimEnd();
 				_screen.AppendText( CmdParser.CMD_TERMINATOR_AS_STRING );
 				_assistant.TryAdvanceTerminator();
 			}
@@ -99,7 +100,9 @@ namespace Limcap.FTerminal {
 
 			// defines the special parameter cases
 			var thereAreNoParams = Ext.IsNullOrEmpty( _assistant.ParsedCommand.Parameters );
-			var allMandatoryParametersAreFilled = IsParametersComplete( cmd, _assistant.ParsedArgs );
+			var allMandatoryParametersAreFilled = cmd.Parameters?.Where( p => !p.optional )
+				.All( p => _assistant.ParsedArgs.Where( a => a.name == p.name ).Count() > 0 ) ?? true;
+			//IsParametersComplete( cmd, _assistant.ParsedArgs );
 			var allParametersAreOptionalAndNoArgWasDefined =
 				_assistant.ParsedArgs.Where( a => a.NameIsComplete ).Count() == 0
 				&& cmd.Parameters != null && cmd.Parameters.Where( p => !p.optional ).Count() == 0;
@@ -111,6 +114,34 @@ namespace Limcap.FTerminal {
 			else
 				return CommandRunnerHelper( !endsWithTerminator );
 			//TypeText( " (Forneça os parâmetros)", FadedFontColor );
+		}
+
+
+
+
+
+
+
+
+		private (bool ok, string result) TryNativeCommand( string input ) {
+			if (input == "exit") {
+				Clear();
+				onExit?.Invoke();
+				return (true, string.Empty);
+			}
+			if (input == "clear") {
+				Clear();
+				Util.CallGarbageCollector();
+				return (true, null);
+			}
+			if (input == "reset") {
+				_screen = BuildTextScreen();
+				_screen.Focus();
+				DockPanel.SetDock( _screen.UIControlHook, Dock.Top );
+				Util.CallGarbageCollector();
+				return (true, null);
+			}
+			return (false, null);
 		}
 
 
@@ -153,34 +184,6 @@ namespace Limcap.FTerminal {
 
 
 
-		private (bool ok, string result) TryNativeCommand( string input ) {
-			if (input == "exit") {
-				Clear();
-				onExit?.Invoke();
-				return (true, string.Empty);
-			}
-			if (input == "clear") {
-				Clear();
-				Util.CallGarbageCollector();
-				return (true, null);
-			}
-			if (input == "reset") {
-				_screen = BuildTextScreen();
-				_screen.Focus();
-				DockPanel.SetDock( _screen.UIControlHook, Dock.Top );
-				Util.CallGarbageCollector();
-				return (true, null);
-			}
-			return (false, null);
-		}
-
-
-
-
-
-
-
-
 		//public string GetCommandInfo( Type t ) {
 		//	if (t.IsSubclassOf( typeof( ACommand ) )) {
 		//		var instance = Activator.CreateInstance( t, Locale ) as ACommand;
@@ -197,11 +200,11 @@ namespace Limcap.FTerminal {
 
 
 
-		private bool IsParametersComplete( ACommand cmd, List<Arg> args ) {
-			return cmd.Parameters?
-				.Where( p => !p.optional )
-				.All( p => args.Where( a => a.name == p.name ).Count() > 0 ) ?? true;
-		}
+		//private bool IsParametersComplete( ACommand cmd, List<Arg> args ) {
+		//	return cmd.Parameters?
+		//		.Where( p => !p.optional )
+		//		.All( p => args.Where( a => a.name == p.name ).Count() > 0 ) ?? true;
+		//}
 
 
 
