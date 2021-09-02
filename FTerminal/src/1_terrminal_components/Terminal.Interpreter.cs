@@ -188,6 +188,7 @@ namespace Limcap.FTerminal {
 		private string CommandRunnerHelper( ACommand cmd, Arg[] args, List<Arg> newArgs = null, Parameter missingArg = null, string inputValue = null ) {
 			try {
 				AssistParameterFilling( cmd, args, newArgs, missingArg, inputValue );
+				_cmdHistory.Add( AssembleFullInvokeString(cmd, newArgs);
 				return RunCommand( cmd, newArgs.ToArray() );
 			}
 			catch (ParameterFillingInProgress) {
@@ -196,6 +197,20 @@ namespace Limcap.FTerminal {
 			catch (Exception ex) {
 				return ex.ToString();
 			}
+		}
+
+
+
+
+
+
+
+
+		private string AssembleFullInvokeString( ACommand cmd, List<Arg> args ) {
+			var temp0 = cmd.GetType().GetConst( "INVOKE_TEXT" ) + ": ";
+			var temp1 = args.Select( arg => $"{arg.name}={arg.value}" );
+			var temp2 = string.Join( ", ", temp1 );
+			return temp0 + temp2;
 		}
 
 
