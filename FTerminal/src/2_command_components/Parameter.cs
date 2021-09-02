@@ -31,7 +31,7 @@ namespace Limcap.FTerminal {
 
 
 
-	public partial class Extensions {
+	public partial class Ext {
 		public static List<Parameter> GetByNamePrefix(
 			this Parameter[] paramArray,
 			ReadOnlySpan<char> name,

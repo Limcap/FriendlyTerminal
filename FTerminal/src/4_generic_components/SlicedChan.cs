@@ -149,7 +149,7 @@ namespace Limcap.FTerminal {
 
 
 
-	public static partial class Extensions {
+	public static partial class Ext {
 		public static bool Contains( ref this SlicedChan schan, string element ) {
 			for (int i = 0; i < schan.NumberOfSlices; i++) {
 				var c = schan[i];

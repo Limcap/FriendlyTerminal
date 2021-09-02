@@ -98,7 +98,7 @@ namespace Limcap.FTerminal {
 			if (TrySpecialCases( cmd )) return null;
 
 			// defines the special parameter cases
-			var thereAreNoParams = Extensions.IsNullOrEmpty( _assistant.ParsedCommand.Parameters );
+			var thereAreNoParams = Ext.IsNullOrEmpty( _assistant.ParsedCommand.Parameters );
 			var allMandatoryParametersAreFilled = IsParametersComplete( cmd, _assistant.ParsedArgs );
 			var allParametersAreOptionalAndNoArgWasDefined =
 				_assistant.ParsedArgs.Where( a => a.NameIsComplete ).Count() == 0

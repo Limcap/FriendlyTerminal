@@ -33,7 +33,7 @@ namespace Limcap.FTerminal {
 
 
 
-	public static partial class Extensions {
+	public static partial class Ext {
 		public static int IndexOf( this Chan chan, char searchedChar, int startIndex = 0 ) {
 			startIndex = startIndex < 0 ? 0 : startIndex;
 			for (int i = startIndex; i < chan.Length; i++)

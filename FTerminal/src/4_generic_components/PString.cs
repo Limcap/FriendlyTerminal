@@ -276,7 +276,7 @@ namespace Limcap.FTerminal {
 	#region EXTENSIONS
 	#endregion
 
-	public static partial class Extensions {
+	public static partial class Ext {
 		public static bool StartsWith( this string str, PString txt ) {
 			if (txt.len > str.Length || txt.IsNull ) return false;
 			for (int i = 0; i < txt.len; i++) if (str[i] != txt[i]) return false;

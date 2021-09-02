@@ -1,7 +1,7 @@
 ! assistente com mais de um parametro da errado;
 ! add no historico o comando completado pelo ajudante, mas sem incluir parametros opcionais vazios;
 ! assistente de preenchimento de parametros: pedir somente obrigatórios se o buffer terminar com o terminador, senao pede todos.
-+ comando nao reconhecido e ajuda: mudar de linha;
+! comando nao reconhecido e ajuda: mudar de linha;
 + status 'comando executado' não esta sendo exibido;
 + nao mudar de paragrafo quando confirmar um comando;
 + output do comando deve ser mostrado na barra de status;

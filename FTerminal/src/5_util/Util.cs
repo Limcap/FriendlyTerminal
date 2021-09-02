@@ -35,7 +35,7 @@ namespace Limcap.FTerminal {
 
 
 
-	public static partial class Extensions {
+	public static partial class Ext {
 
 		public static bool IsIn<T>( this T searched, params T[] group ) {
 			foreach (T item in group) if (item.Equals( searched )) return true;
