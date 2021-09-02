@@ -1,0 +1,5 @@
+! assistente com mais de um parametro da errado;
+! add historico comando completado pelo ajudante;
++ nao mudar de paragrafo quando confirmar um comando;
++ comando nao reconhecido e ajuda: mudar de linha;
++ output do comando deve ser mostrado na barra de status;
