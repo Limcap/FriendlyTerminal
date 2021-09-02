@@ -183,16 +183,17 @@ namespace Limcap.FTerminal {
 
 		private void Handle4_InterpreterResult( string output ) {
 			if (_customInterpreter is null) {
-				if (output != null && output.Length > 0) {
+				if (!Ext.IsNullOrEmpty( output )) {
 					if (output.Length > 100000) {
 						NotepadRunner.Show( output );
-						_statusArea.Text = $"Comando executado";
 					}
 					else {
 						_screen.AppendText( output );
 						_statusArea.Text = $"Saída: {output.Length} caracteres";
 					}
 				}
+				else
+					_statusArea.Text = $"Comando executado";
 				ScrollToEnd();
 				// pede um novo prompt somente se não existir um input handler.
 				//StartNewPrompt( usePrompt: _customInterpreter is null );
