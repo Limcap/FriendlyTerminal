@@ -34,7 +34,7 @@ namespace Limcap.FriendlyTerminal {
 
 		public bool SpaceBetweenBlocks = true;
 		public string Buffer { get => _InputRun.Text; set => _InputRun.Text = value; }
-		public Brush BufferFontColor { get => _InputRun.Foreground; set => _InputRun.Foreground = value; }
+		public SolidColorBrush BufferFontColor { get => _InputRun.Foreground as SolidColorBrush; set => _InputRun.Foreground = value; }
 
 
 
@@ -51,8 +51,8 @@ namespace Limcap.FriendlyTerminal {
 
 		public static implicit operator Control( TerminalScreenV02 screen ) => screen.UIControlHook;
 		public Control UIControlHook => _view;
-		public Brush DefaultFontColor { get; set; } = new SolidColorBrush( Color.FromRgb( 171, 255, 46 ) );
-		public Brush BackgroundColor { get; set; } = new SolidColorBrush( Color.FromArgb( 200, 25, 27, 27 ) );
+		public SolidColorBrush DefaultFontColor { get; set; } = new SolidColorBrush( Color.FromRgb( 171, 255, 46 ) );
+		public SolidColorBrush BackgroundColor { get; set; } = new SolidColorBrush( Color.FromArgb( 200, 25, 27, 27 ) );
 		public double DefaultFontSize { get => _Doc.FontSize; set => _Doc.FontSize = value; }
 
 

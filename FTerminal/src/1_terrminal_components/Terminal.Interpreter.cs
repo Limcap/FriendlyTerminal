@@ -156,14 +156,14 @@ namespace Limcap.FriendlyTerminal {
 				// If the command does not exist and thus won't be executed, we need to clean old info in the assistant,
 				// so that if user press tab right away, there wont be any confirmed nodes in the CmdParser.
 				_assistant.Reset();
-				_screen.NewBlock( FadedFontColor ).AppendText( "Comando não reconhecido." );
+				_screen.NewBlock( FontSecondaryColor ).AppendText( "Comando não reconhecido." );
 				return true;
 			}
 
 			var args = _assistant.RawArgs;
 			if (args == "?") {
 				_assistant.Reset();
-				_screen.NewBlock( FadedFontColor ).AppendText( cmd.Info );
+				_screen.NewBlock( FontSecondaryColor ).AppendText( cmd.Info );
 				return true;
 			}
 
@@ -171,7 +171,7 @@ namespace Limcap.FriendlyTerminal {
 			int requiredPrivilege = (int)(cmdType.GetConst( "REQUIRED_PRIVILEGE" ) ?? 0);
 			if (CurrentPrivilege < requiredPrivilege) {
 				_assistant.Reset();
-				_screen.NewBlock( FadedFontColor ).AppendText( INSUFICIENT_PRIVILEGE_MESSAGE );
+				_screen.NewBlock( FontSecondaryColor ).AppendText( INSUFICIENT_PRIVILEGE_MESSAGE );
 				return true;
 			}
 			return false;
@@ -284,7 +284,7 @@ namespace Limcap.FriendlyTerminal {
 
 		private string RunCommand( ACommand cmd, Arg[] args ) {
 			// Start a new block for the text printed by the command.
-			_screen.NewBlock( FadedFontColor );
+			_screen.NewBlock( FontSecondaryColor );
 			var result = cmd.MainFunction( this, args );
 			_assistant.Reset();
 			Util.CallGarbageCollector();

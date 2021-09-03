@@ -23,15 +23,15 @@
 		"ptbr": "cor-da-fonte"
 	},
 	"param2desc": {
-		"enus": "Name of the color for the font.",
-		"ptbr": "Nome da cor da fonte."
+		"enus": "Name of the color or RBG values semicolon separated (r;g;b).",
+		"ptbr": "Nome da cor ou valores RGB separados por ponto-e-virgula (r;g;b)."
 	},
 	"param3": {
 		"enus": "backcolor",
 		"ptbr": "cor-do-fundo"
 	},
 	"param3desc": {
-		"enus": "Name of the color for the background.",
-		"ptbr": "Nome da cor do fundo."
+		"enus": "Name of the color or RBG values semicolon separated (r;g;b).",
+		"ptbr": "Nome da cor ou valores RGB separados por ponto-e-virgula (r;g;b)."
 	}
 }

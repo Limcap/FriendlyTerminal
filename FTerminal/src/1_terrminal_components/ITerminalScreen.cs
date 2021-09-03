@@ -4,9 +4,9 @@ using System.Windows.Media;
 
 namespace Limcap.FriendlyTerminal {
 	public interface ITerminalScreen {
-		Brush BackgroundColor { get; set; }
-		Brush DefaultFontColor { get; set; }
-		Brush BufferFontColor { get; set; }
+		SolidColorBrush BackgroundColor { get; set; }
+		SolidColorBrush DefaultFontColor { get; set; }
+		SolidColorBrush BufferFontColor { get; set; }
 		double DefaultFontSize { get; set; }
 		string Buffer { get; set; }
 		bool IsEmpty { get; }

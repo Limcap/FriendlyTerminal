@@ -55,23 +55,23 @@ namespace Limcap.FriendlyTerminal {
 
 
 
-		private Brush _defaultBackgroundColor = new SolidColorBrush( Color.FromArgb( 200, 25, 27, 27 ) );
-		private Brush _defaultFontColor = new SolidColorBrush( Color.FromRgb( 171, 255, 46 ) );
+		private SolidColorBrush _defaultBackgroundColor = new SolidColorBrush( Color.FromArgb( 200, 25, 27, 27 ) );
+		private SolidColorBrush _defaultFontColor = new SolidColorBrush( Color.FromRgb( 171, 255, 46 ) );
 		private double _defaultFontSize = 14;
 
 
 
 
-		public Brush BackgroundColor {
-			get => _view.Document.Background;
+		public SolidColorBrush BackgroundColor {
+			get => _view.Document.Background as SolidColorBrush;
 			set => _view.Document.SetValue( TextElement.BackgroundProperty, value ?? DependencyProperty.UnsetValue );
 		}
-		public Brush DefaultFontColor {
-			get => _view.Document.Foreground;
+		public SolidColorBrush DefaultFontColor {
+			get => _view.Document.Foreground as SolidColorBrush;
 			set => _view.Document.SetValue( TextElement.ForegroundProperty, value ?? DependencyProperty.UnsetValue );
 		}
-		public Brush BufferFontColor {
-			get => _BufferRun.Foreground;
+		public SolidColorBrush BufferFontColor {
+			get => _BufferRun.Foreground as SolidColorBrush;
 			set => _BufferRun.SetValue( TextElement.ForegroundProperty, value ?? DependencyProperty.UnsetValue );
 		}
 		public double DefaultFontSize {
@@ -79,7 +79,7 @@ namespace Limcap.FriendlyTerminal {
 			set => _view.Document.FontSize = value.MinMax( 10, 28 );
 		}
 
-
+		
 
 
 
@@ -220,7 +220,7 @@ namespace Limcap.FriendlyTerminal {
 		private ITerminalScreen AppendText_SplitLines( string text ) {
 			text = RemoveInitialLinebreak( text );
 			var sli = ((PString)text).GetSlicer( NEW_LINE_CHAR, PString.Slicer.Mode.IncludeSeparatorAtStart );
-			var color = BufferFontColor;
+			var color = _BufferRun.Foreground == _view.Document.Foreground ? null : BufferFontColor;
 			// skips the first line if it is empty. This is because of how PString.Slicer works: If a string starts
 			// with the separator char, the first slice will always be empty.
 			if (sli.HasNext && sli.PeekNext().IsEmpty) sli.Next();
