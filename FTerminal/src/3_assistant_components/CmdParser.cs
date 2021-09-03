@@ -59,6 +59,7 @@ namespace Limcap.FriendlyTerminal {
 		//public void ConstructParsedCmd( string locale )
 		//	=>ConstructCommand( confirmedNode, locale, ref parsedCmd );
 		public bool TryAdvanceTerminator( string locale ) {
+			if (confirmedNode is null) return false;
 			var input = (PString)CMD_TERMINATOR_AS_STRING;
 			var newConfirmedNode = confirmedNode.Traverse( ref input );
 			var hasFoundCommand = newConfirmedNode.word == CMD_TERMINATOR_AS_STRING && newConfirmedNode != confirmedNode;
