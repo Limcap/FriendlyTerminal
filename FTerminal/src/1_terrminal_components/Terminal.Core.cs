@@ -70,7 +70,7 @@ namespace Limcap.FriendlyTerminal {
 			DockPanel.SetDock( _statusArea, Dock.Bottom );
 			ShowStatusBar = true;
 
-			_screen = BuildTextScreen();
+			_screen = BuildTerminalScreen();
 			Panel.Children.Add( _screen.UIControlHook );
 			DockPanel.SetDock( _screen.UIControlHook, Dock.Top );
 
@@ -167,7 +167,7 @@ namespace Limcap.FriendlyTerminal {
 
 
 
-		private ITerminalScreen BuildTextScreen() {
+		private ITerminalScreen BuildTerminalScreen() {
 			var screen = new TerminalScreenV05() {
 				BackgroundColor = defaultBackgroundColor,
 				DefaultFontColor = defaultPrimaryColor,

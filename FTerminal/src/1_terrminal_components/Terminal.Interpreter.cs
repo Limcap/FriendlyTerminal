@@ -135,7 +135,7 @@ namespace Limcap.FriendlyTerminal {
 				return (true, null);
 			}
 			if (input == "reset") {
-				_screen = BuildTextScreen();
+				_screen = BuildTerminalScreen();
 				_screen.Focus();
 				DockPanel.SetDock( _screen.UIControlHook, Dock.Top );
 				Util.CallGarbageCollector();
