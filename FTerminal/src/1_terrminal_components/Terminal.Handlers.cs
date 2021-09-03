@@ -183,29 +183,20 @@ namespace Limcap.FriendlyTerminal {
 
 		private void Handle4_InterpreterResult( string output ) {
 			if (_customInterpreter is null) {
-				if (!Ext.IsNullOrEmpty( output )) {
+				_customInterpreterIsActive = false;
+
+				if (!Ext.IsNullOrEmpty( output ))
 					_statusArea.Text = output.Substring( 0, Math.Min( 100, output.Length ) );
-					//if (output.Length > 100000) {
-					//	NotepadRunner.Show( output );
-					//}
-					//else {
-					//	_screen.AppendText( output );
-					//	_statusArea.Text = $"Saída: {output.Length} caracteres";
-					//}
-				}
 				else
 					_statusArea.Text = $"Comando executado";
-				ScrollToEnd();
-				// pede um novo prompt somente se não existir um input handler.
-				//StartNewPrompt( usePrompt: _customInterpreter is null );
-				_customInterpreterIsActive = false;
+				
 				NewPrompt();
-				if (output?.Length > 500) ScrollToEnd();
 				Handle3_TextChanged();
 			}
 			else {
 				_customInterpreterIsActive = true;
 			}
+			ScrollToEnd();
 		}
 
 
@@ -224,20 +215,10 @@ namespace Limcap.FriendlyTerminal {
 				}
 			}
 			else if (e.Key == Key.Return) {
-				var interpreter = _customInterpreter is null ? CommandInterpreter : _customInterpreter;
-				_customInterpreter = null;
 				var input = _passwordInput.ToString();
-				var output = interpreter( input );
 				_passwordInput.Clear();
 				_usePasswordMask = false;
-				if (output != null) {
-					_screen.AppendText( NEW_LINE + output );
-					_statusArea.Text = $"Saída: {output.Length} caracteres";
-					if (output.Length > 500) ScrollToEnd();
-				}
-				// pede um novo prompt somente se não existir um input handler.
-				NewPrompt();
-				Handle3_TextChanged();
+				Handle3_RunCustomInterpreter( input );
 			}
 			else {
 				var c = e.Key.ToPasswordAllowedChar();
