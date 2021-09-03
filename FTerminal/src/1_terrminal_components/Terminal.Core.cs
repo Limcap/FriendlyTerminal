@@ -61,14 +61,21 @@ namespace Limcap.FriendlyTerminal {
 			Panel = new DockPanel() { LastChildFill = true };
 
 			_assistantArea = BuildStatuArea();
-			Panel.Children.Add( _assistantArea );
-			DockPanel.SetDock( _assistantArea, Dock.Bottom );
-			ShowAssistBar = true;
-
 			_statusArea = BuildStatuArea();
-			Panel.Children.Add( _statusArea );
-			DockPanel.SetDock( _statusArea, Dock.Bottom );
-			ShowStatusBar = true;
+
+			var helpBar = new StackPanel();
+			helpBar.Children.Add( _assistantArea );
+			helpBar.Children.Add( _statusArea );
+			
+			var helpBarBorder = new Border() {
+				BorderThickness = new Thickness( 1 ),
+				BorderBrush = Brushes.Gray,
+				Child = helpBar
+			};
+
+			DockPanel.SetDock( helpBarBorder, Dock.Bottom );
+			Panel.Children.Add( helpBarBorder );
+
 
 			_screen = BuildTerminalScreen();
 			Panel.Children.Add( _screen.UIControlHook );
@@ -186,7 +193,7 @@ namespace Limcap.FriendlyTerminal {
 
 		private TextBlock BuildStatuArea() {
 			return new TextBlock() {
-				Background = new SolidColorBrush( Color.FromRgb( 25, 27, 27 ) ),
+				Background = new SolidColorBrush( Color.FromRgb( 24, 26, 26 ) ),
 				Foreground = Brushes.Gray,
 				FontFamily = new FontFamily( "Consolas" ),
 				Padding = new Thickness( 5 ),
