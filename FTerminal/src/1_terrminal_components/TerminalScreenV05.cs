@@ -227,8 +227,9 @@ namespace Limcap.FriendlyTerminal {
 			while (sli.HasNext) {
 				var line = sli.Next();
 				if (line.StartsWith( NEW_LINE_CHAR )) {
-					var curRunStartChar = _BufferRun.ContentStart.GetPositionAtOffset( 1 ).GetTextInRun( LogicalDirection.Backward );
-					if (curRunStartChar == NEW_LINE_STRING) NewBuffer( color );
+					NewBuffer( color );
+					//var curRunStartChar = _BufferRun.ContentStart.GetPositionAtOffset( 1 ).GetTextInRun( LogicalDirection.Backward );
+					//if (curRunStartChar == NEW_LINE_STRING) NewBuffer( color );
 				}
 				AppendText_NoSplit( line.AsString );
 			}
