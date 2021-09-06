@@ -39,9 +39,6 @@
     <ApplicationIcon>UTerminal.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Dux">
-      <HintPath>..\..\..\AgenteSolution\packages\Dux\Dux.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -106,6 +103,11 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="UTerminal.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Limcap.Duxtools.Dux">
+      <Version>1.0.3</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FTerminal\FTerminal.csproj">

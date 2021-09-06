@@ -1,5 +1,5 @@
 ﻿
-using Limcap.Dux;
+using Limcap.Duxtools;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -41,13 +41,13 @@ namespace Limcap.FriendlyTerminal {
 
 		public Translator( string translationJson = "{}", string locale = null ) : base() {
 			CurrentLocale = locale;
-			var translationDux = Dux.Dux.Import.FromJson( translationJson ) as Dux.DuxNamedList ?? new DuxNamedList();
+			var translationDux = Dux.Import.FromJson( translationJson ) as DuxNamedList ?? new DuxNamedList();
 			_dux = translationDux;
 		}
 
 
 		public string CurrentLocale { get; set; }
-		private readonly Dux.DuxNamedList _dux;
+		private readonly DuxNamedList _dux;
 
 
 		public string Translate( Tstring tstrg ) => Translate( tstrg, CurrentLocale );

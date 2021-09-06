@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>Limcap.FriendlyTerminal</id>
+    <version>0.6.0</version>
+    <title>Friendly Terminal</title>
+    <authors>Limcap</authors>
+    <owners>Limcap</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="expression">MIT</license>
+    <projectUrl>https://github.com/ledski31/FriendlyTerminal</projectUrl>
+    <description>Custom terminal that allows the easy creation of commands and has a built-in assitant for typing.</description>
+    <releaseNotes></releaseNotes>
+	<!--
+    <copyright>Copyright © 2021</copyright>
+	-->
+    <tags>terminal wpf limcap</tags>
+    <repository type="git" url="https://github.com/Limcap/FriendlyTerminal" />
+    <dependencies>
+	  <!-- 
+	  -->
+      <group targetFramework=".NETFramework4.6.2">
+        <dependency id="Limcap.Duxtools.Dux" version="1.0.3" />
+        <dependency id="System.ValueTuple" version="4.5.0" />
+        <dependency id="System.Memory" version="4.5.4" />
+      </group>
+    </dependencies>
+	<references>
+	  <group targetFramework=".NETFramework4.6.2">
+		<reference file="Limcap.FriendlyTerminal.dll"/>
+      </group>		
+	</references>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="System" targetFramework=".NETFramework4.6.2" />
+      <frameworkAssembly assemblyName="System.Core" targetFramework=".NETFramework4.6.2" />
+      <frameworkAssembly assemblyName="System.Data" targetFramework=".NETFramework4.6.2" />
+      <frameworkAssembly assemblyName="System.Data.DataSetExtensions" targetFramework=".NETFramework4.6.2" />
+      <frameworkAssembly assemblyName="System.Net.Http" targetFramework=".NETFramework4.6.2" />
+      <frameworkAssembly assemblyName="System.Xml" targetFramework=".NETFramework4.6.2" />
+      <frameworkAssembly assemblyName="System.Xml.Linq" targetFramework=".NETFramework4.6.2" />
+      <frameworkAssembly assemblyName="WindowsBase" targetFramework=".NETFramework4.6.2" />
+    </frameworkAssemblies>
+  </metadata>
+  <files>
+    <file src="bin\Release\Limcap.FriendlyTerminal.dll" target="lib\net462\Limcap.FriendlyTerminal.dll" />
+    <file src="bin\Release\Limcap.FriendlyTerminal.pdb" target="lib\net462\Limcap.FriendlyTerminal.pdb" />
+    <file src="bin\Release\Limcap.FriendlyTerminal.xml" target="lib\net462\Limcap.FriendlyTerminal.xml" />
+  </files>
+</package>

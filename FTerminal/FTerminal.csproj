@@ -2,6 +2,10 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
+    <!--
+  	<TargetFramework>.NETFramework4.6.2</TargetFramework>
+	-->
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{B094E712-A262-431A-9B4C-79861284DF63}</ProjectGuid>
@@ -9,7 +13,6 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Limcap.FriendlyTerminal</RootNamespace>
     <AssemblyName>Limcap.FriendlyTerminal</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
@@ -33,12 +36,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DocumentationFile>bin\Release\Limcap.FriendlyTerminal.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Dux, Version=1.0.2.5, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Debug\Dux.dll</HintPath>
-    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -60,12 +63,21 @@
     <Compile Include="src\1_terrminal_components\TerminalScreenV04.cs" />
     <Compile Include="src\1_terrminal_components\TerminalScreenV03.cs" />
     <Compile Include="src\1_terrminal_components\TerminalScreenV02.cs" />
+    <Compile Include="src\1_terrminal_components\Terminal.Actions.cs" />
+    <Compile Include="src\1_terrminal_components\Terminal.Core.cs" />
+    <Compile Include="src\1_terrminal_components\Terminal.Interpreter.cs" />
+    <Compile Include="src\1_terrminal_components\Terminal.UninvokableCommandException.cs" />
+    <Compile Include="src\1_terrminal_components\Terminal.Handlers.cs" />
     <Compile Include="src\2_command_components\Parameter.cs" />
+    <Compile Include="src\2_command_components\ICommand.cs" />
+    <Compile Include="src\2_command_components\ACommand.cs" />
+    <Compile Include="src\3_assistant_components\Translator.cs" />
     <Compile Include="src\3_assistant_components\Args_Old.cs" />
     <Compile Include="src\3_assistant_components\Assistant.cs" />
     <Compile Include="src\3_assistant_components\CmdParser.Node.cs" />
     <Compile Include="src\3_assistant_components\ArgParser.cs" />
     <Compile Include="src\3_assistant_components\Arg.cs" />
+    <Compile Include="src\3_assistant_components\HistoryNavigator.cs" />
     <Compile Include="src\3_assistant_components\CmdParser.cs" />
     <Compile Include="src\4_generic_components\KeyGrabber.cs" />
     <Compile Include="src\4_generic_components\WordNode.cs" />
@@ -73,8 +85,12 @@
     <Compile Include="src\4_generic_components\PString.cs" />
     <Compile Include="src\4_generic_components\PArray.cs" />
     <Compile Include="src\4_generic_components\SlicedChan.cs" />
-    <Compile Include="src\3_assistant_components\HistoryNavigator.cs" />
+    <Compile Include="src\4_generic_components\KeyedSet.cs" />
+    <Compile Include="src\4_generic_components\Range.cs" />
+    <Compile Include="src\4_generic_components\Tstring.cs" />
     <Compile Include="src\5_util\NotepadRunner.cs" />
+    <Compile Include="src\5_util\Util.cs" />
+    <Compile Include="src\5_util\Util_Optimization.cs" />
     <Compile Include="src\6_implemented_commands\customization\ChangeTheme.cs" />
     <Compile Include="src\6_implemented_commands\dev\MemUsage.cs" />
     <Compile Include="src\6_implemented_commands\basic\Help.cs" />
@@ -83,42 +99,21 @@
     <Compile Include="src\6_implemented_commands\customization\ToggleAssistBar.cs" />
     <Compile Include="src\6_implemented_commands\dev\Print_a_lot.cs" />
     <Compile Include="src\6_implemented_commands\customization\ToggleStatusBar.cs" />
-    <Compile Include="src\2_command_components\ICommand.cs" />
-    <Compile Include="src\4_generic_components\KeyedSet.cs" />
-    <Compile Include="src\4_generic_components\Range.cs" />
-    <Compile Include="src\1_terrminal_components\Terminal.Actions.cs" />
-    <Compile Include="src\1_terrminal_components\Terminal.Core.cs" />
-    <Compile Include="src\2_command_components\ACommand.cs" />
-    <Compile Include="src\1_terrminal_components\Terminal.Interpreter.cs" />
-    <Compile Include="src\1_terrminal_components\Terminal.UninvokableCommandException.cs" />
-    <Compile Include="src\3_assistant_components\Translator.cs" />
-    <Compile Include="src\4_generic_components\Tstring.cs" />
-    <Compile Include="src\5_util\Util.cs" />
-    <Compile Include="src\5_util\Util_Optimization.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="src\1_terrminal_components\Terminal.Handlers.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="src\6_implemented_commands\customization\ChangeTheme.locale.json" />
     <EmbeddedResource Include="src\2_command_components\Parameter.locale.json" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="src\6_implemented_commands\basic\Help.locale.json" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="src\6_implemented_commands\access_control\Raise.locale.json" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="src\6_implemented_commands\basic\SaveOutput.locale.json" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="src\6_implemented_commands\customization\ToggleAssistBar.locale.json" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="src\6_implemented_commands\customization\ToggleStatusBar.locale.json" />
+    <EmbeddedResource Include="src\6_implemented_commands\dev\MemUsage.locale.json" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Limcap.Duxtools.Dux">
+      <Version>1.0.3</Version>
+    </PackageReference>
     <PackageReference Include="System.Memory">
       <Version>4.5.4</Version>
     </PackageReference>
@@ -127,8 +122,8 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="src\6_implemented_commands\dev\MemUsage.locale.json" />
+    <None Include="FTerminal.nupkg.create.cmd" />
+    <None Include="FTerminal.nuspec" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,4 +1,4 @@
-﻿using Limcap.Dux;
+﻿using Limcap.Duxtools;
 using System;
 using System.Collections.Generic;
 using System.IO;

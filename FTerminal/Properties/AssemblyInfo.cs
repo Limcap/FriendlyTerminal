@@ -6,8 +6,8 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle( "Lift" )]
-[assembly: AssemblyDescription( "Limcap's Friendly Terminal" )]
+[assembly: AssemblyTitle( "Friendly Terminal" )]
+[assembly: AssemblyDescription( "Custom terminal that allows the easy creation of commands and has a built-in assitant for typing." )]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany( "Limcap" )]
 [assembly: AssemblyProduct( "Friendly Terminal" )]
