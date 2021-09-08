@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "teste-window", "teste-windo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "teste-console", "teste-console\teste-console.csproj", "{424D9B36-23D6-47E2-8B84-F741738EC621}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "teste-input", "teste-input\teste-input.csproj", "{0E74D423-FDEA-4712-BFB8-D64774AEC02A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{424D9B36-23D6-47E2-8B84-F741738EC621}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{424D9B36-23D6-47E2-8B84-F741738EC621}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{424D9B36-23D6-47E2-8B84-F741738EC621}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E74D423-FDEA-4712-BFB8-D64774AEC02A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E74D423-FDEA-4712-BFB8-D64774AEC02A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E74D423-FDEA-4712-BFB8-D64774AEC02A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E74D423-FDEA-4712-BFB8-D64774AEC02A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
