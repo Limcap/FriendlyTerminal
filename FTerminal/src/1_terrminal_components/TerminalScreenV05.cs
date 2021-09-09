@@ -337,6 +337,10 @@ namespace Limcap.FriendlyTerminal {
 			add => _view.PreviewKeyDown += value;
 			remove => _view.PreviewKeyDown -= value;
 		}
+		public event KeyEventHandler OnPreviewKeyUp {
+			add => _view.PreviewKeyUp += value;
+			remove => _view.PreviewKeyUp -= value;
+		}
 
 
 

@@ -181,6 +181,8 @@ namespace Limcap.FriendlyTerminal {
 				DefaultFontSize = 14,
 			};
 			screen.OnPreviewKeyDown += Handle_KeyboardInput;
+			// This is necessary for accents to work.
+			screen.OnPreviewKeyUp += ( o, e ) => KeyGrabber.GetCharFromKey( e.Key );
 			return screen;
 		}
 
