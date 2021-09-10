@@ -105,15 +105,15 @@
     <Resource Include="UTerminal.ico" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Limcap.Duxtools.Dux">
-      <Version>1.0.3</Version>
-    </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\FTerminal\FTerminal.csproj">
       <Project>{b094e712-a262-431a-9b4c-79861284df63}</Project>
       <Name>FTerminal</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Limcap.Duxtools.Dux">
+      <Version>1.0.5</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
