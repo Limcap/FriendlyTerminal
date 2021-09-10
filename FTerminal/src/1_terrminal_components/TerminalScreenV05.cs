@@ -415,7 +415,20 @@ namespace Limcap.FriendlyTerminal {
 				foreach (Run r in p.Inlines)
 					if (r.Foreground == oldColor) r.Foreground = newColor;
 			}
+		}
 
+
+
+
+
+
+
+
+		public void StopInput() {
+			(_caretRun.Parent as Paragraph).Inlines.Remove( _caretRun );
+		}
+		public void StartInput() {
+			(_view.Document.Blocks.LastBlock as Paragraph).Inlines.Add( _caretRun );
 		}
 	}
 }

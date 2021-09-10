@@ -11,6 +11,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Threading;
 using Cmds = Limcap.FriendlyTerminal.Cmds;
 
 namespace Limcap.FriendlyTerminal {
@@ -20,11 +21,11 @@ namespace Limcap.FriendlyTerminal {
 		public const string NEW_LINE = "\n";
 		public const string PROMPT_STRING = "» ";//›»
 		public const string INSUFICIENT_PRIVILEGE_MESSAGE = "Este comando requer um nível de privilégio maior do que o definido no momento.";
-
 		private readonly string _introText = "Limcap Friendly Terminal";
 
 		private ITerminalScreen _screen;
 
+		private readonly Dispatcher _dispatcher;
 		private readonly TextBlock _assistantArea;
 		private readonly TextBlock _statusArea;
 		private readonly HistoryNavigator _cmdHistory = new HistoryNavigator( 15 );
@@ -34,7 +35,7 @@ namespace Limcap.FriendlyTerminal {
 		public Action onExit;
 		public event PropertyChangedEventHandler PropertyChanged;
 		public DuxNamedList vars;
-		private Func<string, string> _customInterpreter;
+		private Func<string,ValueTask<string>> _customInterpreter;
 		private bool _customInterpreterIsActive;
 		private bool _usePasswordMask;
 		private readonly StringBuilder _passwordInput = new StringBuilder();
@@ -52,8 +53,8 @@ namespace Limcap.FriendlyTerminal {
 
 
 
-		public Terminal( string introText, Action onExit = null ) {
-
+		public Terminal( string introText, Dispatcher uiDispatcher, Action onExit = null ) {
+			_dispatcher = uiDispatcher;
 			_introText = introText ?? _introText;
 			this.onExit = onExit;
 			vars = new DuxNamedList();

@@ -148,8 +148,8 @@ namespace Limcap.FriendlyTerminal {
 				else _customInterpreterIsActive = false;
 				_statusArea.Text = string.Empty;
 				_assistantArea.Text = string.Empty;
-				var output = CommandInterpreter( input );
-				Handle4_InterpreterResult( output );
+				RunInterpreter( input, CommandInterpreter );
+				//CommandInterpreter( input, ( output ) => Handle4_InterpreterResult( output ) );
 			}
 		}
 
@@ -170,7 +170,13 @@ namespace Limcap.FriendlyTerminal {
 			// interpreter on the next conformation of the input buffer.
 			var customInterpreter = _customInterpreter;
 			_customInterpreter = null;
-			var output = customInterpreter( input );
+			RunInterpreter( input, customInterpreter );
+		}
+		private async void RunInterpreter( string input, Func<string,ValueTask<string>> interpreter ) {
+			//(_screen as TerminalScreenV05).StopInput();
+			//var output = await Task.Run( () => interpreter( input ) );
+			var output = await interpreter( input );
+			//(_screen as TerminalScreenV05).StartInput();
 			Handle4_InterpreterResult( output );
 		}
 

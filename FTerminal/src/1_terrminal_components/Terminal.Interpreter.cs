@@ -83,7 +83,7 @@ namespace Limcap.FriendlyTerminal {
 
 
 
-		public string CommandInterpreter( string input ) {
+		public async ValueTask<string> CommandInterpreter( string input ) {
 			var (ok, result) = TryNativeCommand( input );
 			if (ok) return result;
 
@@ -108,11 +108,11 @@ namespace Limcap.FriendlyTerminal {
 				&& cmd.Parameters != null && cmd.Parameters.Where( p => !p.optional ).Count() == 0;
 
 			if (allParametersAreOptionalAndNoArgWasDefined)
-				return CommandRunnerHelper( true );
+				return await CommandRunnerHelper( true );
 			else if (allMandatoryParametersAreFilled && (endsWithTerminator || thereAreNoParams))
-				return RunCommand( cmd, _assistant.ParsedArgs.ToArray() );
+				return await RunCommand( cmd, _assistant.ParsedArgs.ToArray() );
 			else
-				return CommandRunnerHelper( !endsWithTerminator );
+				return await CommandRunnerHelper( !endsWithTerminator );
 			//TypeText( " (Forneça os parâmetros)", FadedFontColor );
 		}
 
@@ -213,12 +213,12 @@ namespace Limcap.FriendlyTerminal {
 
 
 
-		private string CommandRunnerHelper( bool includeOptional, Parameter missingArg = null, string inputValue = null ) {
+		private async ValueTask<string> CommandRunnerHelper( bool includeOptional, Parameter missingArg = null, string inputValue = null ) {
 			try {
 				AssistParameterFilling( includeOptional, missingArg, inputValue );
 				var fullStr = AssembleFullInvokeString();
 				if (fullStr != null && _assistant.ParsedCommand.Parameters != null) _cmdHistory.Add( fullStr );
-				return RunCommand( _assistant.ParsedCommand, _assistant.ParsedArgs.ToArray() );
+				return await RunCommand( _assistant.ParsedCommand, _assistant.ParsedArgs.ToArray() );
 			}
 			catch (ParameterFillingInProgress) {
 				return null;
@@ -282,10 +282,10 @@ namespace Limcap.FriendlyTerminal {
 
 
 
-		private string RunCommand( ACommand cmd, Arg[] args ) {
+		private async ValueTask<string> RunCommand( ACommand cmd, Arg[] args ) {
 			// Start a new block for the text printed by the command.
 			_screen.NewBlock( FontSecondaryColor );
-			var result = cmd.MainFunction( this, args );
+			var result = await Task.Run( () => cmd.MainFunction( this, args ) );
 			_assistant.Reset();
 			Util.CallGarbageCollector();
 			return result;

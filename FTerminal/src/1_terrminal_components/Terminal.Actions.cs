@@ -18,15 +18,17 @@ namespace Limcap.FriendlyTerminal {
 
 
 		public void Clear() {
-			_screen.Clear();
+			_dispatcher.Invoke( () => _screen.Clear() );
 		}
 
 
 
 
 		public void TypeText( string text, Brush color = null ) {
-			_screen.NewColor( color ).AppendText( text );
-			ScrollToEnd();
+			_dispatcher.Invoke( () => {
+				_screen.NewColor( color ).AppendText( text );
+				ScrollToEnd();
+			} );
 		}
 
 
@@ -36,23 +38,34 @@ namespace Limcap.FriendlyTerminal {
 			// Only setting the caret to the last index will not scroll the scroll viewer completely to the bottom,
 			// a few pixels will still have to be scrolled manually. To counteract this, we manually scroll the 
 			// scroll viewer to the bottom.
-			_screen.ScrollToEnd();
+			_dispatcher.Invoke( () => _screen.ScrollToEnd() );
 		}
 
 
 
 
 		public void ReadLine( Func<string, string> inputHandler ) {
-			_usePasswordMask = false;
-			_customInterpreter = inputHandler;
+			_dispatcher.Invoke( () => {
+				_usePasswordMask = false;
+				_customInterpreter = CreateCustomInterpreter( inputHandler );
+			} );
 		}
 
 
 
 
 		public void ReadPassword( Func<string, string> inputHandler ) {
-			_usePasswordMask = true;
-			_customInterpreter = inputHandler;
+			_dispatcher.Invoke( () => {
+				_usePasswordMask = true;
+				_customInterpreter = CreateCustomInterpreter( inputHandler );
+			} );
+		}
+
+
+
+
+		private Func<string,ValueTask<string>> CreateCustomInterpreter( Func<string, string> inputHandler ) {
+			return async ( input ) => await Task.Run( () => inputHandler( input ) );
 		}
 
 
