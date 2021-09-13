@@ -28,16 +28,27 @@ namespace Limcap.FriendlyTerminal {
 
 
 
-		public void RegisterCommandsInNamespaces( params string[] nspaces ) {
+		public void RegisterCommandsInNamespaces( string assemblyName, params string[] nspaces ) {
 			var typeICommand = typeof( ICommand );
-			var assemblies = AppDomain.CurrentDomain.GetAssemblies();
-
-			foreach (var nspace in nspaces) {
-				var types = assemblies
-				.SelectMany( s => s.GetTypes() )
-				.Where( p => typeICommand.IsAssignableFrom( p ) && p.Namespace == nspace );
-				foreach (var t in types) RegisterCommand( t );
+			var types = AppDomain.CurrentDomain.GetAssemblies()
+				.Where( a => a.FullName.StartsWith( assemblyName ) ).FirstOrDefault()?.GetTypes();
+			if (types is null) throw new ArgumentException( "Assembly not found: " + assemblyName );
+			
+			var allTypes = new List<Type>( nspaces.Length * 2 );
+			foreach (var type in types) {
+				foreach (var nspace in nspaces) {
+					if (typeICommand.IsAssignableFrom( type ) && type.Namespace == nspace)
+						RegisterCommand( type );
+						//allTypes.Add( type );
+				}
 			}
+
+			//foreach (var nspace in nspaces) {
+			//	var types = assemblies
+			//	.SelectMany( s => s.GetTypes() )
+			//	.Where( p => typeICommand.IsAssignableFrom( p ) && p.Namespace == nspace );
+			//	foreach (var t in types) RegisterCommand( t );
+			//}
 		}
 
 
