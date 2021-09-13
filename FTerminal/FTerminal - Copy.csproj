@@ -2,12 +2,8 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <!--
-  	<TargetFramework>net462</TargetFramework>
+  	<TargetFramework>.NETFramework4.6.2</TargetFramework>
 	-->
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -118,9 +114,6 @@
     <EmbeddedResource Include="src\6_implemented_commands\customization\ToggleAssistBar.locale.json" />
     <EmbeddedResource Include="src\6_implemented_commands\customization\ToggleStatusBar.locale.json" />
     <EmbeddedResource Include="src\6_implemented_commands\dev\MemUsage.locale.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Limcap.Duxtools.Dux">
