@@ -34,6 +34,17 @@ namespace Limcap.FriendlyTerminal {
 
 
 
+		public void ChangeText( string text, Brush color = null ) {
+			_dispatcher.Invoke( () => {
+				_screen.Buffer = text;
+				_screen.ChangeColor( color );
+				ScrollToEnd();
+			} );
+		}
+
+
+
+
 		public void ScrollToEnd() {
 			// Only setting the caret to the last index will not scroll the scroll viewer completely to the bottom,
 			// a few pixels will still have to be scrolled manually. To counteract this, we manually scroll the 
