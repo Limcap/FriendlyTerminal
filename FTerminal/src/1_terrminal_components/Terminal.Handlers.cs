@@ -175,11 +175,25 @@ namespace Limcap.FriendlyTerminal {
 		}
 		private async void RunInterpreter( string input, Func<string,ValueTask<string>> interpreter ) {
 			//(_screen as TerminalScreenV05).StopInput();
-			//var output = await Task.Run( () => interpreter( input ) );
-			_interpreterTask = interpreter( input );
-			var output = await _interpreterTask;
+			try {
+				_interpreterTask = interpreter( input );
+				var output = await _interpreterTask;
+				Handle4_InterpreterResult( output );
+			}
+			catch( Exception ex ) {				
+				TypeText( "\n----------------------------------------\nO commando resultou em um ou mais erros:\n" );
+				if (ex is AggregateException ae)
+					foreach (var e in ae.InnerExceptions)
+						TypeText( "\n" + e.ToString() );
+				else {
+					var full = ex.StackTrace.Split( new string[] { Environment.NewLine }, StringSplitOptions.None );
+					TypeText( "\nTipo: " + ex.GetType().FullName );
+					TypeText( "\nMensagem: " + ex.Message + "\n" );
+					for( int i=0; i <1; i++) if (full.Length > i) TypeText( "\n" + full[i] );
+				}
+				Handle4_InterpreterResult( null );
+			}
 			//(_screen as TerminalScreenV05).StartInput();
-			Handle4_InterpreterResult( output );
 		}
 
 

@@ -234,9 +234,9 @@ namespace Limcap.FriendlyTerminal {
 			catch (ParameterFillingInProgress) {
 				return null;
 			}
-			catch (Exception ex) {
-				return ex.ToString();
-			}
+			//catch (Exception ex) {
+			//	return ex.ToString();
+			//}
 		}
 
 
