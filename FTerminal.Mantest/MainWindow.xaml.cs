@@ -24,7 +24,7 @@ namespace Limcap.FriendlyTerminal.Mantest {
 			InitializeComponent();
 
 			var t = new Terminal( "TESTE do terminal\nLinha 2", Dispatcher, Close ) { Locale = "ptbr" };
-			t.RegisterCommandsInNamespaces(
+			t.RegisterCommandsInNamespaces( "Limcap.FriendlyTerminal",
 				"Limcap.FriendlyTerminal.Cmds.AccessControl",
 				"Limcap.FriendlyTerminal.Cmds.Basic",
 				"Limcap.FriendlyTerminal.Cmds.Customization",
