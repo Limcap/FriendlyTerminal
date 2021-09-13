@@ -301,5 +301,9 @@ namespace Limcap.FriendlyTerminal {
 		public void SwapFontColor( SolidColorBrush oldColor, SolidColorBrush newColor ) {
 			throw new NotImplementedException();
 		}
+
+		public ITerminalScreen ChangeColor( Brush color ) {
+			throw new NotImplementedException();
+		}
 	}
 }

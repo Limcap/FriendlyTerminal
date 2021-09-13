@@ -193,7 +193,7 @@ namespace Limcap.FriendlyTerminal {
 
 
 
-		public ITerminalScreen ChangeBufferColor( Brush color ) {
+		public ITerminalScreen ChangeColor( Brush color ) {
 			if (color == null)
 				_BufferRun.Foreground.SetValue( TextElement.ForegroundProperty, DependencyProperty.UnsetValue );
 			else
