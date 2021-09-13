@@ -103,6 +103,8 @@ namespace Limcap.FriendlyTerminal {
 				FontFamily = new FontFamily( "Consolas" ),
 				PagePadding = marginThickness,
 				Focusable = false,
+				IsHyphenationEnabled = false,
+				TextAlignment = TextAlignment.Left
 			};
 			_view.Document = doc;
 
@@ -225,7 +227,7 @@ namespace Limcap.FriendlyTerminal {
 			// with the separator char, the first slice will always be empty.
 			if (sli.HasNext && sli.PeekNext().IsEmpty) sli.Next();
 			while (sli.HasNext) {
-				var line = sli.Next();
+				var line = sli.Next().TrimEnd('\r');
 				if (line.StartsWith( NEW_LINE_CHAR )) {
 					NewBuffer( color );
 					//var curRunStartChar = _BufferRun.ContentStart.GetPositionAtOffset( 1 ).GetTextInRun( LogicalDirection.Backward );
