@@ -193,6 +193,21 @@ namespace Limcap.FriendlyTerminal {
 
 
 
+		public ITerminalScreen ChangeBufferColor( Brush color ) {
+			if (color == null)
+				_BufferRun.Foreground.SetValue( TextElement.ForegroundProperty, DependencyProperty.UnsetValue );
+			else
+				_BufferRun.Foreground = color;
+			return this;
+		}
+
+
+
+
+
+
+
+
 		public ITerminalScreen AppendText( string text ) {
 			if (text == NEW_LINE_STRING || text.Length == 1) AppendText_NoSplit( text );
 			else AppendText_SplitLines( text );

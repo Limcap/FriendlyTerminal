@@ -17,6 +17,7 @@ namespace Limcap.FriendlyTerminal {
 		ITerminalScreen NewBlock( Brush color = null );
 		ITerminalScreen NewBuffer( Brush color = null );
 		ITerminalScreen NewColor( Brush color );
+		ITerminalScreen ChangeColor( Brush color );
 		ITerminalScreen AppendText( string text );
 		//void NewBlock( Brush color, string text = null );
 		//void NewBlock( string text );
