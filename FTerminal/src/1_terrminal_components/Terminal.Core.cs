@@ -36,6 +36,7 @@ namespace Limcap.FriendlyTerminal {
 		public event PropertyChangedEventHandler PropertyChanged;
 		public DuxNamedList vars;
 		private Func<string,ValueTask<string>> _customInterpreter;
+		private ValueTask<string> _interpreterTask;
 		private bool _customInterpreterIsActive;
 		private bool _usePasswordMask;
 		private readonly StringBuilder _passwordInput = new StringBuilder();

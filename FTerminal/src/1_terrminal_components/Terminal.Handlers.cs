@@ -23,6 +23,7 @@ namespace Limcap.FriendlyTerminal {
 
 
 		private void Handle_KeyboardInput( object sender, KeyEventArgs e ) {
+			if (_interpreterTask == null || !_interpreterTask.IsCompleted) return;
 			//if (e.IsRepeat) UpdateTraceInfo( e.Key );
 			if (_usePasswordMask) Handle_PasswordInput( e );
 			//else if (e.Key.IsIn( Key.Left, Key.Right, Key.Up, Key.Down, Key.Home, Key.End, Key.PageUp, Key.PageDown )) {}
@@ -175,7 +176,8 @@ namespace Limcap.FriendlyTerminal {
 		private async void RunInterpreter( string input, Func<string,ValueTask<string>> interpreter ) {
 			//(_screen as TerminalScreenV05).StopInput();
 			//var output = await Task.Run( () => interpreter( input ) );
-			var output = await interpreter( input );
+			_interpreterTask = interpreter( input );
+			var output = await _interpreterTask;
 			//(_screen as TerminalScreenV05).StartInput();
 			Handle4_InterpreterResult( output );
 		}
