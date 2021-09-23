@@ -1,6 +1,6 @@
 {
 	"INVOKE_TEXT": {
-		"enus":  "terminal, help",
+		"enus": "terminal, help",
 		"ptbr": "terminal, ajuda"
 	},
 
@@ -12,8 +12,8 @@
 
 
 	"intro": {
-		"enus": "The following commands are available in this terminal. For more information on any of them,\ntype the corresponding command followed by :? (colon and question mark)\n\n",
-		"ptbr": "Os seguintes comandos estão disponíveis neste termianal. Para mais informações sobre cada um,\ndigite o comando correspondente seguido de :? (dois pontos e interrogação)\n\n"
+		"enus": "The following commands are available in this terminal. For more information on any of them, type the corresponding command followed by :? (colon and question mark)\n\n",
+		"ptbr": "Os seguintes comandos estão disponíveis neste termianal. Para mais informações sobre cada um, digite o comando correspondente seguido de :? (dois pontos e interrogação)\n\n"
 	},
 	"no-cmds": {
 		"enus": "No command available",
