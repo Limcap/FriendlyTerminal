@@ -55,10 +55,11 @@ namespace Limcap.FriendlyTerminal {
 
 
 
-		public void ReadLine( Func<string, string> inputHandler ) {
+		public void ReadLine( Func<string, string> inputHandler, string defaultText = "" ) {
 			_dispatcher.Invoke( () => {
 				_usePasswordMask = false;
 				_customInterpreter = CreateCustomInterpreter( inputHandler );
+				_screen.NewBuffer(_screen.DefaultFontColor);
 			} );
 		}
 
@@ -83,7 +84,7 @@ namespace Limcap.FriendlyTerminal {
 
 
 
-		public void NewPrompt( bool newBlock = true ) {
+		private void NewPrompt( bool newBlock = true ) {
 			if (_screen.CurrentBlockIsEmpty())
 				_screen.ResetCurrentBlockFormatting();
 			else if (!newBlock)

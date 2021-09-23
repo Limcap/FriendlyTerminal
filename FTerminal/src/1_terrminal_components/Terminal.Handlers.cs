@@ -96,7 +96,8 @@ namespace Limcap.FriendlyTerminal {
 			_customInterpreter = null;
 			_customInterpreterIsActive = false;
 			Status = string.Empty;
-			_screen.NewBuffer(FontSecondaryColor).AppendText( "`Esc´\n\nA tarefa foi cancelada pelo usuário." );
+			_screen.NewBuffer( FontPrimaryColor ).AppendText( "`Esc´" );
+			_screen.NewBuffer( FontSecondaryColor ).AppendText( "\n\nA tarefa foi cancelada pelo usuário." );
 			NewPrompt();
 			Handle3_TextChanged();
 			_screen.ScrollToEnd();

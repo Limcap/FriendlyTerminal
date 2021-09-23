@@ -167,7 +167,12 @@ namespace Limcap.FriendlyTerminal {
 
 		public ITerminalScreen NewBuffer( Brush color = null ) {
 			var run = new Run();
-			if (color != null) run.Foreground = color;
+			if (color != null) {
+				run.Foreground = color;
+				_caretRun.Foreground = color;
+			}
+			else _caretRun.SetValue( TextElement.ForegroundProperty, DependencyProperty.UnsetValue );
+
 			(_caretRun.Parent as Paragraph).Inlines.InsertBefore( _caretRun, run );
 			return this;
 		}
