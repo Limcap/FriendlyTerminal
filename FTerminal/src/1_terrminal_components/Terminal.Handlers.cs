@@ -13,7 +13,7 @@ using System.Windows.Media;
 namespace Limcap.FriendlyTerminal {
 	public partial class Terminal {
 
-		public bool IsAutocompleting { get; private set; }
+		private bool IsAutocompleting { get; set; }
 
 
 

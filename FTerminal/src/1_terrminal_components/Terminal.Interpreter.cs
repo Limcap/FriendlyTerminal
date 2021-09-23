@@ -94,7 +94,7 @@ namespace Limcap.FriendlyTerminal {
 
 
 
-		public async ValueTask<string> CommandInterpreter( string input ) {
+		private async ValueTask<string> CommandInterpreter( string input ) {
 			var (ok, result) = TryNativeCommand( input );
 			if (ok) return result;
 
