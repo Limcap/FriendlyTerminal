@@ -120,8 +120,8 @@ namespace Limcap.FriendlyTerminal {
 
 
 		public string Status {
-			get => _assistantArea.Text;
-			set => _assistantArea.Text = value;
+			get => _statusArea.Text;
+			set => _statusArea.Text = value;
 		}
 
 
