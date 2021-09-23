@@ -32,6 +32,8 @@ namespace Limcap.FriendlyTerminal {
 			else if (e.Key == Key.Tab) Handle2_Autocomplete( e );
 			else if (e.Key == Key.Up || e.Key == Key.Down) Handle2_NavigateHistory( e );
 			else if (e.Key == Key.Back) Handle2_DeleteFromBuffer( e );
+			else if (e.Key == Key.V && IsControlDown) Handle2_PasteToBuffer();
+			else if (e.Key == Key.Escape && _customInterpreterIsActive) Handle2_CancelCustomInterpreter();
 			else Handle2_AddToBuffer( e );
 		}
 
@@ -62,6 +64,42 @@ namespace Limcap.FriendlyTerminal {
 			//InputRun.ContentEnd.GetPositionAtOffset( -1 ).DeleteTextInRun( 1 );
 			_screen.Backspace();
 			Handle3_TextChanged();
+		}
+
+
+
+
+
+
+
+
+		private void Handle2_PasteToBuffer( bool allowNewLine = false ) {
+			var txt = Clipboard.GetText();
+			if (!allowNewLine) { 
+				var idx = txt.IndexOf( '\n' );
+				if (idx > -1) txt = txt.Remove( idx );
+				txt = txt.TrimEnd( TerminalScreenV05.CARET_CHAR, '\n', '\r' );
+			}
+			else txt = txt.TrimEnd( TerminalScreenV05.CARET_CHAR );
+			_screen.AppendText( txt );
+			Handle3_TextChanged();
+		}
+
+
+
+
+
+
+
+
+		private void Handle2_CancelCustomInterpreter() {
+			_customInterpreter = null;
+			_customInterpreterIsActive = false;
+			Status = string.Empty;
+			_screen.NewBuffer(FontSecondaryColor).AppendText( "`Esc´\n\nA tarefa foi cancelada pelo usuário." );
+			NewPrompt();
+			Handle3_TextChanged();
+			_screen.ScrollToEnd();
 		}
 
 

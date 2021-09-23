@@ -21,13 +21,14 @@ namespace Limcap.FriendlyTerminal {
 
 		public const string NEW_LINE_STRING = "\n";
 		public const char NEW_LINE_CHAR = '\n';
+		public const char CARET_CHAR = '█';
 		//public const string PROMPT_STRING = "» ";//›»
 		public readonly Thickness marginThickness = new Thickness( 5 );
 
 
 
 
-		private readonly Run _caretRun = new Run( "█" );
+		private readonly Run _caretRun = new Run( CARET_CHAR.ToString() );
 		private readonly FlowDocumentScrollViewer _view;
 
 
