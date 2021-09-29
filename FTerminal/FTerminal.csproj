@@ -137,6 +137,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Build.cmd" />
     <None Include="FTerminal.nupkg.create.cmd" />
     <None Include="FTerminal.nuspec" />
     <None Include="FTerminal.snk" />
