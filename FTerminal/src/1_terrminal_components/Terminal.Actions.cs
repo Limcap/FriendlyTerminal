@@ -55,11 +55,14 @@ namespace Limcap.FriendlyTerminal {
 
 
 
+		public void ReadLine( string defaultText, Func<string, string> inputHandler ) {
+			ReadLine( inputHandler, defaultText );
+		}
 		public void ReadLine( Func<string, string> inputHandler, string defaultText = "" ) {
 			_dispatcher.Invoke( () => {
 				_usePasswordMask = false;
 				_customInterpreter = CreateCustomInterpreter( inputHandler );
-				_screen.NewBuffer(_screen.DefaultFontColor);
+				_screen.NewBuffer( _screen.DefaultFontColor ).AppendText( defaultText );
 			} );
 		}
 
