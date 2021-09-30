@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -45,7 +46,8 @@ namespace Limcap.FriendlyTerminal {
 
 
 		private void Handle2_AddToBuffer( KeyEventArgs e ) {
-			if (e.Key != Key.Escape) {
+			// !IsControlDown é importante para nao inserir caracteres como \u0003 ao pressionar ctrl+c
+			if (e.Key != Key.Escape && !IsControlDown) {
 				var c = KeyGrabber.GetCharFromKey( e.Key );
 				if (c != 0)
 					_screen.AppendText( c.ToString() );
@@ -74,7 +76,9 @@ namespace Limcap.FriendlyTerminal {
 
 
 		private void Handle2_PasteToBuffer( bool allowNewLine = false ) {
-			var txt = Clipboard.GetText();
+			var txt = Clipboard.GetText(TextDataFormat.UnicodeText);
+			//txt = txt.Replace( "\u0003", "" );
+			txt = Regex.Replace( txt, "[\u0000\u0001\u0002\u0003\u0004]+","" );
 			if (!allowNewLine) { 
 				var idx = txt.IndexOf( '\n' );
 				if (idx > -1) txt = txt.Remove( idx );
