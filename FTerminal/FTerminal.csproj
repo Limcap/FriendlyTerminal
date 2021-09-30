@@ -141,6 +141,7 @@
     <None Include="FTerminal.nupkg.create.cmd" />
     <None Include="FTerminal.nuspec" />
     <None Include="FTerminal.snk" />
+    <None Include="UploadToGit.cmd" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
