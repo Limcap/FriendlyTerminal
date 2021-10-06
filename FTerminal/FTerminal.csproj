@@ -98,6 +98,7 @@
     <Compile Include="src\4_generic_components\Range.cs" />
     <Compile Include="src\4_generic_components\Tstring.cs" />
     <Compile Include="src\5_util\NotepadRunner.cs" />
+    <Compile Include="src\5_util\TextTable.cs" />
     <Compile Include="src\5_util\Util.cs" />
     <Compile Include="src\5_util\Util_Optimization.cs" />
     <Compile Include="src\6_implemented_commands\customization\ChangeTheme.cs" />

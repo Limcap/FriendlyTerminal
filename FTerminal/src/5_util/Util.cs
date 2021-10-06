@@ -9,7 +9,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 
 namespace Limcap.FriendlyTerminal {
-	public class Util {
+	internal class Util {
 
 		public static unsafe char* GetPointer( ReadOnlySpan<char> span ) {
 			fixed (char* ptr = &span.GetPinnableReference()) { return ptr; }
@@ -132,6 +132,26 @@ namespace Limcap.FriendlyTerminal {
 
 		public static string JoinStrings( this IEnumerable<string> list, string separator ) {
 			return string.Join( separator, list );
+		}
+
+
+
+
+
+		public static string FixedRight( this string text, int size, char paddingChar = ' ' ) {
+			return text.PadRight( size, paddingChar ).Substring( 0, size );
+		}
+		public static string FixedLeft( this string text, int size, char paddingChar = ' ' ) {
+			return text.PadLeft( size, paddingChar ).As( t => t.Substring( t.Length - size ) );
+		}
+		public static string FixedSize( this string text, int size, char paddingChar = ' ', int alignment = -1 ) {
+			if (alignment > 0)
+				return text.PadLeft( size, paddingChar ).As( t => t.Substring( t.Length - size ) );
+			if (alignment < 0)
+				return text.PadRight( size, paddingChar ).Substring( 0, size );
+			else
+				return text.PadLeft( size / 2, paddingChar ).PadRight( size, paddingChar ).Substring( 0, size );
+
 		}
 	}
 }
