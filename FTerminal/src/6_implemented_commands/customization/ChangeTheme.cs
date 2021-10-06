@@ -48,9 +48,9 @@ namespace Limcap.FriendlyTerminal.Cmds.Customization {
 
 
 		public override string MainFunction( Terminal t, Arg[] args ) {
-			var arg_fontsize = args.Get( Parameters[0] );
-			var arg_fontcolor = args.Get( Parameters[1] );
-			var arg_backcolor = args.Get( Parameters[2] );
+			var arg_fontsize = args.GetString( Parameters[0] );
+			var arg_fontcolor = args.GetString( Parameters[1] );
+			var arg_backcolor = args.GetString( Parameters[2] );
 
 			if (arg_fontsize == "reset") t.FontSize = 14;
 			else arg_fontsize.SafeParseInt()?.As( s => t.FontSize = s );

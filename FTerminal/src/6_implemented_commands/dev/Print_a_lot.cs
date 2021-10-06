@@ -30,7 +30,7 @@ namespace Limcap.FriendlyTerminal.Cmds.Dev {
 
 
 		public override string MainFunction( Terminal t, Arg[] args ) {
-			int length = args.Get( Parameters[0] ).SafeParseInt() ?? 1000;
+			int length = args.GetString( Parameters[0] ).SafeParseInt() ?? 1000;
 			//var sb = new StringBuilder();
 			for (int i = 0; i < length; i = i + loopText2.Length) {
 				t.TypeText( loopText2 );

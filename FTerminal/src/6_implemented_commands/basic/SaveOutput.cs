@@ -40,7 +40,7 @@ namespace Limcap.FriendlyTerminal.Cmds.Basic {
 
 
 		public override string MainFunction( Terminal t, Arg[] args ) {
-			var filename = args.Get(Parameters[0]);
+			var filename = args.GetString(Parameters[0]);
 			if (args.Length == 0) {
 				t.TypeText( Info );
 			}
