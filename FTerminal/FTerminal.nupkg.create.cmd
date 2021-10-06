@@ -1,4 +1,8 @@
 @echo off
-REM nuget pack FTerminal.nuspec
-nuget pack FTerminal.nuspec -Symbols -SymbolPackageFormat snupkg
+
+REM PARA GERAR UM PACOTE SO COM O DLL E O PDB
+nuget pack FTerminal.nuspec
+
+REM PARA GERAR OS DOIS PACOTES SEPARADOS
+REM nuget pack FTerminal.nuspec -Symbols -SymbolPackageFormat snupkg
 pause
