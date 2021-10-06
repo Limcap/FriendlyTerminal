@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace Limcap.FriendlyTerminal {
 	//public partial class ArgParser {
@@ -95,12 +97,40 @@ namespace Limcap.FriendlyTerminal {
 
 
 	public static class Arg_Extensions {
-		public static string Get( this Arg[] array, Parameter param ) {
-			foreach( var a in array ) {
+		//public static string Get( this Arg[] array, Parameter param ) {
+		//	foreach (var a in array) {
+		//		if (a.parameter == param)
+		//			return a.value.AsString;
+		//	}
+		//	return null;
+		//}
+
+		public static string GetString( this Arg[] array, Parameter param ) {
+			return Get( array, param ).AsString();
+		}
+
+		public static List<string> GetList( this Arg[] array, Parameter param ) {
+			return Get( array, param ).AsList();
+		}
+
+		public static Arg Get( this Arg[] array, Parameter param ) {
+			foreach (var a in array) {
 				if (a.parameter == param)
-					return a.value.AsString;
+					return a;
 			}
-			return null;
+			return new Arg() { name = param.name, value = null };
+		}
+
+		public static string AsString( this Arg arg ) {
+			return arg.value.AsString;
+		}
+
+		public static List<string> AsList( this Arg arg, char separator = ';' ) {
+			if (arg.value.AsString is null) return null;
+			var val = arg.value.AsString;
+			var list = val.Split( separator ).Select( id => id.Trim() ).ToList() ?? new List<string>();
+			list.Remove( string.Empty );
+			return list;
 		}
 	}
 }
