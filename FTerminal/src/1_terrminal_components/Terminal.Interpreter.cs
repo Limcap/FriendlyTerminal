@@ -277,7 +277,7 @@ namespace Limcap.FriendlyTerminal {
 						_customInterpreter = ( input ) => CommandRunnerHelper( includeOptional, p, input );
 						if (optional) TypeText( $"  [{p.name}] = " );
 						else TypeText( $"  {p.name} = " );
-						_statusArea.Text = $"{(optional ? "Optional parameter" : "Parameter")} '{p.name}': {p.description}";
+						_statusArea.Text = $"{(optional ? "Optional parameter" : "Parameter")} '{p.name}': {p.shortDescription}";
 						_assistantArea.Text = "Value: " + p.type.ToString();
 						_screen.NewBuffer();
 						throw new ParameterFillingInProgress();

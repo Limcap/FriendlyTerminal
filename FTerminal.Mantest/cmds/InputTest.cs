@@ -18,7 +18,11 @@ namespace Limcap.FriendlyTerminal.Cmds.Dev {
 
 
 		protected override Parameter[] ParametersBuilder() => new[] {
-			new Parameter("length", Parameter.Type.INTEGER, true, "Length of the text in characters.")
+			new Parameter("length", Parameter.Type.INTEGER, true, "Length of the text in characters.",
+				"Para excluir:" +
+				"\n Colaboradores solecionados, digite um ou mais PIS separados por vírgula;" +
+				"\n Todos os colaboradoes, digite 'todos';" +
+				"\n Colaboradores órfãos (não associados a algum descritor), digite 'órfãos'")
 		};
 
 

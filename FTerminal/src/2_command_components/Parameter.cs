@@ -4,16 +4,18 @@ using System.Linq;
 
 namespace Limcap.FriendlyTerminal {
 	public class Parameter {
-		public Parameter( string name, Type type, bool optional, string description ) {
+		public Parameter( string name, Type type, bool optional, string shortDescription, string longDescription = null ) {
 			this.name = name;
 			this.type = type;
 			this.optional = optional;
-			this.description = description;
+			this.shortDescription = shortDescription;
+			this.longDescription = longDescription;
 		}
 		public string name;
 		public Type type;
 		public bool optional;
-		public string description;
+		public string shortDescription;
+		public string longDescription;
 
 
 
@@ -31,7 +33,7 @@ namespace Limcap.FriendlyTerminal {
 
 
 
-	public partial class Ext {
+	public static partial class Ext {
 		public static List<Parameter> GetByNamePrefix(
 			this Parameter[] paramArray,
 			ReadOnlySpan<char> name,

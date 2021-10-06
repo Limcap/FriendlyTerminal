@@ -51,6 +51,7 @@ namespace Limcap.FriendlyTerminal {
 
 		public string Info {
 			get {
+				string bullet = "● ";//▪
 				var t = Translator.LoadTranslator( typeof(Parameter), Locale );
 				var title = t.Translate( "TITLE" );
 				var word_description = t.Translate( "DESCRIPTION" );
@@ -58,11 +59,13 @@ namespace Limcap.FriendlyTerminal {
 				var word_optional = t.Translate( "OPTIONAL" );
 				var word_type = t.Translate( "TYPE" );
 				var lines = new List<string>( Parameters?.Length??0 );
-				string output = $"{title}\n\n{word_description}\n{Description}";
+				string output = $"{title}\n\n═══════════════ {word_description} ═══════════════\n{Description}";
 				if (Parameters != null && Parameters.Length > 0) {
-					output += "\n\n" + word_parameters + "\n";
-					foreach (var param in Parameters)
-						lines.Add( $"{param.name}{(param.optional ? $" ({word_optional}) " : " ")}: {param.description} - {word_type}: {param.type};" );
+					output += $"\n\n═══════════════ {word_parameters} ═══════════════";
+					foreach (var param in Parameters) {
+						var longDesc = param.longDescription != null ? $"\n{param.longDescription}" : "";
+						lines.Add( $"\n{bullet}{param.name} ({(param.optional ? $"{word_optional}; " : "")}{word_type}: {param.type})\n{param.shortDescription}{longDesc}" );
+					}
 					output += string.Join( NEW_LINE, lines );
 				}
 				return output;

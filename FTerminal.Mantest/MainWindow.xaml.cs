@@ -30,6 +30,8 @@ namespace Limcap.FriendlyTerminal.Mantest {
 				"Limcap.FriendlyTerminal.Cmds.Customization",
 				"Limcap.FriendlyTerminal.Cmds.Dev"
 			);
+			t.RegisterCommandsInNamespaces( "Terminal.ManTest",
+				"Limcap.FriendlyTerminal.Cmds.Dev" );
 			MainPanel.Children.Add( t.Panel );
 			t.Start();
 
