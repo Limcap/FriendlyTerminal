@@ -36,6 +36,7 @@ namespace Limcap.FriendlyTerminal {
 
 		public bool UseSpaceBetweenBlocks { get; set; } = true;
 		public string Buffer { get => _BufferRun.Text; set => _BufferRun.Text = value; }
+		public double Zoom { get => _view.Zoom; }
 
 
 
@@ -56,9 +57,14 @@ namespace Limcap.FriendlyTerminal {
 
 
 
-		private SolidColorBrush _defaultBackgroundColor = new SolidColorBrush( Color.FromArgb( 200, 25, 27, 27 ) );
-		private SolidColorBrush _defaultFontColor = new SolidColorBrush( Color.FromRgb( 171, 255, 46 ) );
-		private double _defaultFontSize = 14;
+		private readonly SolidColorBrush _defaultBackgroundColor = new SolidColorBrush( Color.FromArgb( 200, 25, 27, 27 ) );
+		private readonly SolidColorBrush _defaultFontColor = new SolidColorBrush( Color.FromRgb( 171, 255, 46 ) );
+		private readonly double _defaultFontSize = 14;
+
+
+
+
+		public event EventHandler<double> OnZoom;
 
 
 
@@ -80,7 +86,7 @@ namespace Limcap.FriendlyTerminal {
 			set => _view.Document.FontSize = value.MinMax( 10, 28 );
 		}
 
-		
+
 
 
 
@@ -109,9 +115,41 @@ namespace Limcap.FriendlyTerminal {
 			};
 			_view.Document = doc;
 
+			var contextItem = new MenuItem() {
+				Header = "Copiar e digitar",
+				Command = new ContextCommand( _view, ( o ) => {
+					var text = _view.Selection.Text.Trim();
+					AppendText( text );
+					ScrollToEnd();
+				} )
+			};
+
+			// Add the custom context menu
+			_view.ContextMenu.Items.Add( contextItem );
+			doc.ContextMenu = _view.ContextMenu;
+			//doc.ContextMenu = new ContextMenu();
+			//doc.ContextMenu.Items.Add( contextItem );
+
+			// Initialize the tag, wich is used for zoom.
+			_view.Tag = _view.Zoom;
+
+			// Setup the zoom behavior
+			_view.Document.MouseWheel += ( o, a ) => {
+				if (!Keyboard.IsKeyDown( Key.LeftCtrl ) && !Keyboard.IsKeyDown( Key.RightCtrl )) return;
+				var v = (FlowDocumentScrollViewer)((FlowDocument)o).Parent;
+				var increment = v.ZoomIncrement * (a.Delta > 0 ? 1 : -1);
+				if( increment > 0 && v.CanIncreaseZoom || increment < 0 && v.CanDecreaseZoom ) {
+					v.Tag = v.Zoom;
+					var newZoom = v.Zoom + increment;
+					OnZoom.Invoke( o, newZoom );
+					v.Zoom = newZoom;
+				}
+				a.Handled = true;
+			};
+
+			// Create a new block for typing
 			NewBlock();
 		}
-
 
 
 
@@ -248,7 +286,7 @@ namespace Limcap.FriendlyTerminal {
 			// with the separator char, the first slice will always be empty.
 			if (sli.HasNext && sli.PeekNext().IsEmpty) sli.Next();
 			while (sli.HasNext) {
-				var line = sli.Next().TrimEnd('\r');
+				var line = sli.Next().TrimEnd( '\r' );
 				if (line.StartsWith( NEW_LINE_CHAR )) {
 					NewBuffer( color );
 					//var curRunStartChar = _BufferRun.ContentStart.GetPositionAtOffset( 1 ).GetTextInRun( LogicalDirection.Backward );
@@ -452,6 +490,21 @@ namespace Limcap.FriendlyTerminal {
 		}
 		public void StartInput() {
 			(_view.Document.Blocks.LastBlock as Paragraph).Inlines.Add( _caretRun );
+		}
+
+
+
+
+
+
+
+
+		private class ContextCommand : System.Windows.Input.ICommand {
+			public ContextCommand( Control control, Action<object> action ) => this.action = action;
+			public event EventHandler CanExecuteChanged;
+			private readonly Action<object> action;
+			public bool CanExecute( object parameter ) => true;
+			public void Execute( object parameter ) => action?.Invoke( parameter );
 		}
 	}
 }

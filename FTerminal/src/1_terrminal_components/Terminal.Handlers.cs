@@ -22,9 +22,8 @@ namespace Limcap.FriendlyTerminal {
 
 
 
-
 		private void Handle_KeyboardInput( object sender, KeyEventArgs e ) {
-			if (_interpreterTask == null || !_interpreterTask.IsCompleted) return;
+			if (!_interpreterTask.IsCompleted) return;
 			//if (e.IsRepeat) UpdateTraceInfo( e.Key );
 			if (_usePasswordMask) Handle_PasswordInput( e );
 			//else if (e.Key.IsIn( Key.Left, Key.Right, Key.Up, Key.Down, Key.Home, Key.End, Key.PageUp, Key.PageDown )) {}
@@ -165,7 +164,7 @@ namespace Limcap.FriendlyTerminal {
 
 
 		private void Handle2_ConfirmBuffer( KeyEventArgs e ) {
-			e.Handled = true;
+			if( e != null ) e.Handled = true;
 			var input = _screen.Buffer;
 			if (IsAutocompleting) {
 				IsAutocompleting = false;

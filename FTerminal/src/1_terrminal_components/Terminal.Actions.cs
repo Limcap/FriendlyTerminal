@@ -24,10 +24,10 @@ namespace Limcap.FriendlyTerminal {
 
 
 
-		public void TypeText( string text, Brush color = null ) {
+		public void TypeText( string text, Brush color = null, bool scrollToEnd = true ) {
 			_dispatcher.Invoke( () => {
 				_screen.NewColor( color ).AppendText( text );
-				ScrollToEnd();
+				if( scrollToEnd ) ScrollToEnd();
 			} );
 		}
 
@@ -158,6 +158,16 @@ namespace Limcap.FriendlyTerminal {
 					InputManager.Current.ProcessInput( e1 );
 				}
 			}
+		}
+
+
+
+
+		public void TypeAndConfirm( string cmd ) {
+			if (!_interpreterTask.IsCompleted) return;
+			_screen.AppendText( cmd );
+			Handle3_TextChanged();
+			Handle2_ConfirmBuffer( null );
 		}
 	}
 }

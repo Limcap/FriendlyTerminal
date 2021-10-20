@@ -19,7 +19,7 @@ namespace Limcap.FriendlyTerminal {
 
 		public static readonly SolidColorBrush defaultPrimaryColor = new SolidColorBrush( Color.FromRgb( 171, 255, 46 ) );
 		public static readonly SolidColorBrush defaultBackgroundColor = new SolidColorBrush( Color.FromRgb( 16, 18, 18 ) );
-
+		private readonly double defaultStatusAreaFontSize = 12;
 		public double FontSize { get => _screen.DefaultFontSize; set => _screen.DefaultFontSize = value; }
 		
 		

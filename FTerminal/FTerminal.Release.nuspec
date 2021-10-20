@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
     <id>Limcap.FriendlyTerminal</id>
-    <version>0.7.8.20</version>
+    <version>0.7.8.24</version>
     <title>Friendly Terminal</title>
     <authors>Limcap</authors>
     <owners>Limcap</owners>
@@ -46,8 +46,8 @@
     </frameworkAssemblies>
   </metadata>
   <files>
-    <file src="bin\Debug\Limcap.FriendlyTerminal.dll" target="lib\net462\Limcap.FriendlyTerminal.dll" />
-    <file src="bin\Debug\Limcap.FriendlyTerminal.pdb" target="lib\net462\Limcap.FriendlyTerminal.pdb" />
-    <file src="bin\Debug\Limcap.FriendlyTerminal.xml" target="lib\net462\Limcap.FriendlyTerminal.xml" />
+    <file src="bin\Release\Limcap.FriendlyTerminal.dll" target="lib\net462\Limcap.FriendlyTerminal.dll" />
+    <file src="bin\Release\Limcap.FriendlyTerminal.pdb" target="lib\net462\Limcap.FriendlyTerminal.pdb" />
+    <file src="bin\Release\Limcap.FriendlyTerminal.xml" target="lib\net462\Limcap.FriendlyTerminal.xml" />
   </files>
 </package>

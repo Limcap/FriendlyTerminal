@@ -139,8 +139,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Build.cmd" />
+    <None Include="FTerminal.Debug.nuspec" />
     <None Include="FTerminal.nupkg.create.cmd" />
-    <None Include="FTerminal.nuspec" />
+    <None Include="FTerminal.Release.nuspec" />
     <None Include="FTerminal.snk" />
     <None Include="UploadToGit.cmd" />
   </ItemGroup>

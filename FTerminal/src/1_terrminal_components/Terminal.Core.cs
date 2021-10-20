@@ -28,6 +28,7 @@ namespace Limcap.FriendlyTerminal {
 		private readonly Dispatcher _dispatcher;
 		private readonly TextBlock _assistantArea;
 		private readonly TextBlock _statusArea;
+		
 		private readonly HistoryNavigator _cmdHistory = new HistoryNavigator( 15 );
 		public Assistant _assistant;
 		private bool _allowAssistant = true;
@@ -46,6 +47,9 @@ namespace Limcap.FriendlyTerminal {
 		public Panel Panel { get; private set; }
 		public int CurrentPrivilege { get; set; }
 		public string Locale { get; set; }
+
+		//public void OnZoom( Action<double> action ) { (_screen as TerminalScreenV05).OnZoom += action; }
+		public void OnZoom( EventHandler<double> action ) { (_screen as TerminalScreenV05).OnZoom += action; }
 
 
 
@@ -84,6 +88,16 @@ namespace Limcap.FriendlyTerminal {
 			DockPanel.SetDock( _screen.UIControlHook, Dock.Top );
 
 			FontPrimaryColor = defaultPrimaryColor;
+
+			// Setup the zoom function for the assistant area and status area
+			(_screen as TerminalScreenV05).OnZoom += ( o, z ) => {
+				var fontSize = Math.Round( z / 100.0 * defaultStatusAreaFontSize );
+				//var height = Math.Round( _assistantArea.FontSize * 2.0 + 1.0 );
+				_assistantArea.FontSize = fontSize;
+				//_assistantArea.Height = height;
+				_statusArea.FontSize = fontSize;
+				//_statusArea.Height = height;
+			};
 		}
 
 
@@ -201,7 +215,8 @@ namespace Limcap.FriendlyTerminal {
 				Foreground = Brushes.Gray,
 				FontFamily = new FontFamily( "Consolas" ),
 				Padding = new Thickness( 5 ),
-				Height = 25,
+				FontSize = defaultStatusAreaFontSize,
+				//Height = defaultStatusAreaFontSize * 2 + 1,
 			};
 		}
 	}
