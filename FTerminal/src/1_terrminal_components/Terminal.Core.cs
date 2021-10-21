@@ -125,6 +125,9 @@ namespace Limcap.FriendlyTerminal {
 		public string[] AvailableCommands {
 			get => _cmdList.Select( entry => entry.Key ).ToArray();
 		}
+		public Dictionary<string,Type> RegisteredCommands {
+			get => _cmdList;
+		}
 
 
 

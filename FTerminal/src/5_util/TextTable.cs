@@ -8,6 +8,7 @@ using System.Windows.Media;
 namespace Limcap.FriendlyTerminal {
 	public class TextTable {
 
+		public enum RowStyle { Content, OneCell, Line, LineTop, LineBottom, LineSimple, Empty, Blank }
 		public static Brush defaultColor = Brushes.White;
 
 		public int[] columnsSizes;
@@ -97,7 +98,11 @@ namespace Limcap.FriendlyTerminal {
 		public TextTable Row( params Cell[] lineContent ) {
 			return Row( -1, lineContent );
 		}
-
+		// Linha junta: A primeira cell tem o texto e a segunda é null quer dizer que a primeira cell deve ser do tamanho 
+		// da tabela
+		public TextTable Row( RowStyle style, string text = null ) {
+			return Row( -1, new Cell[] { new Cell( text, style ), null } );
+		}
 
 
 		public TextTable Col( int colIndex, Brush color, string text ) {
@@ -133,67 +138,52 @@ namespace Limcap.FriendlyTerminal {
 
 
 
-		public string Print() {
+		public string Print( bool showHeader = true, bool showTopBar = true ) {
 			// remove os sinais de negativo do columnsizes
 			//for (int i = 0; i < columnsSizes.Length; i++)
 			//	if (columnsSizes[i] < 0) columnsSizes[i] = columnsSizes[i]*-1;
 			// imprime boda inicial
 			StringBuilder sb = new StringBuilder();
 			//Console.ForegroundColor = gridColor;
-			sb.AppendLine( string.Empty.PadRight( TotalWidth, '═' ) );
+			if( showTopBar ) 
+				sb.AppendLine( string.Empty.PadRight( TotalWidth, '═' ) );
 
 			// imprime cabeçalho
-			for (int i = 0; i < headers.Length; i++) {
-				var head = headers[i];
-				var colSize = columnsSizes[i] < 0 ? columnsSizes[i] * -1 : columnsSizes[i];
-				//Console.ForegroundColor = headerColor;
-				sb.Append( head.FixedSize( colSize ) );
-				if (i < headers.Length - 1) {
-					//Console.ForegroundColor = gridColor;
-					sb.Append( " │ " );
+			if( showHeader ) {
+				for (int i = 0; i < headers.Length; i++) {
+					var head = headers[i];
+					var colSize = columnsSizes[i] < 0 ? columnsSizes[i] * -1 : columnsSizes[i];
+					//Console.ForegroundColor = headerColor;
+					sb.Append( head.FixedSize( colSize ) );
+					if (i < headers.Length - 1) {
+						//Console.ForegroundColor = gridColor;
+						sb.Append( " │ " );
+					}
+					else
+						sb.AppendLine();
 				}
-				else
-					sb.AppendLine();
-			}
 
-			// imprime divisoria
-			//Console.ForegroundColor = gridColor;
-			for (int i = 0; i < columnsSizes.Length; i++) {
-				var colSize = columnsSizes[i] < 0 ? columnsSizes[i] * -1 : columnsSizes[i];
-				sb.Append( string.Empty.FixedSize( colSize, '─' ) );
-				sb.Append( i < headers.Length - 1 ? "─┼─" : "\n" );
+				// imprime divisoria
+				//Console.ForegroundColor = gridColor;
+				for (int i = 0; i < columnsSizes.Length; i++) {
+					var colSize = columnsSizes[i] < 0 ? columnsSizes[i] * -1 : columnsSizes[i];
+					sb.Append( string.Empty.FixedSize( colSize, '─' ) );
+					sb.Append( i < headers.Length - 1 ? "─┼─" : "\n" );
+				}
 			}
 
 			// imprime conteudo
 			for (int rowIdx = 0; rowIdx < rows.Count; rowIdx++) {
 				var row = rows[rowIdx];
-				if (row is null) {
-					for (int colIdx = 0; colIdx < columnsSizes.Length; colIdx++) {
-						var colSize = columnsSizes[colIdx] < 0 ? columnsSizes[colIdx] * -1 : columnsSizes[colIdx];
-						sb.Append( "─".PadRight( colSize, '─' ) );
-						if (colIdx < columnsSizes.Length - 1) {
-							//Console.ForegroundColor = gridColor;
-							sb.Append( "─┼─" );
-						}
-						else
-							sb.AppendLine();
-						
-					}
+				if (row is null) PrintLine( sb );
+				else if (row.Count() == 2 ) {//&& row[1] is null
+					if ( row[0].style == RowStyle.OneCell ) PrintRowAsTitle( row, sb );
+					else if( row[0].style == RowStyle.Blank ) sb.AppendLine();
+					else if( row[0].style == RowStyle.Empty ) PrintEmptyLine( sb );
+					else if( row[0].style == RowStyle.Content ) PrintRowAsText( row, sb );
+					else PrintLine( sb, row[0].style );
 				}
-				else {
-					for (int column = 0; column < columnsSizes.Length; column++) {
-						var colSize = columnsSizes[column] < 0 ? columnsSizes[column] * -1 : columnsSizes[column];
-						var cell = rows[rowIdx][column];
-						//Console.ForegroundColor = cell.color ?? textColor;
-						sb.Append( cell.text.FixedSize( colSize ) );
-						if (column < columnsSizes.Length - 1) {
-							//Console.ForegroundColor = gridColor;
-							sb.Append( " │ " );
-						}
-						else
-							sb.AppendLine();
-					}
-				}
+				else PrintRowAsText( row, sb );
 			}
 
 			// imprime finalização
@@ -217,17 +207,87 @@ namespace Limcap.FriendlyTerminal {
 
 
 
+
+		private void PrintLine( StringBuilder sb, RowStyle style = RowStyle.Line ) {
+			var connector =
+				style == RowStyle.LineTop ? "┬" :
+				style == RowStyle.LineBottom ? "┴" :
+				style == RowStyle.LineSimple ? "─" :
+				style == RowStyle.Line ? "┼" : "*";
+			for (int colIdx = 0; colIdx < columnsSizes.Length; colIdx++) {
+				var colSize = columnsSizes[colIdx] < 0 ? columnsSizes[colIdx] * -1 : columnsSizes[colIdx];
+				sb.Append( "─".PadRight( colSize, '─' ) );
+				if (colIdx < columnsSizes.Length - 1) {
+					//Console.ForegroundColor = gridColor;
+					sb.Append( "─" + connector + "─" );
+				}
+				else
+					sb.AppendLine();
+			}
+		}
+
+
+
+
+		private void PrintRowAsTitle(Cell[] row, StringBuilder sb, bool topLine = true, bool bottomLine = true ) {
+			//var tableSize = columnsSizes.Aggregate( 0, ( ag, it ) => ag + (it < 0 ? it * -1 : it) );
+			//if (topLine) PrintSeparatorLine( sb, true );
+			//sb.AppendLine();
+			var text = row[0].text;
+			if (text.Length > TotalWidth) text = text.Substring( 0, TotalWidth );
+			sb.AppendLine( text );
+			//if (bottomLine) PrintSeparatorLine( sb, true );
+		}
+
+
+
+
+		private void PrintRowAsText(Cell[] row, StringBuilder sb) {
+			for (int column = 0; column < columnsSizes.Length; column++) {
+				var colSize = columnsSizes[column] < 0 ? columnsSizes[column] * -1 : columnsSizes[column];
+				//var cell = rows[rowIdx][column];
+				var cell = row[column];
+				//Console.ForegroundColor = cell.color ?? textColor;
+				sb.Append( cell.text.FixedSize( colSize ) );
+				if (column < columnsSizes.Length - 1) {
+					//Console.ForegroundColor = gridColor;
+					sb.Append( " │ " );
+				}
+				else
+					sb.AppendLine();
+			}
+		}
+
+
+
+
+		private void PrintEmptyLine( StringBuilder sb ) {
+			for (int column = 0; column < columnsSizes.Length; column++) {
+				var colSize = columnsSizes[column] < 0 ? columnsSizes[column] * -1 : columnsSizes[column];
+				sb.Append( string.Empty.FixedSize( colSize ) );
+				if (column < columnsSizes.Length - 1)
+					sb.Append( " │ " );
+				else
+					sb.AppendLine();
+			}
+		}
+
+
+
 		public class Cell {
 			public string text;
 			public Brush color;
+			public RowStyle style;
+			//public enum Style { Content, Full, Line, Empty }
 
-			public Cell( Brush color = null, string text = null ) {
+			public Cell( Brush color = null, string text = null, RowStyle style = RowStyle.Content ) {
 				this.color = color;
 				this.text = text ?? string.Empty;
 			}
-			public Cell( string text ) {
+			public Cell( string text, RowStyle style = RowStyle.Content ) {
 				this.color = null;
 				this.text = text ?? string.Empty;
+				this.style = style;
 			}
 
 			public static implicit operator Cell( string text ) { return new Cell( text ); }

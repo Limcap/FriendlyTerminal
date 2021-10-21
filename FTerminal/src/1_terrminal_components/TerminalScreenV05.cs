@@ -116,7 +116,7 @@ namespace Limcap.FriendlyTerminal {
 			_view.Document = doc;
 
 			var contextItem = new MenuItem() {
-				Header = "Copiar e digitar",
+				Header = "Digitar",
 				Command = new ContextCommand( _view, ( o ) => {
 					var text = _view.Selection.Text.Trim();
 					AppendText( text );

@@ -109,7 +109,13 @@ namespace Limcap.FriendlyTerminal {
 				: null;
 		}
 
-		public static int? SafeParseInt( this string s, int? d = null ) {
+		public static int? SafeParseInt( this string s ) {
+			var a = int.TryParse( s, out int i );
+			if (!a) return null;
+			else return i;
+		}
+
+		public static int SafeParseInt( this string s, int d = 0 ) {
 			return int.TryParse( s, out int i ) ? i : d;
 		}
 
