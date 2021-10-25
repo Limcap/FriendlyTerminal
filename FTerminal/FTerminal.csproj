@@ -97,6 +97,7 @@
     <Compile Include="src\4_generic_components\KeyedSet.cs" />
     <Compile Include="src\4_generic_components\Range.cs" />
     <Compile Include="src\4_generic_components\Tstring.cs" />
+    <Compile Include="src\5_util\MenuDef.cs" />
     <Compile Include="src\5_util\NotepadRunner.cs" />
     <Compile Include="src\5_util\TextTable.cs" />
     <Compile Include="src\5_util\Util.cs" />
