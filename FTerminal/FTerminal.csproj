@@ -122,7 +122,7 @@
     <EmbeddedResource Include="src\6_implemented_commands\dev\MemUsage.locale.json" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="all" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Limcap.Duxtools.Dux">
