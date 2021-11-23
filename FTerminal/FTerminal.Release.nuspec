@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
     <id>Limcap.FriendlyTerminal</id>
-    <version>0.8.0.25</version>
+    <version>0.8.1.28</version>
     <title>Friendly Terminal</title>
     <authors>Limcap</authors>
     <owners>Limcap</owners>
