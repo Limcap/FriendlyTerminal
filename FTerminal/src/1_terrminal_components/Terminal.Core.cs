@@ -52,7 +52,8 @@ namespace Limcap.FriendlyTerminal {
 		public void OnZoom( EventHandler<double> action ) { (_screen as TerminalScreenV05).OnZoom += action; }
 
 
-
+		public Thickness Style_HelpBar_BorderThickness { get => (Panel.Children[0] as Border).BorderThickness; set => (Panel.Children[0] as Border).BorderThickness = value; }
+		public Brush Style_HelpBar_BorderBrush { get => (Panel.Children[0] as Border).BorderBrush; set => (Panel.Children[0] as Border).BorderBrush = value; }
 
 
 
