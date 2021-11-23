@@ -21,9 +21,9 @@
 	  -->
       <group targetFramework=".NETFramework4.6.2">
         <dependency id="Limcap.Duxtools.Dux" version="1.0.5" />
-        <dependency id="System.ValueTuple" version="4.5.0" />
         <dependency id="System.Memory" version="4.5.4" />
         <dependency id="System.Threading.Tasks.Extensions" version="4.5.4"/>
+		<!--<dependency id="System.ValueTuple" version="4.5.0" />-->
       </group>
     </dependencies>
 	<references>
@@ -43,6 +43,7 @@
       <frameworkAssembly assemblyName="System.Xml" targetFramework=".NETFramework4.6.2" />
       <frameworkAssembly assemblyName="System.Xml.Linq" targetFramework=".NETFramework4.6.2" />
       <frameworkAssembly assemblyName="WindowsBase" targetFramework=".NETFramework4.6.2" />
+	  <frameworkAssembly assemblyName="System.ValueTuple" targetFramework=".NETFramework4.6.2" />
     </frameworkAssemblies>
   </metadata>
   <files>
